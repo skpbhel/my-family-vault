@@ -40,7 +40,7 @@ nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(760px,
 </head>
 <body>
 <div class="app">
-<header><div class="top"><div><div class="brand"><span style="font-size:20px">👋</span><div class="title" id="pageTitle">My Family Vault</div></div><div class="sub" id="pageSub">All important family records in one place · PDF Fix 2 · Viewer</div></div><button class="iconbtn" onclick="go('search')">🔍</button></div></header>
+<header><div class="top"><div><div class="brand"><span style="font-size:20px">👋</span><div class="title" id="pageTitle">My Family Vault</div></div><div class="sub" id="pageSub">All important family records in one place · PDF Fix 3 · Lal Parser</div></div><button class="iconbtn" onclick="go('search')">🔍</button></div></header>
 <main>
 <section id="home" class="screen active">
   <div class="section">Family quick access</div><div id="homeProfiles" class="profile-strip"></div>
@@ -270,21 +270,232 @@ async function ensurePdfJs(){
 async function pdfText(blob){
   await ensurePdfJs();
   pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
   let bytes;
-  try{bytes=await blob.arrayBuffer()}catch(e){throw new Error('Safari could not read the selected file.')}
+  try{bytes=await blob.arrayBuffer()}
+  catch(e){throw new Error('Safari could not read the selected file.');}
+
   let pdf;
-  try{pdf=await pdfjsLib.getDocument({data:bytes,disableFontFace:true}).promise}
-  catch(e){throw new Error('PDF.js could not open this PDF. It may be damaged or password-protected.')}
-  let t='';
-  for(let i=1;i<=pdf.numPages;i++){
-    const p=await pdf.getPage(i);
-    const c=await p.getTextContent();
-    t+=' '+c.items.map(x=>x.str).join(' ');
+  try{
+    pdf=await pdfjsLib.getDocument({data:bytes,disableFontFace:true}).promise;
+  }catch(e){
+    throw new Error('PDF.js could not open this PDF. It may be damaged or password-protected.');
   }
-  if(!t.trim())throw new Error('This PDF has no selectable text. It may be a scanned/image-only report.');
-  return t;
+
+  let pages=[];
+  for(let pno=1;pno<=pdf.numPages;pno++){
+    const page=await pdf.getPage(pno);
+    const content=await page.getTextContent();
+    const items=content.items
+      .filter(x=>x.str && x.str.trim())
+      .map(x=>({
+        text:x.str.trim(),
+        x:Number(x.transform?.[4]||0),
+        y:Number(x.transform?.[5]||0)
+      }));
+
+    // Group fragments into visual rows, then sort each row left-to-right.
+    const rows=[];
+    const tolerance=2.5;
+    for(const it of items){
+      let row=rows.find(r=>Math.abs(r.y-it.y)<=tolerance);
+      if(!row){row={y:it.y,items:[]};rows.push(row);}
+      row.items.push(it);
+    }
+    rows.sort((a,b)=>b.y-a.y);
+    const lines=rows.map(r=>{
+      r.items.sort((a,b)=>a.x-b.x);
+      return r.items.map(i=>i.text).join(' ')
+        .replace(/\s+/g,' ')
+        .replace(/(\d)\s*\.\s*(\d)/g,'$1.$2')
+        .trim();
+    }).filter(Boolean);
+    pages.push(lines.join('\n'));
+  }
+
+  const text=pages.join('\n---PAGE---\n');
+  if(!text.trim())throw new Error('This PDF has no selectable text. It may be scanned/image-only.');
+  return text;
 }
-function parseHealthText(t){return TESTS.flatMap(x=>{let m=t.match(x[1]);return m?[{parameter:x[0],value:Number(m[1]),unit:x[2],low:x[3],high:x[4],rule:x[5]}]:[]})}
+
+function normalizeLabText(t){
+  return String(t||'')
+    .replace(/\u00A0/g,' ')
+    .replace(/[–—]/g,'-')
+    .replace(/(\d)\s*\.\s*(\d)/g,'$1.$2')
+    .replace(/[ \t]+/g,' ')
+    .trim();
+}
+
+function findLabValue(text, labels, unitPattern){
+  const lines=normalizeLabText(text).split(/\n+/).map(x=>x.trim()).filter(Boolean);
+  const labelList=Array.isArray(labels)?labels:[labels];
+
+  // Best case: label, result and unit are on the same reconstructed row.
+  for(const line of lines){
+    for(const label of labelList){
+      if(label.test(line)){
+        const nums=[...line.matchAll(/\b(\d+(?:\.\d+)?)\b/g)].map(m=>Number(m[1]));
+        if(nums.length){
+          // A result row often ends with reference range numbers. Prefer the first
+          // value after the label, and reject obvious year/age-like values.
+          const clean=nums.filter(v=>v>=0 && v<10000);
+          if(clean.length && (!unitPattern || unitPattern.test(line))) return clean[0];
+        }
+      }
+    }
+  }
+
+  // Fallback: tolerate PDF fragments appearing on adjacent rows.
+  const flat=normalizeLabText(text).replace(/\n/g,' ');
+  for(const label of labelList){
+    const source=label.source;
+    const flags=label.flags.replace('g','');
+    const re=new RegExp(source+'[\\s\\S]{0,180}?(\\d+(?:\\.\\d+)?)\\s*'+(unitPattern?unitPattern.source:''),flags);
+    const m=flat.match(re);
+    if(m)return Number(m[1]);
+  }
+  return null;
+}
+
+function parseHealthText(t){
+  const rows=[];
+  const add=(parameter,value,unit,low,high,rule)=>{
+    if(value!==null && Number.isFinite(value) && !rows.some(r=>r.parameter===parameter))
+      rows.push({parameter,value,unit,low,high,rule});
+  };
+
+  // Dr Lal PathLabs and common lab naming variants.
+  add('HbA1c',
+      findLabValue(t,[/\bHbA1c\b/i,/\bHbA1C\b/i],/%/i),
+      '%',4,5.6,'range');
+
+  add('Estimated Average Glucose',
+      findLabValue(t,[/Estimated average glucose\s*\(eAG\)/i,/Estimated average glucose/i,/\beAG\b/i],/mg\/dL/i),
+      'mg/dL',null,null,'none');
+
+  add('Fasting Glucose',
+      findLabValue(t,[/Glucose\s*Fasting/i,/Fasting\s*Glucose/i],/mg\/dL/i),
+      'mg/dL',70,100,'range');
+
+  add('Creatinine',
+      findLabValue(t,[/\bCreatinine\b/i],/mg\/dL/i),
+      'mg/dL',0.67,1.17,'range');
+
+  add('eGFR',
+      findLabValue(t,[/\beGFR\b/i,/GFR Estimated/i],/mL\/min/i),
+      'mL/min/1.73m²',59,null,'min');
+
+  add('Urea',
+      findLabValue(t,[/\bUrea\b(?! Nitrogen)/i],/mg\/dL/i),
+      'mg/dL',17,43,'range');
+
+  add('Uric Acid',
+      findLabValue(t,[/Uric Acid/i],/mg\/dL/i),
+      'mg/dL',3.5,7.2,'range');
+
+  add('AST (SGOT)',
+      findLabValue(t,[/AST\s*\(SGOT\)/i,/\bSGOT\b/i],/U\/L/i),
+      'U/L',null,50,'max');
+
+  add('ALT (SGPT)',
+      findLabValue(t,[/ALT\s*\(SGPT\)/i,/\bSGPT\b/i],/U\/L/i),
+      'U/L',null,50,'max');
+
+  add('Alkaline Phosphatase',
+      findLabValue(t,[/Alkaline Phosphatase/i,/\bALP\b/i],/U\/L/i),
+      'U/L',30,120,'range');
+
+  add('Bilirubin Total',
+      findLabValue(t,[/Bilirubin Total/i,/Total Bilirubin/i],/mg\/dL/i),
+      'mg/dL',0.3,1.2,'range');
+
+  add('Albumin',
+      findLabValue(t,[/\bAlbumin\b/i],/g\/dL/i),
+      'g/dL',3.5,5.2,'range');
+
+  add('Calcium',
+      findLabValue(t,[/Calcium,?\s*Total/i,/\bCalcium\b/i],/mg\/dL/i),
+      'mg/dL',8.6,10.3,'range');
+
+  add('Sodium',
+      findLabValue(t,[/\bSodium\b/i],/mEq\/L|mmol\/L/i),
+      'mEq/L',136,146,'range');
+
+  add('Potassium',
+      findLabValue(t,[/\bPotassium\b/i],/mEq\/L|mmol\/L/i),
+      'mEq/L',3.5,5.1,'range');
+
+  add('Vitamin B12',
+      findLabValue(t,[/Vitamin B12/i,/Cyanocobalamin/i],/pg\/mL/i),
+      'pg/mL',211,946,'range');
+
+  add('Vitamin D, 25 Hydroxy',
+      findLabValue(t,[/Vitamin D,?\s*25\s*Hydroxy/i,/25[- ]OH Vitamin D/i],/nmol\/L|ng\/mL/i),
+      'nmol/L',75,250,'range');
+
+  add('Free T3',
+      findLabValue(t,[/Free Triiodothyronine/i,/\bFree T3\b/i,/\bFT3\b/i],/pg\/mL/i),
+      'pg/mL',2,4.4,'range');
+
+  add('Free T4',
+      findLabValue(t,[/Free Thyroxine/i,/\bFree T4\b/i,/\bFT4\b/i],/ng\/dL/i),
+      'ng/dL',0.93,1.70,'range');
+
+  add('TSH',
+      findLabValue(t,[/TSH,?\s*Ultrasensitive/i,/\bTSH\b/i],/[µu]IU\/mL|mIU\/L/i),
+      'µIU/mL',0.27,4.2,'range');
+
+  add('Hemoglobin',
+      findLabValue(t,[/\bHemoglobin\b/i,/\bHaemoglobin\b/i],/g\/dL/i),
+      'g/dL',13,17,'range');
+
+  add('PCV',
+      findLabValue(t,[/Packed Cell Volume/i,/\bPCV\b/i],/%/i),
+      '%',40,50,'range');
+
+  add('RBC Count',
+      findLabValue(t,[/RBC Count/i,/Total RBC/i],/mill\/mm3|million\/µL|10\^6/i),
+      'mill/mm³',4.5,5.5,'range');
+
+  add('MCV',
+      findLabValue(t,[/\bMCV\b/i],/fL/i),
+      'fL',83,101,'range');
+
+  add('MCH',
+      findLabValue(t,[/\bMCH\b/i],/\bpg\b/i),
+      'pg',27,32,'range');
+
+  add('MCHC',
+      findLabValue(t,[/\bMCHC\b/i],/g\/dL/i),
+      'g/dL',31.5,34.5,'range');
+
+  add('Platelet Count',
+      findLabValue(t,[/Platelet Count/i],/thou\/mm3|10\^3/i),
+      'thou/mm³',150,410,'range');
+
+  add('Total Cholesterol',
+      findLabValue(t,[/Cholesterol Total/i,/Total Cholesterol/i],/mg\/dL/i),
+      'mg/dL',null,200,'max');
+
+  add('Triglycerides',
+      findLabValue(t,[/\bTriglycerides\b/i],/mg\/dL/i),
+      'mg/dL',null,150,'max');
+
+  add('HDL Cholesterol',
+      findLabValue(t,[/HDL Cholesterol/i,/\bHDL\b/i],/mg\/dL/i),
+      'mg/dL',40,null,'min');
+
+  add('LDL Cholesterol',
+      findLabValue(t,[/LDL Cholesterol/i,/\bLDL\b/i],/mg\/dL/i),
+      'mg/dL',null,100,'max');
+
+  add('Non-HDL Cholesterol',
+      findLabValue(t,[/Non-HDL Cholesterol/i,/Non HDL Cholesterol/i],/mg\/dL/i),
+      'mg/dL',null,130,'max');
+
+  return rows;
+}
 async function extractForReview(id){
   const d=await one('documents',id);
   const f=d?.fileId?await one('files',d.fileId):null;
