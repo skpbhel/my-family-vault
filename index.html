@@ -47,10 +47,22 @@ body{font-size:17px}
 .edit-extra{display:grid;gap:8px}.edit-extra-row{display:grid;grid-template-columns:120px 1fr;gap:8px;align-items:center}.edit-extra-row label{font-size:12px;color:var(--muted)}
 @media(max-width:430px){.metric-strip{grid-template-columns:1fr}.edit-extra-row{grid-template-columns:1fr}}
 </style>
+
+<style>
+/* v9 labelled structured forms */
+.form-panel{display:grid;gap:12px}
+.form-field{display:grid;gap:6px}
+.form-field>label{font-size:14px;font-weight:780;color:#e8edf3;margin-left:2px}
+.form-field .hint{font-size:12px;color:var(--muted);line-height:1.35;margin-left:2px}
+.form-field input,.form-field select,.form-field textarea{width:100%}
+.form-section{font-size:13px;font-weight:850;letter-spacing:.7px;text-transform:uppercase;color:#b9c6d3;margin:8px 2px 0}
+.build-badge{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;background:#153b68;border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:800;color:#d9ebff;margin-top:7px}
+.category-caption{font-size:19px;font-weight:850;margin:2px 0 2px}
+</style>
 </head>
 <body>
 <div class="app">
-<header><div class="top"><div><div class="brand"><span style="font-size:20px">👋</span><div class="title" id="pageTitle">My Family Vault</div></div><div class="sub" id="pageSub">All important family records in one place · Premium Records v8</div></div><button class="iconbtn" onclick="go('search')">🔍</button></div></header>
+<header><div class="top"><div><div class="brand"><span style="font-size:20px">👋</span><div class="title" id="pageTitle">My Family Vault</div></div><div class="sub" id="pageSub">All important family records in one place</div><div class="build-badge" id="buildBadge">Structured Records v9</div></div><button class="iconbtn" onclick="go('search')">🔍</button></div></header>
 <main>
 <section id="home" class="screen active">
   <div class="section">Family quick access</div><div id="homeProfiles" class="profile-strip"></div>
@@ -106,7 +118,7 @@ body{font-size:17px}
   <div class="stepbar"><div id="s1" class="step active">1</div><div class="line"></div><div id="s2" class="step">2</div><div class="line"></div><div id="s3" class="step">3</div></div>
   <div id="a1"><div class="section">Who is this for?</div><div class="choicegrid" id="addMemberChoices"></div><button class="btn primary full" style="margin-top:12px" onclick="step(2)">Continue →</button></div>
   <div id="a2" class="hidden"><div class="section">What type of document?</div><div class="choicegrid" id="addCategoryChoices"></div><button class="btn primary full" style="margin-top:12px" onclick="step(3)">Continue →</button></div>
-  <div id="a3" class="hidden"><div class="section">Details</div><div style="display:grid;gap:9px"><input id="addTitle" placeholder="Document title"><input id="addDate" type="date"><input id="addFile" type="file" accept=".pdf,application/pdf,image/*" multiple><div id="dynamicFields" style="display:grid;gap:9px"></div><textarea id="addNotes" rows="3" placeholder="Notes"></textarea><button class="btn primary full" onclick="saveDocument()">Save document</button><div class="meta" id="addMsg"></div></div></div>
+  <div id="a3" class="hidden"><div class="section">Details</div><div class="category-caption" id="categoryFormTitle">Document details</div><div class="form-panel"><div class="form-field"><label>Record title</label><input id="addTitle" placeholder="e.g. Car insurance 2026-27"></div><div class="form-field"><label>Document / record date</label><input id="addDate" type="date"></div><div class="form-field"><label>Attachment(s)</label><input id="addFile" type="file" accept=".pdf,application/pdf,image/*" multiple><div class="hint">Original PDF/image is stored unchanged. You can attach more than one file.</div></div><div id="dynamicFields" class="form-panel"></div><div class="form-field"><label>Notes</label><textarea id="addNotes" rows="3" placeholder="Optional notes"></textarea></div><button class="btn primary full" onclick="saveDocument()">Save document</button><div class="meta" id="addMsg"></div></div></div>
 </div></div>
 
 <div id="memberModal" class="modal hidden"><div class="sheet"><div class="top"><div class="name" id="memberModalTitle">Add family member</div><button class="iconbtn" onclick="closeMemberModal()">✕</button></div><div style="display:grid;gap:9px;margin-top:12px"><input id="memberName" placeholder="Name"><select id="memberRelation"><option>Self</option><option>Spouse</option><option>Son</option><option>Daughter</option><option>Parent</option><option>Other</option></select><input id="memberDob" type="date"><button class="btn primary full" onclick="saveMember()">Save</button></div></div></div>
@@ -236,134 +248,147 @@ async function buildAddChoices(){let m=await all('members');addMemberChoices.inn
 function pickAddPerson(id,el){addPerson=id;el.parentElement.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));el.classList.add('selected')}
 function pickAddCategory(c,el){addCategory=c;el.parentElement.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));el.classList.add('selected')}
 function step(n){if(n===2&&!addPerson)return alert('Choose a family member.');if(n===3&&!addCategory)return alert('Choose a document type.');[1,2,3].forEach(i=>{document.getElementById('a'+i).classList.toggle('hidden',i!==n);document.getElementById('s'+i).classList.toggle('active',i<=n)});if(n===3){addDate.value=new Date().toISOString().slice(0,10);buildDynamicFields()}}
+function ff(label,control,hint=''){return `<div class="form-field"><label>${label}</label>${control}${hint?`<div class="hint">${hint}</div>`:''}</div>`}
+function fs(label){return `<div class="form-section">${label}</div>`}
 function buildDynamicFields(){
+  if(typeof categoryFormTitle!=='undefined')categoryFormTitle.textContent=addCategory+' details';
   let h='';
-  if(addCategory==='Health')h=`<input id="xLab" placeholder="Laboratory / hospital">`;
-  if(addCategory==='Education')h=`
-    <select id="xEduType"><option>Mark Sheet</option><option>School Report Card</option><option>Entrance Test Report</option><option>Degree</option><option>Diploma</option><option>Certificate</option><option>Training Certificate</option><option>Achievement</option><option>Admission Document</option><option>ID Card</option><option>Other</option></select>
-    <input id="xCertificateName" placeholder="Certificate / report title">
-    <input id="xSchool" placeholder="School / college / institute">
-    <input id="xBoard" placeholder="Board / university">
-    <input id="xClass" placeholder="Class / course">
-    <input id="xSubject" placeholder="Subject / stream (optional)">
-    <input id="xExam" placeholder="Exam / test name">
-    <input id="xAcademicYear" placeholder="Academic year">
-    <input id="xMarks" inputmode="decimal" placeholder="Marks obtained">
-    <input id="xMaxMarks" inputmode="decimal" placeholder="Maximum marks">
-    <input id="xPercentage" inputmode="decimal" placeholder="Percentage">
-    <input id="xGrade" placeholder="Grade">
-    <input id="xRank" inputmode="numeric" placeholder="Rank (optional)">
-    <input id="xRoll" placeholder="Roll / registration number">
-    <input id="xCertificateNo" placeholder="Certificate number">
-    <input id="xIssueDate" type="date"><div class="meta">Issue / result date</div>
-    <input id="xReminder" type="date"><div class="meta">Validity / renewal date if applicable</div>`;
-  if(addCategory==='Insurance')h=`
-    <select id="xInsuranceFor" onchange="renderInsuranceSpecific()"><option>Person</option><option>Health</option><option>Life</option><option>Vehicle</option><option>Property</option><option>Appliance / Equipment</option><option>Jewellery</option><option>Travel</option><option>Other</option></select>
-    <input id="xInsuredSubject" placeholder="Insured person / item / asset">
-    <input id="xVendor" placeholder="Insurance company">
-    <input id="xPolicyNo" placeholder="Policy number">
-    <input id="xStartDate" type="date"><div class="meta">Policy start date</div>
-    <input id="xReminder" type="date"><div class="meta">Valid up to / renewal date</div>
-    <input id="xSumInsured" inputmode="decimal" placeholder="Sum insured / insured value (₹)">
-    <input id="xPremium" inputmode="decimal" placeholder="Premium amount (₹)">
-    <select id="xPremiumFreq"><option>Annual</option><option>One-time</option><option>Monthly</option><option>Quarterly</option><option>Half-yearly</option></select>
-    <input id="xNominee" placeholder="Nominee / beneficiary">
-    <input id="xAgent" placeholder="Agent / broker">
-    <input id="xCustomerCare" placeholder="Customer care / claim contact">
-    <div id="insuranceSpecific" style="display:grid;gap:9px"></div>`;
-  if(addCategory==='Jewellery')h=`
-    <select id="xMetal"><option>Gold</option><option>Silver</option><option>Diamond</option><option>Platinum</option><option>Mixed</option><option>Other</option></select>
-    <select id="xJewelleryItem"><option>Ring</option><option>Chain</option><option>Necklace</option><option>Bangle</option><option>Earring</option><option>Coin</option><option>Bar</option><option>Other</option></select>
-    <input id="xPurchaseDate" type="date"><div class="meta">Purchase date</div>
-    <input id="xVendor" placeholder="Store / jeweller">
-    <input id="xInvoiceNo" placeholder="Invoice number">
-    <select id="xPurity"><option>24K</option><option>22K</option><option>18K</option><option>14K</option><option>999 Silver</option><option>925 Silver</option><option>Platinum 950</option><option>Other</option></select>
-    <input id="xGrossWeight" inputmode="decimal" placeholder="Gross weight (g)">
-    <input id="xNetWeight" inputmode="decimal" placeholder="Net metal weight (g)">
-    <input id="xDiamondCarat" inputmode="decimal" placeholder="Diamond carat (optional)">
-    <input id="xStoneWeight" inputmode="decimal" placeholder="Other stone weight (optional)">
-    <input id="xPurchaseRate" inputmode="decimal" placeholder="Gold / silver rate on purchase date (₹/g)">
-    <input id="xCurrentRate" inputmode="decimal" placeholder="Current metal rate (₹/g) - manual">
-    <input id="xMetalValueAtPurchase" inputmode="decimal" placeholder="Metal value at purchase (optional)">
-    <input id="xMaking" inputmode="decimal" placeholder="Making charges (₹)">
-    <input id="xGST" inputmode="decimal" placeholder="GST (₹)">
-    <input id="xAmount" inputmode="decimal" placeholder="Total purchase value (₹)">
-    <input id="xHallmark" placeholder="Hallmark / HUID">
-    <input id="xLocker" placeholder="Stored at / locker reference (optional)">`;
-  if(addCategory==='Warranty')h=`
-    <select id="xItemCategory"><option>Refrigerator</option><option>AC</option><option>TV</option><option>Washing Machine</option><option>Mobile</option><option>Laptop</option><option>Kitchen Appliance</option><option>Furniture</option><option>Power Tool</option><option>Other</option></select>
-    <input id="xItem" placeholder="Item name">
-    <input id="xBrand" placeholder="Brand">
-    <input id="xModel" placeholder="Model">
-    <input id="xSerial" placeholder="Serial number">
-    <input id="xVendor" placeholder="Store / seller">
-    <input id="xInvoiceNo" placeholder="Invoice number">
-    <input id="xAmount" inputmode="decimal" placeholder="Purchase value (₹)">
-    <input id="xPurchaseDate" type="date"><div class="meta">Purchase date</div>
-    <input id="xInstallDate" type="date"><div class="meta">Installation date (optional)</div>
-    <input id="xReminder" type="date"><div class="meta">Warranty valid up to</div>
-    <input id="xExtendedWarranty" type="date"><div class="meta">Extended warranty up to (optional)</div>
-    <input id="xAMC" type="date"><div class="meta">AMC valid up to (optional)</div>
-    <input id="xService" placeholder="Service centre / contact">
-    <input id="xLocation" placeholder="Location in home / office">`;
-  if(addCategory==='Certificates')h=`
-    <select id="xCertificateType"><option>Identity</option><option>Academic</option><option>Employment</option><option>Property</option><option>Tax</option><option>Legal</option><option>Government</option><option>Membership</option><option>Medical</option><option>Other</option></select>
-    <input id="xCertificateName" placeholder="Document / certificate name">
-    <input id="xVendor" placeholder="Issuing authority / institution">
-    <input id="xCertificateNo" placeholder="Document / certificate number">
-    <input id="xIssueDate" type="date"><div class="meta">Issue date</div>
-    <input id="xReminder" type="date"><div class="meta">Expiry date if applicable</div>
-    <input id="xPlace" placeholder="Place of issue">
-    <select id="xStatus"><option>Active</option><option>Permanent</option><option>Expired</option></select>
-    <input id="xOriginalLocation" placeholder="Original stored at: home locker / bank locker / office">
-    <select id="xSensitive"><option value="No">Show document number</option><option value="Yes">Hide document number on dashboard</option></select>`;
-  if(addCategory==='Vehicle')h=`
-    <select id="xVehicleType"><option>Car</option><option>Two Wheeler</option><option>Other</option></select>
-    <input id="xBrand" placeholder="Make / brand">
-    <input id="xModel" placeholder="Model">
-    <input id="xRegNo" placeholder="Registration number">
-    <input id="xEngineNo" placeholder="Engine number">
-    <input id="xChassisNo" placeholder="Chassis number">
-    <input id="xRegDate" type="date"><div class="meta">Registration date</div>
-    <input id="xPurchaseDate" type="date"><div class="meta">Purchase date</div>
-    <input id="xAmount" inputmode="decimal" placeholder="Purchase price (₹)">
-    <input id="xReminder" type="date"><div class="meta">RC valid up to / main renewal date</div>
-    <input id="xInsuranceExpiry" type="date"><div class="meta">Insurance valid up to</div>
-    <input id="xPUC" type="date"><div class="meta">PUC valid up to</div>
-    <input id="xLastService" type="date"><div class="meta">Last service date</div>
-    <input id="xNextService" type="date"><div class="meta">Next service due</div>
-    <input id="xOdometer" inputmode="numeric" placeholder="Odometer (km)">
-    <input id="xLoan" placeholder="Loan / hypothecation details">`;
-  if(addCategory==='Property')h=`
-    <select id="xPropertyType"><option>Flat</option><option>House</option><option>Plot</option><option>Commercial</option><option>Agricultural</option><option>Other</option></select>
-    <textarea id="xAddress" rows="2" placeholder="Property address"></textarea>
-    <input id="xCoOwners" placeholder="Co-owner(s) if any">
-    <input id="xPlotFlat" placeholder="Plot / flat number">
-    <input id="xArea" placeholder="Area">
-    <input id="xPurchaseDate" type="date"><div class="meta">Purchase date</div>
-    <input id="xAmount" inputmode="decimal" placeholder="Purchase value (₹)">
-    <input id="xRegNo" placeholder="Registration number">
-    <input id="xRegistryDate" type="date"><div class="meta">Registry date</div>
-    <input id="xCurrentValue" inputmode="decimal" placeholder="Current estimated value (₹)">
-    <input id="xReminder" type="date"><div class="meta">Property tax / important due date</div>
-    <input id="xLoan" placeholder="Loan details">
-    <input id="xElectricity" placeholder="Electricity consumer number">
-    <input id="xWater" placeholder="Water connection number">
-    <input id="xSociety" placeholder="Society / association details">`;
-  if(addCategory==='Other')h=`<input id="xItem" placeholder="Description"><input id="xVendor" placeholder="Issuer / vendor / source"><input id="xReminder" type="date"><div class="meta">Reminder / expiry if applicable</div>`;
+  if(addCategory==='Health')h=ff('Laboratory / hospital','<input id="xLab" placeholder="e.g. Dr Lal PathLabs">');
+  if(addCategory==='Education')h=
+    ff('Certificate / record type','<select id="xEduType"><option>Mark Sheet</option><option>School Report Card</option><option>Entrance Test Report</option><option>Degree</option><option>Diploma</option><option>Certificate</option><option>Training Certificate</option><option>Achievement</option><option>Admission Document</option><option>ID Card</option><option>Other</option></select>')+
+    ff('Certificate / report title','<input id="xCertificateName" placeholder="e.g. Class XI Term 1 Report">')+
+    fs('Institution & course')+
+    ff('School / college / institute','<input id="xSchool" placeholder="Institution name">')+
+    ff('Board / university','<input id="xBoard" placeholder="CBSE / university / institute">')+
+    ff('Class / course','<input id="xClass" placeholder="e.g. Class XI / B.Tech">')+
+    ff('Subject / stream','<input id="xSubject" placeholder="Optional">')+
+    fs('Exam / result')+
+    ff('Exam / test name','<input id="xExam" placeholder="e.g. JEE Mock Test 05">')+
+    ff('Academic year','<input id="xAcademicYear" placeholder="e.g. 2026-27">')+
+    ff('Marks obtained','<input id="xMarks" inputmode="decimal" placeholder="Marks">')+
+    ff('Maximum marks','<input id="xMaxMarks" inputmode="decimal" placeholder="Maximum marks">')+
+    ff('Percentage','<input id="xPercentage" inputmode="decimal" placeholder="%">')+
+    ff('Grade','<input id="xGrade" placeholder="Grade">')+
+    ff('Rank','<input id="xRank" inputmode="numeric" placeholder="Optional">')+
+    ff('Roll / registration number','<input id="xRoll" placeholder="Roll / registration number">')+
+    ff('Certificate number','<input id="xCertificateNo" placeholder="If applicable">')+
+    ff('Issue / result date','<input id="xIssueDate" type="date">')+
+    ff('Valid up to / renewal date','<input id="xReminder" type="date">','Leave blank for permanent records.');
+  if(addCategory==='Insurance')h=
+    ff('Insured for','<select id="xInsuranceFor" onchange="renderInsuranceSpecific()"><option value="Person">Person</option><option value="Health">Health</option><option value="Life">Life</option><option value="Vehicle">Vehicle</option><option value="Property">Property</option><option value="Appliance / Equipment">Appliance / Equipment</option><option value="Jewellery">Jewellery</option><option value="Travel">Travel</option><option value="Other">Other</option></select>','Choose what this policy protects.')+
+    ff('Insured person / item / asset','<input id="xInsuredSubject" placeholder="e.g. Self / Honda City / Flat B-302">')+
+    fs('Policy')+
+    ff('Insurance company','<input id="xVendor" placeholder="Company name">')+
+    ff('Policy number','<input id="xPolicyNo" placeholder="Policy number">')+
+    ff('Policy start date','<input id="xStartDate" type="date">')+
+    ff('Valid up to / renewal date','<input id="xReminder" type="date">')+
+    ff('Sum insured / insured value','<input id="xSumInsured" inputmode="decimal" placeholder="₹">')+
+    ff('Premium amount','<input id="xPremium" inputmode="decimal" placeholder="₹">')+
+    ff('Premium frequency','<select id="xPremiumFreq"><option>Annual</option><option>One-time</option><option>Monthly</option><option>Quarterly</option><option>Half-yearly</option></select>')+
+    ff('Nominee / beneficiary','<input id="xNominee" placeholder="Optional">')+
+    ff('Agent / broker','<input id="xAgent" placeholder="Optional">')+
+    ff('Customer care / claim contact','<input id="xCustomerCare" placeholder="Phone / email / reference">')+
+    '<div id="insuranceSpecific" class="form-panel"></div>';
+  if(addCategory==='Jewellery')h=
+    ff('Metal / jewellery type','<select id="xMetal"><option>Gold</option><option>Silver</option><option>Diamond</option><option>Platinum</option><option>Mixed</option><option>Other</option></select>')+
+    ff('Item','<select id="xJewelleryItem"><option>Ring</option><option>Chain</option><option>Necklace</option><option>Bangle</option><option>Earring</option><option>Coin</option><option>Bar</option><option>Other</option></select>')+
+    ff('Purchase date','<input id="xPurchaseDate" type="date">')+
+    ff('Store / jeweller','<input id="xVendor" placeholder="Store / jeweller name">')+
+    ff('Invoice number','<input id="xInvoiceNo" placeholder="Invoice number">')+
+    fs('Weight & purity')+
+    ff('Purity','<select id="xPurity"><option>24K</option><option>22K</option><option>18K</option><option>14K</option><option>999 Silver</option><option>925 Silver</option><option>Platinum 950</option><option>Other</option></select>')+
+    ff('Gross weight (g)','<input id="xGrossWeight" inputmode="decimal" placeholder="g">')+
+    ff('Net metal weight (g)','<input id="xNetWeight" inputmode="decimal" placeholder="g">','Used for estimated current metal value.')+
+    ff('Diamond carat','<input id="xDiamondCarat" inputmode="decimal" placeholder="Optional">')+
+    ff('Other stone weight','<input id="xStoneWeight" inputmode="decimal" placeholder="Optional">')+
+    fs('Value')+
+    ff('Metal rate on purchase date','<input id="xPurchaseRate" inputmode="decimal" placeholder="₹ per g">')+
+    ff('Current metal rate','<input id="xCurrentRate" inputmode="decimal" placeholder="₹ per g">','Enter manually; the app calculates estimated metal value locally.')+
+    ff('Metal value at purchase','<input id="xMetalValueAtPurchase" inputmode="decimal" placeholder="Optional ₹">')+
+    ff('Making charges','<input id="xMaking" inputmode="decimal" placeholder="₹">')+
+    ff('GST','<input id="xGST" inputmode="decimal" placeholder="₹">')+
+    ff('Total purchase value','<input id="xAmount" inputmode="decimal" placeholder="₹">')+
+    ff('Hallmark / HUID','<input id="xHallmark" placeholder="Hallmark / HUID">')+
+    ff('Stored at / locker','<input id="xLocker" placeholder="Optional locker/reference">');
+  if(addCategory==='Warranty')h=
+    ff('Item category','<select id="xItemCategory"><option>Refrigerator</option><option>AC</option><option>TV</option><option>Washing Machine</option><option>Mobile</option><option>Laptop</option><option>Kitchen Appliance</option><option>Furniture</option><option>Power Tool</option><option>Other</option></select>')+
+    ff('Item name','<input id="xItem" placeholder="Product / item name">')+
+    ff('Brand','<input id="xBrand" placeholder="Brand">')+
+    ff('Model','<input id="xModel" placeholder="Model">')+
+    ff('Serial number','<input id="xSerial" placeholder="Serial number">')+
+    fs('Purchase')+
+    ff('Store / seller','<input id="xVendor" placeholder="Store / seller">')+
+    ff('Invoice number','<input id="xInvoiceNo" placeholder="Invoice number">')+
+    ff('Purchase value','<input id="xAmount" inputmode="decimal" placeholder="₹">')+
+    ff('Purchase date','<input id="xPurchaseDate" type="date">')+
+    ff('Installation date','<input id="xInstallDate" type="date">')+
+    fs('Warranty & service')+
+    ff('Warranty valid up to','<input id="xReminder" type="date">')+
+    ff('Extended warranty up to','<input id="xExtendedWarranty" type="date">')+
+    ff('AMC valid up to','<input id="xAMC" type="date">')+
+    ff('Service centre / contact','<input id="xService" placeholder="Service centre / contact">')+
+    ff('Location','<input id="xLocation" placeholder="Home / office location">');
+  if(addCategory==='Certificates')h=
+    ff('Document type','<select id="xCertificateType"><option>Identity</option><option>Academic</option><option>Employment</option><option>Property</option><option>Tax</option><option>Legal</option><option>Government</option><option>Membership</option><option>Medical</option><option>Other</option></select>')+
+    ff('Document / certificate name','<input id="xCertificateName" placeholder="e.g. Passport / Degree Certificate">')+
+    ff('Issuing authority / institution','<input id="xVendor" placeholder="Issuing authority">')+
+    ff('Document / certificate number','<input id="xCertificateNo" placeholder="Number">')+
+    ff('Issue date','<input id="xIssueDate" type="date">')+
+    ff('Expiry date','<input id="xReminder" type="date">','Leave blank if permanent.')+
+    ff('Place of issue','<input id="xPlace" placeholder="Place of issue">')+
+    ff('Status','<select id="xStatus"><option>Active</option><option>Permanent</option><option>Expired</option></select>')+
+    ff('Original stored at','<input id="xOriginalLocation" placeholder="Home locker / bank locker / office">')+
+    ff('Document number privacy','<select id="xSensitive"><option value="No">Show document number</option><option value="Yes">Hide document number on dashboard</option></select>');
+  if(addCategory==='Vehicle')h=
+    ff('Vehicle type','<select id="xVehicleType"><option>Car</option><option>Two Wheeler</option><option>Other</option></select>')+
+    ff('Make / brand','<input id="xBrand" placeholder="Make / brand">')+
+    ff('Model','<input id="xModel" placeholder="Model">')+
+    ff('Registration number','<input id="xRegNo" placeholder="Registration number">')+
+    ff('Engine number','<input id="xEngineNo" placeholder="Engine number">')+
+    ff('Chassis number','<input id="xChassisNo" placeholder="Chassis number">')+
+    ff('Registration date','<input id="xRegDate" type="date">')+
+    ff('Purchase date','<input id="xPurchaseDate" type="date">')+
+    ff('Purchase price','<input id="xAmount" inputmode="decimal" placeholder="₹">')+
+    fs('Validity & service')+
+    ff('RC valid up to / main renewal','<input id="xReminder" type="date">')+
+    ff('Insurance valid up to','<input id="xInsuranceExpiry" type="date">')+
+    ff('PUC valid up to','<input id="xPUC" type="date">')+
+    ff('Last service date','<input id="xLastService" type="date">')+
+    ff('Next service due','<input id="xNextService" type="date">')+
+    ff('Odometer (km)','<input id="xOdometer" inputmode="numeric" placeholder="km">')+
+    ff('Loan / hypothecation','<input id="xLoan" placeholder="Optional">');
+  if(addCategory==='Property')h=
+    ff('Property type','<select id="xPropertyType"><option>Flat</option><option>House</option><option>Plot</option><option>Commercial</option><option>Agricultural</option><option>Other</option></select>')+
+    ff('Property address','<textarea id="xAddress" rows="2" placeholder="Full address"></textarea>')+
+    ff('Co-owner(s)','<input id="xCoOwners" placeholder="If any">')+
+    ff('Plot / flat number','<input id="xPlotFlat" placeholder="Plot / flat number">')+
+    ff('Area','<input id="xArea" placeholder="Area and unit">')+
+    fs('Purchase & registry')+
+    ff('Purchase date','<input id="xPurchaseDate" type="date">')+
+    ff('Purchase value','<input id="xAmount" inputmode="decimal" placeholder="₹">')+
+    ff('Registration number','<input id="xRegNo" placeholder="Registration number">')+
+    ff('Registry date','<input id="xRegistryDate" type="date">')+
+    ff('Current estimated value','<input id="xCurrentValue" inputmode="decimal" placeholder="₹">')+
+    fs('Other references')+
+    ff('Property tax / important due date','<input id="xReminder" type="date">')+
+    ff('Loan details','<input id="xLoan" placeholder="Optional">')+
+    ff('Electricity consumer number','<input id="xElectricity" placeholder="Consumer number">')+
+    ff('Water connection number','<input id="xWater" placeholder="Connection number">')+
+    ff('Society / association details','<input id="xSociety" placeholder="Optional">');
+  if(addCategory==='Other')h=ff('Description','<input id="xItem" placeholder="Description">')+ff('Issuer / vendor / source','<input id="xVendor" placeholder="Issuer / vendor / source">')+ff('Reminder / expiry','<input id="xReminder" type="date">');
   dynamicFields.innerHTML=h;
   if(addCategory==='Insurance')renderInsuranceSpecific();
 }
 function renderInsuranceSpecific(){
   const box=document.getElementById('insuranceSpecific');if(!box)return;
   const type=xv('xInsuranceFor');let h='';
-  if(type==='Vehicle')h=`<input id="xRegNo" placeholder="Vehicle registration number"><input id="xIDV" inputmode="decimal" placeholder="IDV (₹)"><input id="xEngineNo" placeholder="Engine number"><input id="xChassisNo" placeholder="Chassis number"><input id="xAddOns" placeholder="Add-on covers">`;
-  if(type==='Health')h=`<input id="xCoveredPersons" placeholder="Persons covered"><select id="xHealthPolicyType"><option>Family Floater</option><option>Individual</option></select><input id="xTPA" placeholder="TPA / administrator"><input id="xNetworkNote" placeholder="Cashless network note (optional)">`;
-  if(type==='Life')h=`<input id="xLifeAssured" placeholder="Life assured"><input id="xMaturityDate" type="date"><div class="meta">Maturity date</div>`;
-  if(type==='Travel')h=`<input id="xTravelDestination" placeholder="Destination / trip"><input id="xTravelEnd" type="date"><div class="meta">Travel cover end date</div>`;
-  if(type==='Property')h=`<input id="xPropertyRef" placeholder="Property / address reference">`;
-  if(type==='Jewellery')h=`<input id="xJewelleryRef" placeholder="Jewellery record / item reference">`;
-  if(type==='Appliance / Equipment')h=`<input id="xEquipmentRef" placeholder="Item / model / serial number">`;
+  if(type==='Vehicle')h=fs('Vehicle policy details')+ff('Vehicle registration number','<input id="xRegNo" placeholder="Registration number">')+ff('IDV','<input id="xIDV" inputmode="decimal" placeholder="₹">')+ff('Engine number','<input id="xEngineNo" placeholder="Engine number">')+ff('Chassis number','<input id="xChassisNo" placeholder="Chassis number">')+ff('Add-on covers','<input id="xAddOns" placeholder="Zero dep, RSA, etc.">');
+  if(type==='Health')h=fs('Health policy details')+ff('Persons covered','<input id="xCoveredPersons" placeholder="Names / family members">')+ff('Policy type','<select id="xHealthPolicyType"><option>Family Floater</option><option>Individual</option></select>')+ff('TPA / administrator','<input id="xTPA" placeholder="TPA">')+ff('Cashless network note','<input id="xNetworkNote" placeholder="Optional">');
+  if(type==='Life')h=fs('Life policy details')+ff('Life assured','<input id="xLifeAssured" placeholder="Person covered">')+ff('Maturity date','<input id="xMaturityDate" type="date">');
+  if(type==='Travel')h=fs('Travel policy details')+ff('Destination / trip','<input id="xTravelDestination" placeholder="Destination / trip">')+ff('Travel cover end date','<input id="xTravelEnd" type="date">');
+  if(type==='Property')h=fs('Property policy details')+ff('Property / address reference','<input id="xPropertyRef" placeholder="Property / address">');
+  if(type==='Jewellery')h=fs('Jewellery policy details')+ff('Jewellery record / item reference','<input id="xJewelleryRef" placeholder="Item / invoice / locker reference">');
+  if(type==='Appliance / Equipment')h=fs('Equipment policy details')+ff('Item / model / serial number','<input id="xEquipmentRef" placeholder="Equipment reference">');
   box.innerHTML=h;
 }
 function xv(id){let e=document.getElementById(id);return e?e.value.trim():''}
@@ -779,7 +804,7 @@ async function exportBackup(){let members=await all('members'),documents=await a
 function blobData(b){return new Promise(r=>{let f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)})}
 function dataBlob(s){let [h,b]=s.split(','),m=(h.match(/data:(.*?);base64/)||[])[1]||'application/octet-stream',x=atob(b),a=new Uint8Array(x.length);for(let i=0;i<x.length;i++)a[i]=x.charCodeAt(i);return new Blob([a],{type:m})}
 async function importBackup(){let f=restoreInput.files[0];if(!f)return;try{let p=JSON.parse(await f.text());if(!p.members||!p.documents)throw Error();for(const x of p.members)await put('members',x);for(const x of p.documents)await put('documents',x);for(const x of p.healthResults||[])await put('healthResults',x);for(const x of p.files||[])await put('files',{id:x.id,name:x.name,type:x.type,blob:dataBlob(x.data)});alert('Backup restored.');refreshAll()}catch(e){alert('Invalid backup file.')}restoreInput.value=''}
-window.addEventListener('load',async()=>{await openDB();await defaults();renderHome();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{})});
+window.addEventListener('load',async()=>{await openDB();await defaults();renderHome();if('serviceWorker'in navigator){try{const r=await navigator.serviceWorker.register('sw.js?v=9');await r.update();navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!sessionStorage.getItem('v9reload')){sessionStorage.setItem('v9reload','1');location.reload()}})}catch(e){}}});
 </script>
 </body>
 </html>
