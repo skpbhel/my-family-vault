@@ -1,30 +1,18 @@
-MY FAMILY VAULT — FULL FUNCTIONALITY
+MY FAMILY VAULT — PREMIUM RECORDS v8
 
-Files to replace in GitHub root:
-index.html
-sw.js
-manifest.json
-icon-192.png
-icon-512.png
+Replace all 5 files in GitHub root.
 
-Features:
-- Local IndexedDB storage only for family records, documents, attachments, health values
-- Family profiles
-- Categories: Health, Education, Warranty, Jewellery, Insurance, Certificates, Vehicle, Property, Other
-- View, edit, replace, share/export, delete documents
-- Health text-PDF extraction using pdf.js in the browser
-- Review extracted health values before saving
-- Health overview, trends, reports, comparison
-- Search
-- Reminders using expiry/renewal dates
-- Backup/restore including attachments
-- Offline PWA shell
-
-Privacy:
-No personal records are intentionally sent to GitHub or a backend. The app code is hosted by GitHub Pages; data is stored in Safari IndexedDB. pdf.js is loaded as a library from cdnjs and cached. PDF bytes are processed in the browser, not uploaded to cdnjs.
-
-After uploading:
-1. Wait for GitHub Pages to deploy.
-2. Open https://skpbhel.github.io/my-family-vault/ in Safari.
-3. Pull to refresh.
-4. If old UI persists, remove/re-add the Home Screen app or clear site cache only after taking a backup.
+Checked improvements:
+- Health: retains tolerant Dr Lal PathLabs text-PDF parser + in-app original PDF viewer
+- Insurance: insured for, insured subject, company, policy, validity, cover, premium, nominee, agent, claims contact; conditional Vehicle/Health/Life/Travel/Property/Jewellery/Equipment fields
+- Education: type/title, institute, board, class/course, subject, exam, academic year, marks/max/percentage/grade/rank, roll no., certificate no., issue/validity dates
+- Jewellery: purchase date, metal/type, store, invoice, purity, gross/net weight, diamond carat, stone weight, purchase/current metal rate, making/GST/value, hallmark/HUID, locker; estimated current metal value
+- Warranty: item/category, brand/model/serial, store/invoice/value, purchase/install date, warranty/extended/AMC, service centre, location
+- Certificates: type/name/issuer/no., issue/expiry, status, place, original location, optional number masking
+- Vehicle: type/make/model/reg, engine/chassis, registration/purchase, RC/insurance/PUC/service dates, odometer, loan
+- Property: type/address/co-owners/area, purchase/registry/current value, tax reminder, loan, utility/society refs
+- Multiple attachments; add attachments and replace primary
+- Structured data editable
+- Search works across structured fields
+- Multiple reminder types per record
+- Home portfolio snapshot
