@@ -40,7 +40,7 @@ nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(760px,
 </head>
 <body>
 <div class="app">
-<header><div class="top"><div><div class="brand"><span style="font-size:20px">👋</span><div class="title" id="pageTitle">My Family Vault</div></div><div class="sub" id="pageSub">All important family records in one place · PDF Fix 3 · Lal Parser</div></div><button class="iconbtn" onclick="go('search')">🔍</button></div></header>
+<header><div class="top"><div><div class="brand"><span style="font-size:20px">👋</span><div class="title" id="pageTitle">My Family Vault</div></div><div class="sub" id="pageSub">All important family records in one place · PDF Fix 4 · Tolerant Parser</div></div><button class="iconbtn" onclick="go('search')">🔍</button></div></header>
 <main>
 <section id="home" class="screen active">
   <div class="section">Family quick access</div><div id="homeProfiles" class="profile-strip"></div>
@@ -496,6 +496,61 @@ function parseHealthText(t){
 
   return rows;
 }
+
+function simpleLabFallback(text){
+  const t=String(text||'').replace(/\u00A0/g,' ').replace(/\s+/g,' ');
+  const rows=[];
+  const add=(parameter,value,unit,low,high,rule)=>{
+    const v=Number(value);
+    if(Number.isFinite(v) && !rows.some(r=>r.parameter===parameter))
+      rows.push({parameter,value:v,unit,low,high,rule});
+  };
+
+  // Very tolerant patterns for common lab PDFs. These intentionally ignore
+  // visual row/column positions and only require label -> value -> unit order.
+  let m;
+
+  m=t.match(/(?:HbA1c|HbA1C)[\s\S]{0,500}?(\d+(?:\.\d+)?)\s*%/i);
+  if(m)add('HbA1c',m[1],'%',4,5.6,'range');
+
+  m=t.match(/(?:Estimated\s+average\s+glucose(?:\s*\(eAG\))?|\beAG\b)[\s\S]{0,300}?(\d+(?:\.\d+)?)\s*mg\s*\/\s*dL/i);
+  if(m)add('Estimated Average Glucose',m[1],'mg/dL',null,null,'none');
+
+  m=t.match(/(?:Glucose\s*Fasting|Fasting\s*Glucose)[\s\S]{0,300}?(\d+(?:\.\d+)?)\s*mg\s*\/\s*dL/i);
+  if(m)add('Fasting Glucose',m[1],'mg/dL',70,100,'range');
+
+  m=t.match(/\bCreatinine\b[\s\S]{0,250}?(\d+(?:\.\d+)?)\s*mg\s*\/\s*dL/i);
+  if(m)add('Creatinine',m[1],'mg/dL',0.67,1.17,'range');
+
+  m=t.match(/(?:Cholesterol\s+Total|Total\s+Cholesterol)[\s\S]{0,250}?(\d+(?:\.\d+)?)\s*mg\s*\/\s*dL/i);
+  if(m)add('Total Cholesterol',m[1],'mg/dL',null,200,'max');
+
+  m=t.match(/\bTriglycerides\b[\s\S]{0,250}?(\d+(?:\.\d+)?)\s*mg\s*\/\s*dL/i);
+  if(m)add('Triglycerides',m[1],'mg/dL',null,150,'max');
+
+  m=t.match(/(?:HDL\s+Cholesterol|\bHDL\b)[\s\S]{0,250}?(\d+(?:\.\d+)?)\s*mg\s*\/\s*dL/i);
+  if(m)add('HDL Cholesterol',m[1],'mg/dL',40,null,'min');
+
+  m=t.match(/(?:LDL\s+Cholesterol|\bLDL\b)[\s\S]{0,250}?(\d+(?:\.\d+)?)\s*mg\s*\/\s*dL/i);
+  if(m)add('LDL Cholesterol',m[1],'mg/dL',null,100,'max');
+
+  m=t.match(/\bHemoglobin\b[\s\S]{0,250}?(\d+(?:\.\d+)?)\s*g\s*\/\s*dL/i);
+  if(m)add('Hemoglobin',m[1],'g/dL',13,17,'range');
+
+  m=t.match(/(?:TSH(?:,\s*Ultrasensitive)?|\bTSH\b)[\s\S]{0,250}?(\d+(?:\.\d+)?)\s*(?:µIU\/mL|uIU\/mL|mIU\/L)/i);
+  if(m)add('TSH',m[1],'µIU/mL',0.27,4.2,'range');
+
+  return rows;
+}
+
+function mergeLabResults(primary,fallback){
+  const out=[...(primary||[])];
+  for(const r of fallback||[]){
+    if(!out.some(x=>x.parameter===r.parameter))out.push(r);
+  }
+  return out;
+}
+
 async function extractForReview(id){
   const d=await one('documents',id);
   const f=d?.fileId?await one('files',d.fileId):null;
@@ -506,9 +561,10 @@ async function extractForReview(id){
   }
   try{
     const text=await pdfText(f.blob);
-    const p=parseHealthText(text);
+    const p=mergeLabResults(parseHealthText(text),simpleLabFallback(text));
     if(!p.length){
-      return alert('PDF opened successfully and selectable text was extracted, but no supported lab parameters were recognized. This is a parser-format issue, not an unsupported file.');
+      const preview=text.replace(/\s+/g,' ').slice(0,700);
+      return alert('PDF opened and text was extracted, but no supported lab values were recognized.\n\nExtracted text preview:\n'+preview);
     }
     reviewDocId=id;reviewData=p;
     reviewInfo.innerHTML=`<div class="name">${E(d.title)}</div><div class="meta">${E(d.memberName)} · ${d.date||''} · ${E(d.extra?.lab||'')}</div><div class="meta">${p.length} values detected</div>`;
@@ -522,7 +578,7 @@ function renderReviewRows(){reviewRows.innerHTML=reviewData.map((r,i)=>`<div cla
 function removeReview(i){reviewData.splice(i,1);renderReviewRows()}
 async function confirmReview(){document.querySelectorAll('#reviewRows input').forEach(x=>{let i=Number(x.dataset.i),k=x.dataset.k;if(reviewData[i])reviewData[i][k]=k==='value'?Number(x.value):x.value});let d=await one('documents',reviewDocId),old=(await all('healthResults')).filter(x=>x.documentId===reviewDocId);for(const x of old)await del('healthResults',x.id);for(const r of reviewData)await put('healthResults',{id:'hr-'+reviewDocId+'-'+slug(r.parameter),documentId:reviewDocId,memberId:d.memberId,date:d.date,lab:d.extra?.lab||'',...r});d.processed=true;d.processedCount=reviewData.length;await put('documents',d);reviewModal.classList.add('hidden');refreshAll()}
 function slug(s){return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
-async function processUnprocessed(){let docs=(await all('documents')).filter(x=>x.category==='Health'&&x.memberId===healthPerson.value&&x.fileId&&!x.processed),done=0;for(const d of docs){let f=await one('files',d.fileId);try{let p=parseHealthText(await pdfText(f.blob));if(!p.length)continue;for(const r of p)await put('healthResults',{id:'hr-'+d.id+'-'+slug(r.parameter),documentId:d.id,memberId:d.memberId,date:d.date,lab:d.extra?.lab||'',...r});d.processed=true;d.processedCount=p.length;await put('documents',d);done++}catch(e){}}alert(`Processed ${done} report(s).`);renderHealthAll()}
+async function processUnprocessed(){let docs=(await all('documents')).filter(x=>x.category==='Health'&&x.memberId===healthPerson.value&&x.fileId&&!x.processed),done=0;for(const d of docs){let f=await one('files',d.fileId);try{let raw=await pdfText(f.blob),p=mergeLabResults(parseHealthText(raw),simpleLabFallback(raw));if(!p.length)continue;for(const r of p)await put('healthResults',{id:'hr-'+d.id+'-'+slug(r.parameter),documentId:d.id,memberId:d.memberId,date:d.date,lab:d.extra?.lab||'',...r});d.processed=true;d.processedCount=p.length;await put('documents',d);done++}catch(e){}}alert(`Processed ${done} report(s).`);renderHealthAll()}
 function healthTab(t){['Overview','Trends','Reports','Compare'].forEach(n=>document.getElementById('h'+n).classList.add('hidden'));document.getElementById('h'+t[0].toUpperCase()+t.slice(1)).classList.remove('hidden');['Overview','Trends','Reports','Compare'].forEach(n=>document.getElementById('t'+n).classList.toggle('active',n.toLowerCase()===t));if(t==='trends')prepareTrends();if(t==='compare')prepareCompare()}
 async function prepareHealth(){let m=await all('members'),cur=healthPerson.value;healthPerson.innerHTML=m.filter(x=>x.id!=='household').map(x=>`<option value="${x.id}">${E(x.name)}</option>`).join('');if(cur)healthPerson.value=cur;renderHealthAll()}
 async function renderHealthAll(){if(!healthPerson.value)return;await renderOverview();await renderHealthReports()}
