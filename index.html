@@ -77,20 +77,20 @@ nav button{background:none;border:0;color:#8b98a5;font-size:11px;padding:4px 1px
 <section id="home" class="screen active">
   <div class="section">Family quick access</div>
   <div class="profile-strip">
-    <div class="profile"><div class="avatar avb">👤</div><div class="pname">Me</div></div>
-    <div class="profile"><div class="avatar avp">👤</div><div class="pname">Spouse</div></div>
-    <div class="profile"><div class="avatar avg">👤</div><div class="pname">Child</div></div>
-    <div class="profile"><div class="avatar avy">👥</div><div class="pname">Family / Common</div></div>
+    <button class="profile" style="background:none;border:0;color:white" onclick="openFamilyDocs('Me')"><div class="avatar avb">👤</div><div class="pname">Me</div></button>
+    <button class="profile" style="background:none;border:0;color:white" onclick="openFamilyDocs('Spouse')"><div class="avatar avp">👤</div><div class="pname">Spouse</div></button>
+    <button class="profile" style="background:none;border:0;color:white" onclick="openFamilyDocs('Child')"><div class="avatar avg">👤</div><div class="pname">Child</div></button>
+    <button class="profile" style="background:none;border:0;color:white" onclick="openFamilyDocs('Common')"><div class="avatar avy">👥</div><div class="pname">Family / Common</div></button>
   </div>
 
   <div class="section">Quick access</div>
   <div class="grid2">
     <button class="quick qblue" onclick="go('health')"><div class="qi">💙</div><div class="qn">Health</div><div class="qc">18 reports</div></button>
-    <button class="quick qgreen" onclick="go('documents')"><div class="qi">🎓</div><div class="qn">Education</div><div class="qc">12 records</div></button>
-    <button class="quick qorange" onclick="go('documents')"><div class="qi">🛡️</div><div class="qn">Warranty</div><div class="qc">8 items</div></button>
-    <button class="quick qpurple" onclick="go('documents')"><div class="qi">💍</div><div class="qn">Jewellery</div><div class="qc">6 records</div></button>
-    <button class="quick qteal" onclick="go('documents')"><div class="qi">☂️</div><div class="qn">Insurance</div><div class="qc">5 policies</div></button>
-    <button class="quick qred" onclick="go('documents')"><div class="qi">📁</div><div class="qn">Important Documents</div><div class="qc">9 docs</div></button>
+    <button class="quick qgreen" onclick="openCategory('Education')"><div class="qi">🎓</div><div class="qn">Education</div><div class="qc">12 records</div></button>
+    <button class="quick qorange" onclick="openCategory('Warranty')"><div class="qi">🛡️</div><div class="qn">Warranty</div><div class="qc">8 items</div></button>
+    <button class="quick qpurple" onclick="openCategory('Jewellery')"><div class="qi">💍</div><div class="qn">Jewellery</div><div class="qc">6 records</div></button>
+    <button class="quick qteal" onclick="openCategory('Insurance')"><div class="qi">☂️</div><div class="qn">Insurance</div><div class="qc">5 policies</div></button>
+    <button class="quick qred" onclick="openCategory('Certificates')"><div class="qi">📁</div><div class="qn">Important Documents</div><div class="qc">9 docs</div></button>
   </div>
 
   <div class="section">Upcoming reminders</div>
@@ -110,36 +110,36 @@ nav button{background:none;border:0;color:#8b98a5;font-size:11px;padding:4px 1px
 
 <section id="family" class="screen">
   <div class="top" style="margin-bottom:12px"><div class="section" style="margin:0">My family</div><button class="btn primary" style="width:72px">＋ Add</button></div>
-  <div class="card family-card blue"><div class="family-inner"><div class="avatar avb" style="margin:0">👤</div><div class="family-main"><div class="name" style="font-size:18px">Me</div><div class="meta" style="color:#d6e5f8">👤 Self</div><div class="meta" style="color:#d6e5f8;margin-top:8px">24 Health &nbsp; • &nbsp; 8 Documents</div></div><div>›</div></div></div>
-  <div class="card family-card pink"><div class="family-inner"><div class="avatar avp" style="margin:0">👤</div><div class="family-main"><div class="name" style="font-size:18px">Spouse</div><div class="meta" style="color:#f0d3e0">👩 Spouse</div><div class="meta" style="color:#f0d3e0;margin-top:8px">16 Health &nbsp; • &nbsp; 5 Documents</div></div><div>›</div></div></div>
-  <div class="card family-card green"><div class="family-inner"><div class="avatar avg" style="margin:0">👤</div><div class="family-main"><div class="name" style="font-size:18px">Child</div><div class="meta" style="color:#d9f0d6">👦 Child</div><div class="meta" style="color:#d9f0d6;margin-top:8px">6 Health &nbsp; • &nbsp; 15 Education</div></div><div>›</div></div></div>
-  <div class="card family-card gold"><div class="family-inner"><div class="avatar avy" style="margin:0">👥</div><div class="family-main"><div class="name" style="font-size:18px">Family / Common</div><div class="meta" style="color:#f3e8ca">Appliances &nbsp; • &nbsp; Jewellery<br>Property &nbsp; • &nbsp; Vehicle<br>Insurance &nbsp; • &nbsp; Certificates</div></div><div>›</div></div></div>
+  <button class="card family-card blue full" style="color:white;text-align:left" onclick="openFamilyDocs('Me')"><div class="family-inner"><div class="avatar avb" style="margin:0">👤</div><div class="family-main"><div class="name" style="font-size:18px">Me</div><div class="meta" style="color:#d6e5f8">👤 Self</div><div class="meta" style="color:#d6e5f8;margin-top:8px">24 Health &nbsp; • &nbsp; 8 Documents</div></div><div>›</div></div></button>
+  <button class="card family-card pink full" style="color:white;text-align:left" onclick="openFamilyDocs('Spouse')"><div class="family-inner"><div class="avatar avp" style="margin:0">👤</div><div class="family-main"><div class="name" style="font-size:18px">Spouse</div><div class="meta" style="color:#f0d3e0">👩 Spouse</div><div class="meta" style="color:#f0d3e0;margin-top:8px">16 Health &nbsp; • &nbsp; 5 Documents</div></div><div>›</div></div></button>
+  <button class="card family-card green full" style="color:white;text-align:left" onclick="openFamilyDocs('Child')"><div class="family-inner"><div class="avatar avg" style="margin:0">👤</div><div class="family-main"><div class="name" style="font-size:18px">Child</div><div class="meta" style="color:#d9f0d6">👦 Child</div><div class="meta" style="color:#d9f0d6;margin-top:8px">6 Health &nbsp; • &nbsp; 15 Education</div></div><div>›</div></div></button>
+  <button class="card family-card gold full" style="color:white;text-align:left" onclick="openFamilyDocs('Common')"><div class="family-inner"><div class="avatar avy" style="margin:0">👥</div><div class="family-main"><div class="name" style="font-size:18px">Family / Common</div><div class="meta" style="color:#f3e8ca">Appliances &nbsp; • &nbsp; Jewellery<br>Property &nbsp; • &nbsp; Vehicle<br>Insurance &nbsp; • &nbsp; Certificates</div></div><div>›</div></div></button>
 </section>
 
 <section id="documents" class="screen">
   <div class="top"><div class="section" style="margin:0">📁 Documents</div><button class="btn primary" style="width:72px" onclick="openAdd()">＋ Add</button></div>
   <div class="search" style="margin-top:10px"><input placeholder="Search documents..."><button class="iconbtn">☷</button></div>
-  <div class="filters"><button class="pill active">All</button><button class="pill">Health</button><button class="pill">Education</button><button class="pill">Insurance</button><button class="pill">Warranty</button><button class="pill">Jewellery</button></div>
+  <div class="filters"><button class="pill active" onclick="selectPill(this,'All')">All</button><button class="pill" onclick="selectPill(this,'Health')">Health</button><button class="pill" onclick="selectPill(this,'Education')">Education</button><button class="pill" onclick="selectPill(this,'Insurance')">Insurance</button><button class="pill" onclick="selectPill(this,'Warranty')">Warranty</button><button class="pill" onclick="selectPill(this,'Jewellery')">Jewellery</button></div>
 
   <div class="section">Categories</div>
   <div class="categories">
-    <button class="cat">💙 Health</button><button class="cat">🎓 Education</button><button class="cat">🛡️ Insurance</button>
-    <button class="cat">🛡 Warranty</button><button class="cat">💍 Jewellery</button><button class="cat">📜 Certificates</button>
-    <button class="cat">🚙 Vehicle</button><button class="cat">🏡 Property</button><button class="cat">⬛ Other</button>
+    <button class="cat" onclick="openCategory('Health')">💙 Health</button><button class="cat" onclick="openCategory('Education')">🎓 Education</button><button class="cat" onclick="openCategory('Insurance')">🛡️ Insurance</button>
+    <button class="cat" onclick="openCategory('Warranty')">🛡 Warranty</button><button class="cat" onclick="openCategory('Jewellery')">💍 Jewellery</button><button class="cat" onclick="openCategory('Certificates')">📜 Certificates</button>
+    <button class="cat" onclick="openCategory('Vehicle')">🚙 Vehicle</button><button class="cat" onclick="openCategory('Property')">🏡 Property</button><button class="cat" onclick="openCategory('Other')">⬛ Other</button>
   </div>
 
   <div class="section">Recent documents</div>
   <div class="card doc">
     <div class="doctop"><div class="docicon">PDF</div><div class="docmain"><div class="name">Blood Test Report</div><div class="meta">Me</div><div class="meta">20 Aug 2026 &nbsp;•&nbsp; Dr Lal PathLabs</div><div class="tags"><span class="tag">18 parameters extracted</span></div></div></div>
-    <div class="actions"><button class="btn primary">View</button><button class="btn secondary">Edit</button><button class="btn secondary" onclick="openMenu('Blood Test Report')">•••</button></div>
+    <div class="actions"><button class="btn primary" onclick="demoView()">View</button><button class="btn secondary" onclick="demoEdit()">Edit</button><button class="btn secondary" onclick="openMenu('Blood Test Report')">•••</button></div>
   </div>
   <div class="card doc">
     <div class="doctop"><div class="docicon">PDF</div><div class="docmain"><div class="name">JEE Test Report</div><div class="meta">Child</div><div class="meta">18 Aug 2026</div></div></div>
-    <div class="actions"><button class="btn primary">View</button><button class="btn secondary">Edit</button><button class="btn secondary" onclick="openMenu('JEE Test Report')">•••</button></div>
+    <div class="actions"><button class="btn primary" onclick="demoView()">View</button><button class="btn secondary" onclick="demoEdit()">Edit</button><button class="btn secondary" onclick="openMenu('JEE Test Report')">•••</button></div>
   </div>
   <div class="card doc">
     <div class="doctop"><div class="docicon" style="color:#2563eb">🧾</div><div class="docmain"><div class="name">Gold Purchase Invoice</div><div class="meta">Family / Common</div><div class="meta">11 Aug 2026 &nbsp;•&nbsp; Tanishq</div></div></div>
-    <div class="actions"><button class="btn primary">View</button><button class="btn secondary">Edit</button><button class="btn secondary" onclick="openMenu('Gold Purchase Invoice')">•••</button></div>
+    <div class="actions"><button class="btn primary" onclick="demoView()">View</button><button class="btn secondary" onclick="demoEdit()">Edit</button><button class="btn secondary" onclick="openMenu('Gold Purchase Invoice')">•••</button></div>
   </div>
 </section>
 
@@ -202,9 +202,9 @@ nav button{background:none;border:0;color:#8b98a5;font-size:11px;padding:4px 1px
 <section id="search" class="screen">
   <div class="top"><div class="section" style="margin:0">🔍 Search</div><button class="iconbtn">🔔</button></div>
   <div class="search" style="margin-top:10px"><input placeholder="Search across documents, values, notes..."></div>
-  <div class="filters"><button class="pill active">All</button><button class="pill">Documents</button><button class="pill">Health</button><button class="pill">Reminders</button><button class="pill">Notes</button></div>
+  <div class="filters"><button class="pill active" onclick="searchPill(this)">All</button><button class="pill" onclick="searchPill(this)">Documents</button><button class="pill" onclick="searchPill(this)">Health</button><button class="pill" onclick="searchPill(this)">Reminders</button><button class="pill" onclick="searchPill(this)">Notes</button></div>
   <div class="section">Suggested searches</div>
-  <div class="filters" style="flex-wrap:wrap;overflow:visible"><button class="pill">Blood test reports</button><button class="pill">Insurance papers</button><button class="pill">Warranty</button><button class="pill">School reports</button><button class="pill">Gold invoices</button><button class="pill">Property papers</button></div>
+  <div class="filters" style="flex-wrap:wrap;overflow:visible"><button class="pill" onclick="suggestSearch('Blood test reports')">Blood test reports</button><button class="pill" onclick="suggestSearch('Insurance papers')">Insurance papers</button><button class="pill" onclick="suggestSearch('Warranty')">Warranty</button><button class="pill" onclick="suggestSearch('School reports')">School reports</button><button class="pill" onclick="suggestSearch('Gold invoices')">Gold invoices</button><button class="pill" onclick="suggestSearch('Property papers')">Property papers</button></div>
 
   <div class="section">Upcoming reminders</div>
   <div class="card pad">
@@ -214,7 +214,7 @@ nav button{background:none;border:0;color:#8b98a5;font-size:11px;padding:4px 1px
   </div>
 
   <div class="section">Backup & restore</div>
-  <div class="backups"><button class="backup green"><div style="font-size:24px">💾</div><div class="name" style="margin-top:8px">Backup Now</div><div class="meta" style="color:#d9f0df">Last backup: 18 Aug 2026</div></button><button class="backup purple"><div style="font-size:24px">☁️</div><div class="name" style="margin-top:8px">Restore</div><div class="meta" style="color:#eadcf8">Restore from backup</div></button></div>
+  <div class="backups"><button class="backup green" onclick="alert('Backup will be connected when local data functions are enabled.')"><div style="font-size:24px">💾</div><div class="name" style="margin-top:8px">Backup Now</div><div class="meta" style="color:#d9f0df">Last backup: 18 Aug 2026</div></button><button class="backup purple" onclick="alert('Restore will be connected when local data functions are enabled.')"><div style="font-size:24px">☁️</div><div class="name" style="margin-top:8px">Restore</div><div class="meta" style="color:#eadcf8">Restore from backup</div></button></div>
 </section>
 </main>
 </div>
@@ -249,7 +249,7 @@ nav button{background:none;border:0;color:#8b98a5;font-size:11px;padding:4px 1px
   <div id="a3" class="hidden"><div class="section">Details</div><div style="display:grid;gap:9px"><input placeholder="Document title"><input type="date" value="2026-08-24"><input type="file" accept="application/pdf,image/*"><input placeholder="Laboratory / institution / vendor"><textarea rows="3" placeholder="Notes"></textarea><button class="btn primary full" onclick="closeAdd()">Save document</button></div></div>
 </div></div>
 
-<div id="menuModal" class="modal hidden"><div class="sheet"><div class="name" id="menuTitle">Document</div><div style="display:grid;gap:8px;margin-top:12px"><button class="btn secondary full">Replace attachment</button><button class="btn secondary full">Move category</button><button class="btn secondary full">Export / Share</button><button class="btn danger full">Delete</button><button class="btn secondary full" onclick="closeMenu()">Cancel</button></div></div></div>
+<div id="menuModal" class="modal hidden"><div class="sheet"><div class="name" id="menuTitle">Document</div><div style="display:grid;gap:8px;margin-top:12px"><button class="btn secondary full" onclick="menuAction('Replace attachment')">Replace attachment</button><button class="btn secondary full" onclick="menuAction('Move category')">Move category</button><button class="btn secondary full" onclick="menuAction('Export / Share')">Export / Share</button><button class="btn danger full" onclick="menuAction('Delete')">Delete</button><button class="btn secondary full" onclick="closeMenu()">Cancel</button></div></div></div>
 
 <script>
 const titles={home:['Good morning','All important family records in one place'],family:['My Family','Family profiles'],documents:['Documents','Your family document library'],health:['Health','Reports, trends and comparison'],search:['Search','Search, reminders and backup']};
@@ -260,6 +260,51 @@ function openAdd(){addModal.classList.remove('hidden');step(1)}function closeAdd
 function step(n){[1,2,3].forEach(i=>{document.getElementById('a'+i).classList.toggle('hidden',i!==n);document.getElementById('s'+i).classList.toggle('active',i<=n)})}
 function pick(el){el.parentElement.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));el.classList.add('selected')}
 function openMenu(t){menuTitle.textContent=t;menuModal.classList.remove('hidden')}function closeMenu(){menuModal.classList.add('hidden')}
+
+function openCategory(cat){
+  go(cat==='Health'?'health':'documents');
+  if(cat!=='Health'){
+    setTimeout(()=>{
+      const pills=document.querySelectorAll('#documents .filters .pill');
+      pills.forEach(p=>p.classList.toggle('active',p.textContent.trim()===cat));
+    },0);
+  }
+}
+function openFamilyDocs(person){
+  go('documents');
+  setTimeout(()=>{
+    pageSub.textContent=person==='Common'?'Family / Common documents':person+' documents';
+  },0);
+}
+function selectPill(el,cat){
+  el.parentElement.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  pageSub.textContent=cat==='All'?'Your family document library':cat+' documents';
+}
+function searchPill(el){
+  el.parentElement.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+}
+function suggestSearch(q){
+  const box=document.querySelector('#search .search input');
+  if(box) box.value=q;
+}
+function demoView(){
+  alert('Document viewer will open the locally stored PDF/image in the fully wired version.');
+}
+function demoEdit(){
+  alert('Edit screen will be connected to the local document database in the fully wired version.');
+}
+function menuAction(action){
+  if(action==='Delete'){
+    if(confirm('Delete this document?')) alert('Delete action will remove the local file after the database is connected.');
+  }else{
+    alert(action+' will be connected to the local document database.');
+  }
+  closeMenu();
+}
+
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{});}
 </script>
 </body>
 </html>
