@@ -40,7 +40,7 @@ nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(760px,
 </head>
 <body>
 <div class="app">
-<header><div class="top"><div><div class="brand"><span style="font-size:20px">👋</span><div class="title" id="pageTitle">My Family Vault</div></div><div class="sub" id="pageSub">All important family records in one place</div></div><button class="iconbtn" onclick="go('search')">🔍</button></div></header>
+<header><div class="top"><div><div class="brand"><span style="font-size:20px">👋</span><div class="title" id="pageTitle">My Family Vault</div></div><div class="sub" id="pageSub">All important family records in one place · PDF Fix 2 · Viewer</div></div><button class="iconbtn" onclick="go('search')">🔍</button></div></header>
 <main>
 <section id="home" class="screen active">
   <div class="section">Family quick access</div><div id="homeProfiles" class="profile-strip"></div>
@@ -96,16 +96,30 @@ nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(760px,
   <div class="stepbar"><div id="s1" class="step active">1</div><div class="line"></div><div id="s2" class="step">2</div><div class="line"></div><div id="s3" class="step">3</div></div>
   <div id="a1"><div class="section">Who is this for?</div><div class="choicegrid" id="addMemberChoices"></div><button class="btn primary full" style="margin-top:12px" onclick="step(2)">Continue →</button></div>
   <div id="a2" class="hidden"><div class="section">What type of document?</div><div class="choicegrid" id="addCategoryChoices"></div><button class="btn primary full" style="margin-top:12px" onclick="step(3)">Continue →</button></div>
-  <div id="a3" class="hidden"><div class="section">Details</div><div style="display:grid;gap:9px"><input id="addTitle" placeholder="Document title"><input id="addDate" type="date"><input id="addFile" type="file" accept="application/pdf,image/*"><div id="dynamicFields" style="display:grid;gap:9px"></div><textarea id="addNotes" rows="3" placeholder="Notes"></textarea><button class="btn primary full" onclick="saveDocument()">Save document</button><div class="meta" id="addMsg"></div></div></div>
+  <div id="a3" class="hidden"><div class="section">Details</div><div style="display:grid;gap:9px"><input id="addTitle" placeholder="Document title"><input id="addDate" type="date"><input id="addFile" type="file" accept=".pdf,application/pdf,image/*"><div id="dynamicFields" style="display:grid;gap:9px"></div><textarea id="addNotes" rows="3" placeholder="Notes"></textarea><button class="btn primary full" onclick="saveDocument()">Save document</button><div class="meta" id="addMsg"></div></div></div>
 </div></div>
 
 <div id="memberModal" class="modal hidden"><div class="sheet"><div class="top"><div class="name" id="memberModalTitle">Add family member</div><button class="iconbtn" onclick="closeMemberModal()">✕</button></div><div style="display:grid;gap:9px;margin-top:12px"><input id="memberName" placeholder="Name"><select id="memberRelation"><option>Self</option><option>Spouse</option><option>Son</option><option>Daughter</option><option>Parent</option><option>Other</option></select><input id="memberDob" type="date"><button class="btn primary full" onclick="saveMember()">Save</button></div></div></div>
 
-<div id="docModal" class="modal hidden"><div class="sheet"><div class="top"><div class="name" id="docModalTitle">Document</div><button class="iconbtn" onclick="closeDocMenu()">✕</button></div><div style="display:grid;gap:8px;margin-top:12px"><button class="btn secondary full" onclick="viewCurrentDoc()">View</button><button class="btn secondary full" onclick="editCurrentDoc()">Edit details</button><button class="btn secondary full" onclick="replaceInput.click()">Replace attachment</button><button class="btn secondary full" onclick="shareCurrentDoc()">Export / Share</button><button class="btn danger full" onclick="deleteCurrentDoc()">Delete</button></div></div></div><input id="replaceInput" class="hidden" type="file" accept="application/pdf,image/*" onchange="replaceCurrentAttachment()">
+<div id="docModal" class="modal hidden"><div class="sheet"><div class="top"><div class="name" id="docModalTitle">Document</div><button class="iconbtn" onclick="closeDocMenu()">✕</button></div><div style="display:grid;gap:8px;margin-top:12px"><button class="btn secondary full" onclick="viewCurrentDoc()">View</button><button class="btn secondary full" onclick="editCurrentDoc()">Edit details</button><button class="btn secondary full" onclick="replaceInput.click()">Replace attachment</button><button class="btn secondary full" onclick="shareCurrentDoc()">Export / Share</button><button class="btn danger full" onclick="deleteCurrentDoc()">Delete</button></div></div></div><input id="replaceInput" class="hidden" type="file" accept=".pdf,application/pdf,image/*" onchange="replaceCurrentAttachment()">
 
 <div id="editModal" class="modal hidden"><div class="sheet"><div class="top"><div class="name">Edit document</div><button class="iconbtn" onclick="editModal.classList.add('hidden')">✕</button></div><div style="display:grid;gap:9px;margin-top:12px"><input id="editTitle"><input id="editDate" type="date"><select id="editPerson"></select><select id="editCategory"></select><input id="editReminder" type="date"><textarea id="editNotes" rows="3"></textarea><button class="btn primary full" onclick="saveEdit()">Save changes</button></div></div></div>
 
 <div id="reviewModal" class="modal hidden"><div class="sheet"><div class="top"><div><div class="name">Review extracted health results</div><div class="meta">Confirm before adding to trends</div></div><button class="iconbtn" onclick="reviewModal.classList.add('hidden')">✕</button></div><div id="reviewInfo" class="card pad" style="margin-top:10px"></div><div style="margin-top:10px"><div class="review-grid"><b>Parameter</b><b>Value</b><b>Unit</b><b></b></div><div id="reviewRows"></div></div><button class="btn primary full" style="margin-top:10px" onclick="confirmReview()">Confirm & Save</button></div></div>
+
+
+<div id="viewerModal" class="modal hidden">
+  <div class="sheet" style="height:94vh;max-height:94vh;padding:10px;display:flex;flex-direction:column">
+    <div class="top" style="margin-bottom:8px">
+      <div>
+        <div class="name" id="viewerTitle">Document</div>
+        <div class="meta" id="viewerMeta"></div>
+      </div>
+      <button class="iconbtn" onclick="closeViewer()">✕</button>
+    </div>
+    <div id="viewerBody" style="flex:1;min-height:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#000"></div>
+  </div>
+</div>
 
 <script>
 const DB='MyFamilyVaultDB', VER=5, CATS=['Health','Education','Warranty','Jewellery','Insurance','Certificates','Vehicle','Property','Other'];
@@ -138,7 +152,35 @@ function openCategory(c){docCategoryFilter=c;go(c==='Health'?'health':'documents
 async function visibleDocs(){let d=await all('documents'),q=(docSearch.value||'').toLowerCase(),p=docPersonFilter.value||'All';if(docCategoryFilter!=='All')d=d.filter(x=>x.category===docCategoryFilter);if(p!=='All')d=d.filter(x=>x.memberId===p);if(q)d=d.filter(x=>JSON.stringify(x).toLowerCase().includes(q));return d.sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.createdAt||0)-(a.createdAt||0))}
 function docCard(x){let ft=(x.fileName||'').toLowerCase().endsWith('.pdf')?'PDF':x.fileName?'IMG':'';return `<div class="card doc"><div class="doctop"><div class="docicon" style="${ft==='PDF'?'':'color:#2563eb'}">${ft||icon(x.category)}</div><div class="docmain"><div class="name">${E(x.title)}</div><div class="meta">${E(x.memberName)} · ${E(x.category)}</div><div class="meta">${x.date||''}${x.extra?.lab?' • '+E(x.extra.lab):x.extra?.vendor?' • '+E(x.extra.vendor):''}</div><div class="tags">${x.processed?`<span class="tag">${x.processedCount||0} values extracted</span>`:''}${x.reminderDate?`<span class="tag">Due ${x.reminderDate}</span>`:''}</div></div></div><div class="actions"><button class="btn primary" onclick="viewDoc('${x.id}')">View</button><button class="btn secondary" onclick="openEdit('${x.id}')">Edit</button><button class="btn secondary" onclick="openDocMenu('${x.id}')">•••</button></div></div>`}
 async function renderDocuments(){let d=await visibleDocs();documentList.innerHTML=d.length?d.map(docCard).join(''):'<div class="card pad"><div class="meta">No matching documents.</div></div>'}
-async function viewDoc(id){let d=await one('documents',id);if(!d?.fileId)return alert('No attachment saved.');let f=await one('files',d.fileId);if(!f?.blob)return alert('Attachment not found.');let u=URL.createObjectURL(f.blob);window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),60000)}
+let currentViewerUrl=null;
+async function viewDoc(id){
+  const d=await one('documents',id);
+  if(!d?.fileId)return alert('No attachment is saved for this document.');
+  const f=await one('files',d.fileId);
+  if(!f?.blob)return alert('The stored attachment could not be found.');
+
+  closeViewer();
+  currentViewerUrl=URL.createObjectURL(f.blob);
+  viewerTitle.textContent=d.title||f.name||'Document';
+  viewerMeta.textContent=f.name||'Original attachment';
+
+  const type=(f.type||'').toLowerCase();
+  const name=(f.name||'').toLowerCase();
+
+  if(type.includes('pdf')||name.endsWith('.pdf')){
+    viewerBody.innerHTML='<iframe src="'+currentViewerUrl+'" title="Original PDF" style="width:100%;height:100%;border:0;background:white"></iframe>';
+  }else if(type.startsWith('image/')||/\.(png|jpe?g|webp|gif|heic)$/i.test(name)){
+    viewerBody.innerHTML='<div style="width:100%;height:100%;overflow:auto;display:grid;place-items:center;background:#111"><img src="'+currentViewerUrl+'" alt="Original document" style="max-width:100%;height:auto;display:block"></div>';
+  }else{
+    viewerBody.innerHTML='<div style="padding:20px;color:white">This attachment type cannot be previewed inside the app.</div>';
+  }
+  viewerModal.classList.remove('hidden');
+}
+function closeViewer(){
+  if(typeof viewerModal!=='undefined')viewerModal.classList.add('hidden');
+  if(typeof viewerBody!=='undefined')viewerBody.innerHTML='';
+  if(currentViewerUrl){URL.revokeObjectURL(currentViewerUrl);currentViewerUrl=null}
+}
 function openDocMenu(id){currentDocId=id;one('documents',id).then(d=>{docModalTitle.textContent=d?.title||'Document';docModal.classList.remove('hidden')})}
 function closeDocMenu(){docModal.classList.add('hidden')}
 function viewCurrentDoc(){closeDocMenu();viewDoc(currentDocId)}
@@ -157,7 +199,12 @@ function pickAddCategory(c,el){addCategory=c;el.parentElement.querySelectorAll('
 function step(n){if(n===2&&!addPerson)return alert('Choose a family member.');if(n===3&&!addCategory)return alert('Choose a document type.');[1,2,3].forEach(i=>{document.getElementById('a'+i).classList.toggle('hidden',i!==n);document.getElementById('s'+i).classList.toggle('active',i<=n)});if(n===3){addDate.value=new Date().toISOString().slice(0,10);buildDynamicFields()}}
 function buildDynamicFields(){let h='';if(addCategory==='Health')h='<input id="xLab" placeholder="Laboratory / hospital">';if(addCategory==='Education')h='<input id="xSchool" placeholder="School / institute"><input id="xExam" placeholder="Class / exam / test"><input id="xScore" placeholder="Marks / percentage / grade"><input id="xRank" placeholder="Rank (optional)">';if(addCategory==='Warranty')h='<input id="xVendor" placeholder="Brand / seller"><input id="xItem" placeholder="Item / model / serial number"><input id="xAmount" placeholder="Purchase amount"><input id="xReminder" type="date"><div class="meta">Warranty expiry</div>';if(addCategory==='Jewellery')h='<input id="xVendor" placeholder="Jeweller"><input id="xItem" placeholder="Item description"><input id="xDetails" placeholder="Weight / purity / hallmark"><input id="xAmount" placeholder="Amount">';if(addCategory==='Insurance')h='<input id="xVendor" placeholder="Insurer"><input id="xItem" placeholder="Policy number"><input id="xAmount" placeholder="Premium / sum insured"><input id="xReminder" type="date"><div class="meta">Renewal / expiry</div>';if(addCategory==='Certificates')h='<input id="xVendor" placeholder="Issuer / institution"><input id="xItem" placeholder="Certificate / registration number"><input id="xReminder" type="date"><div class="meta">Expiry if applicable</div>';if(addCategory==='Vehicle')h='<input id="xItem" placeholder="Vehicle / registration number"><input id="xReminder" type="date"><div class="meta">Expiry / renewal</div>';if(addCategory==='Property')h='<input id="xItem" placeholder="Property / document description"><input id="xDetails" placeholder="Registration / reference number">';dynamicFields.innerHTML=h}
 function xv(id){let e=document.getElementById(id);return e?e.value.trim():''}
-async function saveDocument(){let m=await one('members',addPerson);if(!m)return;let f=addFile.files[0],fid=null;if(f){fid='f'+Date.now();await put('files',{id:fid,name:f.name,type:f.type,blob:f})}let extra={};if(addCategory==='Health')extra={lab:xv('xLab')};if(addCategory==='Education')extra={school:xv('xSchool'),exam:xv('xExam'),score:xv('xScore'),rank:xv('xRank')};if(['Warranty','Jewellery','Insurance','Certificates','Vehicle','Property'].includes(addCategory))extra={vendor:xv('xVendor'),item:xv('xItem'),amount:xv('xAmount'),details:xv('xDetails')};let d={id:'d'+Date.now(),memberId:m.id,memberName:m.name,category:addCategory,title:addTitle.value.trim()||addCategory+' document',date:addDate.value,fileId:fid,fileName:f?.name||'',notes:addNotes.value,reminderDate:xv('xReminder')||null,extra,createdAt:Date.now(),processed:false};await put('documents',d);closeAdd();refreshAll();if(addCategory==='Health'&&f&&(f.type==='application/pdf'||f.name.toLowerCase().endsWith('.pdf')))setTimeout(()=>extractForReview(d.id),200)}
+async function saveDocument(){let m=await one('members',addPerson);if(!m)return;let f=addFile.files[0],fid=null;if(f){fid='f'+Date.now();await put('files',{id:fid,name:f.name,type:f.type,blob:f})}let extra={};if(addCategory==='Health')extra={lab:xv('xLab')};if(addCategory==='Education')extra={school:xv('xSchool'),exam:xv('xExam'),score:xv('xScore'),rank:xv('xRank')};if(['Warranty','Jewellery','Insurance','Certificates','Vehicle','Property'].includes(addCategory))extra={vendor:xv('xVendor'),item:xv('xItem'),amount:xv('xAmount'),details:xv('xDetails')};let d={id:'d'+Date.now(),memberId:m.id,memberName:m.name,category:addCategory,title:addTitle.value.trim()||addCategory+' document',date:addDate.value,fileId:fid,fileName:f?.name||'',notes:addNotes.value,reminderDate:xv('xReminder')||null,extra,createdAt:Date.now(),processed:false};await put('documents',d);closeAdd();refreshAll();if(addCategory==='Health'&&f){
+  setTimeout(async()=>{
+    if(await isPdfLike(f))extractForReview(d.id);
+    else alert('Health report saved, but this attachment is not recognized as a PDF. Please choose the original .pdf file.');
+  },200)
+}}
 const TESTS=[
 ['HbA1c',/HbA1c(?:,? WHOLE BLOOD)?[^0-9]{0,120}(\d+(?:\.\d+)?)\s*%/i,'%',4,5.6,'range'],
 ['Estimated Average Glucose',/(?:Estimated average glucose|eAG)[^0-9]{0,80}(\d+(?:\.\d+)?)\s*mg\/dL/i,'mg/dL',null,null,'none'],
@@ -192,9 +239,74 @@ const TESTS=[
 ['LDL Cholesterol',/LDL Cholesterol,?\s*Direct[^0-9]{0,80}(\d+(?:\.\d+)?)\s*mg\/dL/i,'mg/dL',null,100,'max'],
 ['Non-HDL Cholesterol',/Non-HDL Cholesterol[^0-9]{0,80}(\d+(?:\.\d+)?)\s*mg\/dL/i,'mg/dL',null,130,'max']
 ];
-async function pdfText(blob){if(typeof pdfjsLib==='undefined')throw Error('PDF engine unavailable');pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';let pdf=await pdfjsLib.getDocument({data:await blob.arrayBuffer()}).promise,t='';for(let i=1;i<=pdf.numPages;i++){let p=await pdf.getPage(i),c=await p.getTextContent();t+=' '+c.items.map(x=>x.str).join(' ')}return t}
+async function isPdfLike(file){
+  if(!file)return false;
+  const name=(file.name||'').toLowerCase();
+  const type=(file.type||'').toLowerCase();
+  if(name.endsWith('.pdf')||type.includes('pdf'))return true;
+  try{
+    const sig=new Uint8Array(await file.slice(0,5).arrayBuffer());
+    return String.fromCharCode(...sig)==='%PDF-';
+  }catch(e){return false}
+}
+async function ensurePdfJs(){
+  if(typeof pdfjsLib!=='undefined')return;
+  const urls=[
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js',
+    'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js'
+  ];
+  for(const url of urls){
+    try{
+      await new Promise((res,rej)=>{
+        const s=document.createElement('script');
+        s.src=url;s.async=true;s.onload=res;s.onerror=()=>rej(new Error('load failed'));
+        document.head.appendChild(s);
+      });
+      if(typeof pdfjsLib!=='undefined')return;
+    }catch(e){}
+  }
+  throw new Error('PDF reader library could not be loaded. Connect to the internet once, reopen the app, and try again.');
+}
+async function pdfText(blob){
+  await ensurePdfJs();
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  let bytes;
+  try{bytes=await blob.arrayBuffer()}catch(e){throw new Error('Safari could not read the selected file.')}
+  let pdf;
+  try{pdf=await pdfjsLib.getDocument({data:bytes,disableFontFace:true}).promise}
+  catch(e){throw new Error('PDF.js could not open this PDF. It may be damaged or password-protected.')}
+  let t='';
+  for(let i=1;i<=pdf.numPages;i++){
+    const p=await pdf.getPage(i);
+    const c=await p.getTextContent();
+    t+=' '+c.items.map(x=>x.str).join(' ');
+  }
+  if(!t.trim())throw new Error('This PDF has no selectable text. It may be a scanned/image-only report.');
+  return t;
+}
 function parseHealthText(t){return TESTS.flatMap(x=>{let m=t.match(x[1]);return m?[{parameter:x[0],value:Number(m[1]),unit:x[2],low:x[3],high:x[4],rule:x[5]}]:[]})}
-async function extractForReview(id){let d=await one('documents',id),f=d?.fileId?await one('files',d.fileId):null;if(!f)return alert('No PDF attachment.');try{let p=parseHealthText(await pdfText(f.blob));if(!p.length)return alert('No supported selectable-text lab values were detected. The PDF may be scanned/image-only or use a different layout.');reviewDocId=id;reviewData=p;reviewInfo.innerHTML=`<div class="name">${E(d.title)}</div><div class="meta">${E(d.memberName)} · ${d.date||''} · ${E(d.extra?.lab||'')}</div><div class="meta">${p.length} values detected</div>`;renderReviewRows();reviewModal.classList.remove('hidden')}catch(e){alert('Could not read this PDF locally. The original file is still saved.')}}
+async function extractForReview(id){
+  const d=await one('documents',id);
+  const f=d?.fileId?await one('files',d.fileId):null;
+  if(!f?.blob)return alert('No attachment is stored for this report.');
+  const pseudoFile=new File([f.blob],f.name||'report.pdf',{type:f.type||''});
+  if(!(await isPdfLike(pseudoFile))){
+    return alert('This attachment is not recognized as a PDF. Safari may have supplied an unusual file type. Please re-select the original .pdf file.');
+  }
+  try{
+    const text=await pdfText(f.blob);
+    const p=parseHealthText(text);
+    if(!p.length){
+      return alert('PDF opened successfully and selectable text was extracted, but no supported lab parameters were recognized. This is a parser-format issue, not an unsupported file.');
+    }
+    reviewDocId=id;reviewData=p;
+    reviewInfo.innerHTML=`<div class="name">${E(d.title)}</div><div class="meta">${E(d.memberName)} · ${d.date||''} · ${E(d.extra?.lab||'')}</div><div class="meta">${p.length} values detected</div>`;
+    renderReviewRows();
+    reviewModal.classList.remove('hidden');
+  }catch(e){
+    alert('PDF processing failed: '+(e?.message||'Unknown error')+'\n\nThe original report is still safely stored in the app.');
+  }
+}
 function renderReviewRows(){reviewRows.innerHTML=reviewData.map((r,i)=>`<div class="review-grid"><input data-i="${i}" data-k="parameter" value="${E(r.parameter)}"><input data-i="${i}" data-k="value" type="number" step="any" value="${r.value}"><input data-i="${i}" data-k="unit" value="${E(r.unit)}"><button class="btn danger" onclick="removeReview(${i})">×</button></div>`).join('')}
 function removeReview(i){reviewData.splice(i,1);renderReviewRows()}
 async function confirmReview(){document.querySelectorAll('#reviewRows input').forEach(x=>{let i=Number(x.dataset.i),k=x.dataset.k;if(reviewData[i])reviewData[i][k]=k==='value'?Number(x.value):x.value});let d=await one('documents',reviewDocId),old=(await all('healthResults')).filter(x=>x.documentId===reviewDocId);for(const x of old)await del('healthResults',x.id);for(const r of reviewData)await put('healthResults',{id:'hr-'+reviewDocId+'-'+slug(r.parameter),documentId:reviewDocId,memberId:d.memberId,date:d.date,lab:d.extra?.lab||'',...r});d.processed=true;d.processedCount=reviewData.length;await put('documents',d);reviewModal.classList.add('hidden');refreshAll()}
