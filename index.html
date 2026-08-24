@@ -62,7 +62,7 @@ body{font-size:17px}
 </head>
 <body>
 <div class="app">
-<header><div class="top"><div><div class="brand"><span style="font-size:20px">👋</span><div class="title" id="pageTitle">My Family Vault</div></div><div class="sub" id="pageSub">All important family records in one place</div><div class="build-badge" id="buildBadge">Structured Records v9</div></div><button class="iconbtn" onclick="go('search')">🔍</button></div></header>
+<header><div class="top"><div><div class="brand"><span style="font-size:20px">👋</span><div class="title" id="pageTitle">My Family Vault</div></div><div class="sub" id="pageSub">All important family records in one place</div><div class="build-badge" id="buildBadge">Structured Records v10</div></div><button class="iconbtn" onclick="go('search')">🔍</button></div></header>
 <main>
 <section id="home" class="screen active">
   <div class="section">Family quick access</div><div id="homeProfiles" class="profile-strip"></div>
@@ -84,7 +84,7 @@ body{font-size:17px}
 </section>
 
 <section id="documents" class="screen">
-  <div class="top"><div class="section" style="margin:0">📁 Documents</div><button class="btn primary" style="width:72px" onclick="openAdd()">＋ Add</button></div>
+  <div class="top"><div class="section" id="docPageHeading" style="margin:0">📁 Documents</div><button class="btn primary" id="docAddBtn" style="width:auto;min-width:88px" onclick="openAddForCurrentCategory()">＋ Add</button></div>
   <div class="search" style="margin-top:10px"><input id="docSearch" placeholder="Search documents..." oninput="renderDocuments()"><select id="docPersonFilter" style="max-width:125px" onchange="renderDocuments()"></select></div>
   <div class="filters" id="docFilterPills"></div>
   <div class="section">Categories</div><div class="categories" id="categoryGrid"></div>
@@ -118,7 +118,7 @@ body{font-size:17px}
   <div class="stepbar"><div id="s1" class="step active">1</div><div class="line"></div><div id="s2" class="step">2</div><div class="line"></div><div id="s3" class="step">3</div></div>
   <div id="a1"><div class="section">Who is this for?</div><div class="choicegrid" id="addMemberChoices"></div><button class="btn primary full" style="margin-top:12px" onclick="step(2)">Continue →</button></div>
   <div id="a2" class="hidden"><div class="section">What type of document?</div><div class="choicegrid" id="addCategoryChoices"></div><button class="btn primary full" style="margin-top:12px" onclick="step(3)">Continue →</button></div>
-  <div id="a3" class="hidden"><div class="section">Details</div><div class="category-caption" id="categoryFormTitle">Document details</div><div class="form-panel"><div class="form-field"><label>Record title</label><input id="addTitle" placeholder="e.g. Car insurance 2026-27"></div><div class="form-field"><label>Document / record date</label><input id="addDate" type="date"></div><div class="form-field"><label>Attachment(s)</label><input id="addFile" type="file" accept=".pdf,application/pdf,image/*" multiple><div class="hint">Original PDF/image is stored unchanged. You can attach more than one file.</div></div><div id="dynamicFields" class="form-panel"></div><div class="form-field"><label>Notes</label><textarea id="addNotes" rows="3" placeholder="Optional notes"></textarea></div><button class="btn primary full" onclick="saveDocument()">Save document</button><div class="meta" id="addMsg"></div></div></div>
+  <div id="a3" class="hidden"><div class="section">Details</div><div class="category-caption" id="categoryFormTitle">Document details</div><div class="form-panel"><div id="dynamicFields" class="form-panel"></div><div class="form-section">Document & attachment</div><div class="form-field"><label>Record title</label><input id="addTitle" placeholder="Short name for this record"></div><div class="form-field"><label>Document / record date</label><input id="addDate" type="date"></div><div class="form-field"><label>Attachment(s)</label><input id="addFile" type="file" accept=".pdf,application/pdf,image/*" multiple><div class="hint">Original PDF/image is stored unchanged. You can attach more than one file.</div></div><div class="form-field"><label>Notes</label><textarea id="addNotes" rows="3" placeholder="Optional notes"></textarea></div><button class="btn primary full" onclick="saveDocument()">Save document</button><div class="meta" id="addMsg"></div></div></div>
 </div></div>
 
 <div id="memberModal" class="modal hidden"><div class="sheet"><div class="top"><div class="name" id="memberModalTitle">Add family member</div><button class="iconbtn" onclick="closeMemberModal()">✕</button></div><div style="display:grid;gap:9px;margin-top:12px"><input id="memberName" placeholder="Name"><select id="memberRelation"><option>Self</option><option>Spouse</option><option>Son</option><option>Daughter</option><option>Parent</option><option>Other</option></select><input id="memberDob" type="date"><button class="btn primary full" onclick="saveMember()">Save</button></div></div></div>
@@ -146,7 +146,7 @@ body{font-size:17px}
 
 <script>
 const DB='MyFamilyVaultDB', VER=5, CATS=['Health','Education','Warranty','Jewellery','Insurance','Certificates','Vehicle','Property','Other'];
-let dbx, docCategoryFilter='All', addPerson='', addCategory='', currentDocId='', editingDocId='', reviewDocId='', reviewData=[];
+let dbx, docCategoryFilter='All', addPerson='', addCategory='', addCategoryLocked=false, currentDocId='', editingDocId='', reviewDocId='', reviewData=[];
 const titles={home:['My Family Vault','All important family records in one place'],family:['My Family','Family profiles'],documents:['Documents','Your family document library'],health:['Health','Reports, trends and comparison'],search:['Search','Search, reminders and backup']};
 
 function openDB(){return new Promise((res,rej)=>{let r=indexedDB.open(DB,VER);r.onupgradeneeded=e=>{let d=e.target.result;['members','documents','files','healthResults'].forEach((n,i)=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:'id'})})};r.onsuccess=()=>{dbx=r.result;res()};r.onerror=()=>rej(r.error)})}
@@ -177,12 +177,31 @@ function closeMemberModal(){memberModal.classList.add('hidden')}
 async function saveMember(){let n=memberName.value.trim();if(!n)return alert('Enter a name');await put('members',{id:'m'+Date.now(),name:n,relation:memberRelation.value,dob:memberDob.value,color:['blue','pink','green','gold'][(await all('members')).length%4]});closeMemberModal();renderFamily();renderHome()}
 async function deleteMember(id){if(id==='self'||id==='household')return alert('Default profiles cannot be deleted. You can edit their names later.');let docs=(await all('documents')).filter(x=>x.memberId===id);if(docs.length)return alert('Move or delete this member’s documents first.');if(confirm('Delete this family member?')){await del('members',id);renderFamily();renderHome()}}
 function openMemberDocs(id){go('documents');setTimeout(()=>{docPersonFilter.value=id;renderDocuments()},20)}
-async function prepareDocuments(){let m=await all('members'),cur=docPersonFilter.value;docPersonFilter.innerHTML='<option value="All">All</option>'+m.map(x=>`<option value="${x.id}">${E(x.name)}</option>`).join('');if(cur)docPersonFilter.value=cur;docFilterPills.innerHTML=['All',...CATS].map(c=>`<button class="pill ${c===docCategoryFilter?'active':''}" onclick="setDocCategory('${c}',this)">${c}</button>`).join('');categoryGrid.innerHTML=CATS.map(c=>`<button class="cat" onclick="setDocCategory('${c}')">${icon(c)} ${c}</button>`).join('');renderDocuments()}
-function setDocCategory(c,el){docCategoryFilter=c;if(el){el.parentElement.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));el.classList.add('active')}else{document.querySelectorAll('#docFilterPills .pill').forEach(x=>x.classList.toggle('active',x.textContent===c))}renderDocuments()}
-function openCategory(c){docCategoryFilter=c;go(c==='Health'?'health':'documents')}
+async function prepareDocuments(){let m=await all('members'),cur=docPersonFilter.value;docPersonFilter.innerHTML='<option value="All">All</option>'+m.map(x=>`<option value="${x.id}">${E(x.name)}</option>`).join('');if(cur)docPersonFilter.value=cur;docFilterPills.innerHTML=['All',...CATS].map(c=>`<button class="pill ${c===docCategoryFilter?'active':''}" onclick="setDocCategory('${c}',this)">${c}</button>`).join('');categoryGrid.innerHTML=CATS.map(c=>`<button class="cat" onclick="setDocCategory('${c}')">${icon(c)} ${c}</button>`).join('');updateDocumentHeader();renderDocuments()}
+function updateDocumentHeader(){
+  if(typeof docPageHeading==='undefined'||typeof docAddBtn==='undefined')return;
+  if(docCategoryFilter==='All'){
+    docPageHeading.textContent='📁 Documents';
+    docAddBtn.textContent='＋ Add';
+  }else{
+    docPageHeading.textContent=icon(docCategoryFilter)+' '+docCategoryFilter;
+    const label={Insurance:'Policy',Education:'Record',Warranty:'Item',Jewellery:'Item',Certificates:'Document',Vehicle:'Vehicle',Property:'Property',Other:'Record'}[docCategoryFilter]||'Record';
+    docAddBtn.textContent='＋ Add '+label;
+  }
+}
+function openAddForCurrentCategory(){openAdd(docCategoryFilter==='All'?'':docCategoryFilter)}
+function setDocCategory(c,el){docCategoryFilter=c;if(el){el.parentElement.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));el.classList.add('active')}else{document.querySelectorAll('#docFilterPills .pill').forEach(x=>x.classList.toggle('active',x.textContent===c))}updateDocumentHeader();renderDocuments()}
+function openCategory(c){docCategoryFilter=c;go(c==='Health'?'health':'documents');setTimeout(updateDocumentHeader,0)}
 async function visibleDocs(){let d=await all('documents'),q=(docSearch.value||'').toLowerCase(),p=docPersonFilter.value||'All';if(docCategoryFilter!=='All')d=d.filter(x=>x.category===docCategoryFilter);if(p!=='All')d=d.filter(x=>x.memberId===p);if(q)d=d.filter(x=>JSON.stringify(x).toLowerCase().includes(q));return d.sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.createdAt||0)-(a.createdAt||0))}
 function docCard(x){let ft=(x.fileName||'').toLowerCase().endsWith('.pdf')?'PDF':x.fileName?'IMG':'';return `<div class="card doc"><div class="doctop"><div class="docicon" style="${ft==='PDF'?'':'color:#2563eb'}">${ft||icon(x.category)}</div><div class="docmain"><div class="name">${E(x.title)}</div><div class="meta">${E(x.memberName)} · ${E(x.category)}</div><div class="meta">${x.date||''}${x.extra?.lab?' • '+E(x.extra.lab):x.extra?.vendor?' • '+E(x.extra.vendor):''}</div><div class="tags">${x.processed?`<span class="tag">${x.processedCount||0} values extracted</span>`:''}${x.reminderDate?`<span class="tag">Due ${x.reminderDate}</span>`:''}</div></div></div><div class="actions"><button class="btn primary" onclick="openRecord('${x.id}')">View</button><button class="btn secondary" onclick="openEdit('${x.id}')">Edit</button><button class="btn secondary" onclick="openDocMenu('${x.id}')">•••</button></div></div>`}
-async function renderDocuments(){let d=await visibleDocs();documentList.innerHTML=d.length?d.map(docCard).join(''):'<div class="card pad"><div class="meta">No matching documents.</div></div>'}
+async function renderDocuments(){
+  let d=await visibleDocs();
+  if(d.length){documentList.innerHTML=d.map(docCard).join('');return}
+  if(docCategoryFilter!=='All'){
+    const label={Insurance:'policy',Education:'education record',Warranty:'warranty item',Jewellery:'jewellery record',Certificates:'document',Vehicle:'vehicle record',Property:'property record',Other:'record'}[docCategoryFilter]||'record';
+    documentList.innerHTML=`<div class="card pad"><div class="name">No ${E(docCategoryFilter)} records yet</div><div class="meta" style="margin-top:5px">Add the first structured ${label}.</div><button class="btn primary full" style="margin-top:12px" onclick="openAdd('${docCategoryFilter}')">＋ Add ${E(docCategoryFilter)}</button></div>`;
+  }else documentList.innerHTML='<div class="card pad"><div class="meta">No matching documents.</div></div>';
+}
 let currentViewerUrl=null;
 async function viewDoc(id){
   const d=await one('documents',id);
@@ -242,12 +261,18 @@ async function replaceCurrentAttachment(){
 async function shareCurrentDoc(){let d=await one('documents',currentDocId);if(!d?.fileId)return alert('No attachment.');let f=await one('files',d.fileId);if(!f)return;if(navigator.share&&navigator.canShare){let file=new File([f.blob],f.name,{type:f.type||'application/octet-stream'});if(navigator.canShare({files:[file]})){await navigator.share({title:d.title,files:[file]});return}}let u=URL.createObjectURL(f.blob),a=document.createElement('a');a.href=u;a.download=f.name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
 async function deleteCurrentDoc(){let d=await one('documents',currentDocId);if(!d||!confirm(`Delete "${d.title}"?\n\nThis also removes all attachments and extracted health values.`))return;let rs=(await all('healthResults')).filter(x=>x.documentId===d.id);for(const r of rs)await del('healthResults',r.id);const ids=d.fileIds?.length?d.fileIds:(d.fileId?[d.fileId]:[]);for(const id of new Set(ids))await del('files',id);await del('documents',d.id);closeDocMenu();refreshAll()}
 function refreshAll(){renderHome();renderFamily();renderDocuments();renderHealthAll();renderReminders()}
-async function openAdd(pref=''){addPerson='';addCategory=pref||'';addModal.classList.remove('hidden');await buildAddChoices();step(1)}
+async function openAdd(pref=''){addPerson='';addCategory=pref||'';addCategoryLocked=!!pref;addTitle.value='';addNotes.value='';addFile.value='';addModal.classList.remove('hidden');await buildAddChoices();step(1)}
 function closeAdd(){addModal.classList.add('hidden')}
 async function buildAddChoices(){let m=await all('members');addMemberChoices.innerHTML=m.map((x,i)=>`<button class="choice" onclick="pickAddPerson('${x.id}',this)"><div><div class="emoji">${x.id==='household'?'👨‍👩‍👦':'👤'}</div><div class="name">${E(x.name)}</div></div></button>`).join('');addCategoryChoices.innerHTML=CATS.map(c=>`<button class="choice ${c===addCategory?'selected':''}" onclick="pickAddCategory('${c}',this)"><div><div class="emoji">${icon(c)}</div><div class="name">${c}</div></div></button>`).join('')}
 function pickAddPerson(id,el){addPerson=id;el.parentElement.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));el.classList.add('selected')}
 function pickAddCategory(c,el){addCategory=c;el.parentElement.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));el.classList.add('selected')}
-function step(n){if(n===2&&!addPerson)return alert('Choose a family member.');if(n===3&&!addCategory)return alert('Choose a document type.');[1,2,3].forEach(i=>{document.getElementById('a'+i).classList.toggle('hidden',i!==n);document.getElementById('s'+i).classList.toggle('active',i<=n)});if(n===3){addDate.value=new Date().toISOString().slice(0,10);buildDynamicFields()}}
+function step(n){
+  if(n===2&&!addPerson)return alert('Choose a family member.');
+  if(n===2&&addCategoryLocked)return step(3);
+  if(n===3&&!addCategory)return alert('Choose a document type.');
+  [1,2,3].forEach(i=>{document.getElementById('a'+i).classList.toggle('hidden',i!==n);document.getElementById('s'+i).classList.toggle('active',i<=n)});
+  if(n===3){addDate.value=new Date().toISOString().slice(0,10);buildDynamicFields();setTimeout(()=>{const first=dynamicFields.querySelector('select,input,textarea');if(first)first.focus({preventScroll:true});},0)}
+}
 function ff(label,control,hint=''){return `<div class="form-field"><label>${label}</label>${control}${hint?`<div class="hint">${hint}</div>`:''}</div>`}
 function fs(label){return `<div class="form-section">${label}</div>`}
 function buildDynamicFields(){
