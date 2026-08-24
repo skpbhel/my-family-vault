@@ -3,231 +3,263 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#090b0e">
+<meta name="theme-color" content="#07101a">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Family Vault">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>My Family Vault</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <style>
-:root{color-scheme:dark;--bg:#090b0e;--panel:#14181e;--panel2:#1b2028;--text:#f6f7f9;--muted:#9da7b2;--line:#29313a;--blue:#3478f6;--green:#72c86b;--orange:#ee9439;--purple:#9b63e6;--teal:#4cc7bd;--red:#ed654e;--yellow:#e7b849}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;padding-bottom:90px}
-.app{max-width:680px;margin:auto;min-height:100vh}header{position:sticky;top:0;z-index:20;background:rgba(9,11,14,.94);backdrop-filter:blur(16px);padding:calc(env(safe-area-inset-top) + 14px) 18px 12px;border-bottom:1px solid var(--line)}
-.header-row{display:flex;align-items:center;justify-content:space-between;gap:12px}h1{margin:0;font-size:24px;letter-spacing:.2px}.sub{font-size:13px;color:var(--muted);margin-top:3px}
-main{padding:15px}.screen{display:none}.screen.active{display:block}.section{font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;margin:22px 2px 10px}
-.card{background:linear-gradient(180deg,#171b21,#13171c);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:10px}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.metric{font-size:28px;font-weight:850}.name{font-size:16px;font-weight:760}.meta,.small{font-size:13px;color:var(--muted)}.small{font-size:12px;line-height:1.45}
-.row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}
-button,input,select,textarea{font:inherit}.btn,.primary,.secondary,.danger{border-radius:12px;padding:11px 13px;font-weight:800}.primary{border:0;background:var(--blue);color:#fff}.secondary{background:var(--panel2);border:1px solid var(--line);color:var(--text)}.danger{background:#3b1717;border:1px solid #632a2a;color:#ffc0c0}.full{width:100%}
-input,select,textarea{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:12px;color:var(--text);padding:11px}.stack>*+*{margin-top:9px}
-.chips,.tabs{display:flex;gap:7px;overflow:auto;padding-bottom:4px}.chips button,.tabs button{white-space:nowrap}
-.profile-row{display:flex;gap:12px;overflow:auto;padding-bottom:4px}.profile{min-width:76px;background:none;border:0;color:var(--text);padding:0;text-align:center}.avatar{width:50px;height:50px;border-radius:50%;margin:0 auto 6px;display:grid;place-items:center;font-size:24px;border:1px solid #ffffff18}.pblue{background:#19345c}.ppink{background:#5b263e}.pgreen{background:#314b29}.pyellow{background:#554521}
-.quick{min-height:86px;text-align:left}.quick .qicon{font-size:20px;margin-bottom:8px}.blue{background:linear-gradient(135deg,#183c6d,#17325b)}.green{background:linear-gradient(135deg,#244c2f,#1c3b27)}.orange{background:linear-gradient(135deg,#6b3518,#54301c)}.purple{background:linear-gradient(135deg,#45266c,#392059)}.teal{background:linear-gradient(135deg,#1c524d,#193f3d)}.red{background:linear-gradient(135deg,#67301f,#56261e)}
-.doc{display:flex;gap:12px}.docicon{width:44px;height:50px;border-radius:9px;background:var(--panel2);display:grid;place-items:center;font-size:23px;flex:0 0 auto}.docbody{flex:1;min-width:0}.badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.badge{display:inline-block;padding:4px 7px;border-radius:999px;background:#20262e;border:1px solid var(--line);font-size:11px;color:var(--muted)}
-.actions{display:flex;gap:7px;margin-top:10px}.actions button{flex:1;padding:9px}.dots{max-width:45px}
-.searchbar{display:flex;gap:7px}.searchbar input{flex:1}
-.healthcards .card{margin:0}.hvalue{font-size:24px;font-weight:850;margin-top:5px}.unit{font-size:13px;color:var(--muted);font-weight:600}.up{color:#ff9f45}.down{color:#67ce80}.attention td:last-child{text-align:right}.attention .high{color:#ff6d6d}.attention .low{color:#ffb24d}
-table{width:100%;border-collapse:collapse}th,td{padding:9px 6px;text-align:left;border-bottom:1px solid var(--line);font-size:13px}th{font-size:11px;color:var(--muted)}.tablewrap{overflow:auto}
-canvas{width:100%;height:235px;background:var(--panel);border:1px solid var(--line);border-radius:16px}
-nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(680px,100%);display:grid;grid-template-columns:repeat(5,1fr);background:#101318;border-top:1px solid var(--line);padding:7px 3px calc(7px + env(safe-area-inset-bottom));z-index:30}nav button{background:none;border:0;color:var(--muted);padding:5px 1px;font-size:11px}nav button.active{color:#4b8cff}.ico{display:block;font-size:19px;margin-bottom:2px}
-.hidden{display:none!important}.modal{position:fixed;inset:0;background:#000b;z-index:100;display:grid;align-items:end;padding:10px}.sheet{background:#15191f;border:1px solid var(--line);border-radius:20px 20px 12px 12px;padding:16px;max-height:90vh;overflow:auto}
-.stepbar{display:flex;align-items:center;justify-content:center;margin:12px 0 30px}.step{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#2a2f37}.step.on{background:var(--blue)}.line{height:2px;width:75px;background:#3a404a}.choice{min-height:130px;display:grid;place-items:center;text-align:center}.choice.sel{border-color:#4285ff;box-shadow:inset 0 0 0 1px #4285ff}
-.progress{height:7px;border-radius:999px;background:#242a32;overflow:hidden}.progress span{display:block;height:100%;background:var(--blue);width:0}
-.review-row{display:grid;grid-template-columns:1.5fr .7fr .7fr;gap:6px;margin-bottom:7px}.review-row input{padding:8px;font-size:13px}
-@media(min-width:600px){main{padding:18px}.quick{min-height:95px}}
+:root{
+  color-scheme:dark;
+  --bg:#07101a;--surface:#121820;--surface2:#19222d;--surface3:#202b37;
+  --text:#f7f9fb;--muted:#95a4b5;--line:rgba(255,255,255,.08);
+  --blue:#0b75ff;--blue2:#174a93;--green:#1ca65a;--green2:#0c6538;
+  --orange:#e97f00;--orange2:#984900;--purple:#7a36c9;--purple2:#4e2385;
+  --teal:#0d9e9e;--teal2:#0a646b;--red:#d94b37;--red2:#8f261d;--gold:#d39a00;--gold2:#8d6400;
+  --radius:18px;--shadow:0 14px 34px rgba(0,0,0,.30)
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:linear-gradient(180deg,#06101a 0,#07101a 100%);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI",Arial,sans-serif}
+body{padding-bottom:88px;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit}
+.app{max-width:760px;margin:auto;min-height:100vh}
+header{position:sticky;top:0;z-index:30;padding:calc(env(safe-area-inset-top) + 12px) 18px 12px;background:rgba(7,16,26,.95);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:8px}.title{font-size:23px;font-weight:850;letter-spacing:-.3px}.sub{font-size:12px;color:var(--muted);margin-top:4px}
+.iconbtn{width:38px;height:38px;border-radius:12px;border:1px solid var(--line);background:var(--surface2);color:white;display:grid;place-items:center}
+main{padding:15px}.screen{display:none}.screen.active{display:block}
+.section{font-size:12px;font-weight:850;letter-spacing:.7px;text-transform:uppercase;color:#d1d7df;margin:22px 2px 10px}
+.card{background:linear-gradient(180deg,#151d26 0,#10171e 100%);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.pad{padding:14px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.profile-strip{display:flex;gap:16px;overflow:auto;padding:4px 2px 6px;scrollbar-width:none}.profile-strip::-webkit-scrollbar{display:none}
+.profile{width:68px;flex:0 0 68px;text-align:center}.avatar{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;margin:auto;border:1px solid rgba(255,255,255,.15);font-size:25px;box-shadow:0 8px 22px rgba(0,0,0,.3)}
+.avb{background:radial-gradient(circle at 30% 30%,#4aa0ff,#0046a2)}.avp{background:radial-gradient(circle at 30% 30%,#ff7db3,#8c214f)}.avg{background:radial-gradient(circle at 30% 30%,#9ee545,#3f7e0c)}.avy{background:radial-gradient(circle at 30% 30%,#ffc834,#8b5b00)}
+.pname{font-size:11px;margin-top:6px}
+.quick{min-height:102px;border-radius:16px;padding:14px;color:white;text-align:left;border:1px solid rgba(255,255,255,.10);box-shadow:var(--shadow)}
+.qi{font-size:22px;margin-bottom:12px}.qn{font-size:16px;font-weight:850}.qc{font-size:12px;margin-top:3px;color:rgba(255,255,255,.78)}
+.qblue{background:linear-gradient(135deg,#1268d8,#0a3d89)}.qgreen{background:linear-gradient(135deg,#178a49,#0b5b33)}.qorange{background:linear-gradient(135deg,#d56d00,#8f3f00)}.qpurple{background:linear-gradient(135deg,#7b39c8,#49227d)}.qteal{background:linear-gradient(135deg,#0c8d8d,#086367)}.qred{background:linear-gradient(135deg,#d84b36,#8f261d)}
+.row{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.row:last-child{border-bottom:0}.grow{flex:1;min-width:0}.name{font-size:15px;font-weight:780}.meta{font-size:12px;color:var(--muted)}.right{text-align:right}
+.dot{width:9px;height:9px;border-radius:50%}
+.family-card{padding:14px;margin-bottom:10px}.family-inner{display:flex;align-items:center;gap:13px}.family-main{flex:1}.family-card.blue{background:linear-gradient(135deg,#174c98,#0f2d5a)}.family-card.pink{background:linear-gradient(135deg,#a52556,#5c1733)}.family-card.green{background:linear-gradient(135deg,#2b8f26,#165215)}.family-card.gold{background:linear-gradient(135deg,#a46e00,#694600)}
+.search{display:flex;gap:8px}.search input{flex:1}
+input,select,textarea{width:100%;background:var(--surface2);border:1px solid var(--line);border-radius:12px;color:white;padding:11px}
+.filters{display:flex;gap:7px;overflow:auto;margin-top:10px;padding-bottom:3px;scrollbar-width:none}.filters::-webkit-scrollbar{display:none}
+.pill{white-space:nowrap;padding:8px 11px;border-radius:11px;background:#18212b;border:1px solid var(--line);color:#dce2e9;font-size:12px}.pill.active{background:#0b75ff;color:white;border-color:#0b75ff}
+.categories{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.cat{padding:11px 8px;border-radius:11px;background:#171f28;border:1px solid var(--line);font-size:12px;color:white;text-align:left}
+.doc{padding:13px;margin-bottom:9px}.doctop{display:flex;gap:12px}.docicon{width:42px;height:48px;border-radius:10px;background:#fff;color:#d52f2f;display:grid;place-items:center;font-weight:900;flex:0 0 auto}.docmain{flex:1}.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.tag{font-size:10px;padding:3px 6px;border-radius:6px;background:#24303d;color:#b8c4d0}.actions{display:grid;grid-template-columns:1fr 1fr 42px;gap:7px;margin-top:10px}
+.btn{height:36px;border-radius:9px;border:1px solid var(--line);font-weight:750}.primary{background:#0b75ff;color:#fff;border-color:#0b75ff}.secondary{background:#151d26;color:#fff}.danger{background:#421a1a;color:#ffaaaa;border-color:#6e2b2b}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;background:#111821;border:1px solid var(--line);border-radius:12px;padding:4px;margin-top:10px}.tab{height:34px;border-radius:8px;border:0;background:transparent;color:#aab6c2;font-size:12px}.tab.active{background:#0b75ff;color:white}
+.healthgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.hcard{padding:13px}.hname{font-size:12px;color:#b9c3ce}.hval{font-size:24px;font-weight:850;margin-top:5px}.htrend{font-size:11px;margin-top:5px}.greenText{color:#61d482}.orangeText{color:#ffac55}.redText{color:#ff6e68}
+.table{overflow:auto}.table table{width:100%;border-collapse:collapse}.table td,.table th{font-size:12px;padding:9px 5px;border-bottom:1px solid var(--line);text-align:left}.table th{color:#9cadbd}
+canvas{width:100%;height:240px;background:#101821;border:1px solid var(--line);border-radius:14px}
+.timeline{border-left:1px solid var(--line);margin-left:14px;padding-left:18px}.time{position:relative;margin-bottom:10px}.time:before{content:"";position:absolute;left:-23px;top:20px;width:8px;height:8px;border-radius:50%;background:#0b75ff;box-shadow:0 0 0 4px rgba(11,117,255,.15)}
+.days{width:54px;padding:7px 4px;border-radius:10px;text-align:center;font-size:16px;font-weight:850}.days span{font-size:9px}.dr{background:#4a2020;color:#ff8989}.do{background:#4b351f;color:#ffc06e}.dg{background:#1d4428;color:#7ede91}
+.backups{display:grid;grid-template-columns:1fr 1fr;gap:10px}.backup{padding:17px 12px;text-align:left;border-radius:15px;border:1px solid var(--line);color:#fff}.backup.green{background:linear-gradient(135deg,#164e2b,#0e341e)}.backup.purple{background:linear-gradient(135deg,#5b2ca2,#361b63)}
+nav{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(760px,100%);display:grid;grid-template-columns:repeat(5,1fr);background:rgba(12,18,25,.96);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:7px 3px calc(7px + env(safe-area-inset-bottom));z-index:40}
+nav button{background:none;border:0;color:#8b98a5;font-size:11px;padding:4px 1px}nav button.active{color:#0b75ff}.navicon{display:block;font-size:20px;margin-bottom:2px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;display:grid;align-items:end;padding:10px}.sheet{background:#111821;border:1px solid var(--line);border-radius:20px 20px 12px 12px;padding:15px;max-height:90vh;overflow:auto}
+.stepbar{display:flex;justify-content:center;align-items:center;margin:18px 0 24px}.step{width:32px;height:32px;border-radius:50%;background:#2a3440;display:grid;place-items:center;font-weight:800}.step.active{background:#0b75ff}.line{width:62px;height:2px;background:#344150}
+.choicegrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.choice{min-height:120px;border-radius:14px;border:1px solid var(--line);background:#151d26;color:white;display:grid;place-items:center;text-align:center}.choice.selected{border-color:#0b75ff;box-shadow:inset 0 0 0 1px #0b75ff}.choice .emoji{font-size:30px;margin-bottom:7px}
+.hidden{display:none!important}.full{width:100%}
 </style>
 </head>
 <body>
 <div class="app">
-<header><div class="header-row"><div><h1 id="title">MY FAMILY VAULT</h1><div class="sub" id="subtitle">All important family records in one place</div></div><button class="secondary" style="padding:9px 11px" onclick="go('search')">⌕</button></div></header>
-<main>
-
-<section id="home" class="screen active">
-<div id="homeProfiles" class="profile-row"></div>
-<div class="section">Quick access</div>
-<div class="grid2">
-<button class="card quick blue secondary" onclick="openCat('Health')"><div class="qicon">✚</div><div class="name">Health</div><div class="meta" id="qHealth">0 reports</div></button>
-<button class="card quick green secondary" onclick="openCat('Education')"><div class="qicon">🎓</div><div class="name">Education</div><div class="meta" id="qEducation">0 records</div></button>
-<button class="card quick orange secondary" onclick="openCat('Warranty')"><div class="qicon">▣</div><div class="name">Warranty</div><div class="meta" id="qWarranty">0 items</div></button>
-<button class="card quick purple secondary" onclick="openCat('Jewellery')"><div class="qicon">◉</div><div class="name">Jewellery</div><div class="meta" id="qJewellery">0 records</div></button>
-<button class="card quick teal secondary" onclick="openCat('Insurance')"><div class="qicon">⬟</div><div class="name">Insurance</div><div class="meta" id="qInsurance">0 policies</div></button>
-<button class="card quick red secondary" onclick="openCat('Certificates')"><div class="qicon">▤</div><div class="name">Important Documents</div><div class="meta" id="qCertificates">0 docs</div></button>
+<header>
+<div class="top">
+  <div><div class="brand"><span style="font-size:20px">👋</span><div class="title" id="pageTitle">Good morning</div></div><div class="sub" id="pageSub">All important family records in one place</div></div>
+  <button class="iconbtn" onclick="go('search')">🔍</button>
 </div>
-<div class="section">Upcoming</div><div class="card" id="homeUpcoming"></div>
-<div class="section">Recent documents</div><div class="card" id="homeRecent"></div>
+</header>
+<main>
+<section id="home" class="screen active">
+  <div class="section">Family quick access</div>
+  <div class="profile-strip">
+    <div class="profile"><div class="avatar avb">👤</div><div class="pname">Me</div></div>
+    <div class="profile"><div class="avatar avp">👤</div><div class="pname">Spouse</div></div>
+    <div class="profile"><div class="avatar avg">👤</div><div class="pname">Child</div></div>
+    <div class="profile"><div class="avatar avy">👥</div><div class="pname">Family / Common</div></div>
+  </div>
+
+  <div class="section">Quick access</div>
+  <div class="grid2">
+    <button class="quick qblue" onclick="go('health')"><div class="qi">💙</div><div class="qn">Health</div><div class="qc">18 reports</div></button>
+    <button class="quick qgreen" onclick="go('documents')"><div class="qi">🎓</div><div class="qn">Education</div><div class="qc">12 records</div></button>
+    <button class="quick qorange" onclick="go('documents')"><div class="qi">🛡️</div><div class="qn">Warranty</div><div class="qc">8 items</div></button>
+    <button class="quick qpurple" onclick="go('documents')"><div class="qi">💍</div><div class="qn">Jewellery</div><div class="qc">6 records</div></button>
+    <button class="quick qteal" onclick="go('documents')"><div class="qi">☂️</div><div class="qn">Insurance</div><div class="qc">5 policies</div></button>
+    <button class="quick qred" onclick="go('documents')"><div class="qi">📁</div><div class="qn">Important Documents</div><div class="qc">9 docs</div></button>
+  </div>
+
+  <div class="section">Upcoming reminders</div>
+  <div class="card pad">
+    <div class="row"><div class="dot" style="background:#ffcc4d"></div><div class="grow"><div class="name">AC warranty expires</div></div><div class="meta">24 Sep ›</div></div>
+    <div class="row"><div class="dot" style="background:#ff9a3c"></div><div class="grow"><div class="name">Car insurance renewal</div></div><div class="meta">12 Oct ›</div></div>
+    <div class="row"><div class="dot" style="background:#8ee66d"></div><div class="grow"><div class="name">Health insurance renewal</div></div><div class="meta">26 Dec ›</div></div>
+  </div>
+
+  <div class="section">Recent documents</div>
+  <div class="card pad">
+    <div class="row"><div>📄</div><div class="grow"><div class="name">Blood Test Report</div></div><div class="meta">20 Aug <span style="background:#d72f35;color:white;padding:2px 4px;border-radius:3px">PDF</span></div></div>
+    <div class="row"><div>📄</div><div class="grow"><div class="name">School Test Report</div></div><div class="meta">18 Aug <span style="background:#d72f35;color:white;padding:2px 4px;border-radius:3px">PDF</span></div></div>
+    <div class="row"><div>🧾</div><div class="grow"><div class="name">Gold Purchase Invoice</div></div><div class="meta">11 Aug</div></div>
+  </div>
 </section>
 
 <section id="family" class="screen">
-<div class="header-row"><div class="section" style="margin:0">Family</div><button class="primary" onclick="memberForm.classList.toggle('hidden')">＋ Add</button></div>
-<div id="familyCards" style="margin-top:12px"></div>
-<div id="memberForm" class="card hidden"><div class="stack"><input id="memberName" placeholder="Name"><select id="memberRelation"><option>Self</option><option>Spouse</option><option>Son</option><option>Daughter</option><option>Parent</option><option>Other</option></select><input id="memberDob" type="date"><button class="primary full" onclick="saveMember()">Save member</button></div></div>
+  <div class="top" style="margin-bottom:12px"><div class="section" style="margin:0">My family</div><button class="btn primary" style="width:72px">＋ Add</button></div>
+  <div class="card family-card blue"><div class="family-inner"><div class="avatar avb" style="margin:0">👤</div><div class="family-main"><div class="name" style="font-size:18px">Me</div><div class="meta" style="color:#d6e5f8">👤 Self</div><div class="meta" style="color:#d6e5f8;margin-top:8px">24 Health &nbsp; • &nbsp; 8 Documents</div></div><div>›</div></div></div>
+  <div class="card family-card pink"><div class="family-inner"><div class="avatar avp" style="margin:0">👤</div><div class="family-main"><div class="name" style="font-size:18px">Spouse</div><div class="meta" style="color:#f0d3e0">👩 Spouse</div><div class="meta" style="color:#f0d3e0;margin-top:8px">16 Health &nbsp; • &nbsp; 5 Documents</div></div><div>›</div></div></div>
+  <div class="card family-card green"><div class="family-inner"><div class="avatar avg" style="margin:0">👤</div><div class="family-main"><div class="name" style="font-size:18px">Child</div><div class="meta" style="color:#d9f0d6">👦 Child</div><div class="meta" style="color:#d9f0d6;margin-top:8px">6 Health &nbsp; • &nbsp; 15 Education</div></div><div>›</div></div></div>
+  <div class="card family-card gold"><div class="family-inner"><div class="avatar avy" style="margin:0">👥</div><div class="family-main"><div class="name" style="font-size:18px">Family / Common</div><div class="meta" style="color:#f3e8ca">Appliances &nbsp; • &nbsp; Jewellery<br>Property &nbsp; • &nbsp; Vehicle<br>Insurance &nbsp; • &nbsp; Certificates</div></div><div>›</div></div></div>
 </section>
 
 <section id="documents" class="screen">
-<div class="header-row"><div class="section" style="margin:0">Documents</div><button class="primary" onclick="startAdd()">＋ Add</button></div>
-<div class="searchbar" style="margin-top:12px"><input id="docSearch" placeholder="Search documents…" oninput="renderDocuments()"><select id="docMemberFilter" onchange="renderDocuments()"></select></div>
-<div class="chips" style="margin-top:10px"><button class="primary" onclick="setFilter('All')">All</button><button class="secondary" onclick="setFilter('Health')">Health</button><button class="secondary" onclick="setFilter('Education')">Education</button><button class="secondary" onclick="setFilter('Insurance')">Insurance</button><button class="secondary" onclick="setFilter('Warranty')">Warranty</button><button class="secondary" onclick="setFilter('Jewellery')">Jewellery</button><button class="secondary" onclick="setFilter('Certificates')">Certificates</button><button class="secondary" onclick="setFilter('Vehicle')">Vehicle</button><button class="secondary" onclick="setFilter('Property')">Property</button></div>
-<div id="documentList" style="margin-top:12px"></div>
+  <div class="top"><div class="section" style="margin:0">📁 Documents</div><button class="btn primary" style="width:72px" onclick="openAdd()">＋ Add</button></div>
+  <div class="search" style="margin-top:10px"><input placeholder="Search documents..."><button class="iconbtn">☷</button></div>
+  <div class="filters"><button class="pill active">All</button><button class="pill">Health</button><button class="pill">Education</button><button class="pill">Insurance</button><button class="pill">Warranty</button><button class="pill">Jewellery</button></div>
+
+  <div class="section">Categories</div>
+  <div class="categories">
+    <button class="cat">💙 Health</button><button class="cat">🎓 Education</button><button class="cat">🛡️ Insurance</button>
+    <button class="cat">🛡 Warranty</button><button class="cat">💍 Jewellery</button><button class="cat">📜 Certificates</button>
+    <button class="cat">🚙 Vehicle</button><button class="cat">🏡 Property</button><button class="cat">⬛ Other</button>
+  </div>
+
+  <div class="section">Recent documents</div>
+  <div class="card doc">
+    <div class="doctop"><div class="docicon">PDF</div><div class="docmain"><div class="name">Blood Test Report</div><div class="meta">Me</div><div class="meta">20 Aug 2026 &nbsp;•&nbsp; Dr Lal PathLabs</div><div class="tags"><span class="tag">18 parameters extracted</span></div></div></div>
+    <div class="actions"><button class="btn primary">View</button><button class="btn secondary">Edit</button><button class="btn secondary" onclick="openMenu('Blood Test Report')">•••</button></div>
+  </div>
+  <div class="card doc">
+    <div class="doctop"><div class="docicon">PDF</div><div class="docmain"><div class="name">JEE Test Report</div><div class="meta">Child</div><div class="meta">18 Aug 2026</div></div></div>
+    <div class="actions"><button class="btn primary">View</button><button class="btn secondary">Edit</button><button class="btn secondary" onclick="openMenu('JEE Test Report')">•••</button></div>
+  </div>
+  <div class="card doc">
+    <div class="doctop"><div class="docicon" style="color:#2563eb">🧾</div><div class="docmain"><div class="name">Gold Purchase Invoice</div><div class="meta">Family / Common</div><div class="meta">11 Aug 2026 &nbsp;•&nbsp; Tanishq</div></div></div>
+    <div class="actions"><button class="btn primary">View</button><button class="btn secondary">Edit</button><button class="btn secondary" onclick="openMenu('Gold Purchase Invoice')">•••</button></div>
+  </div>
 </section>
 
 <section id="health" class="screen">
-<div class="header-row"><div><div class="meta">Person</div><select id="healthMember" onchange="renderHealthAll()" style="margin-top:4px"></select></div><button class="primary" onclick="startAdd('Health')">＋ Report</button></div>
-<div class="tabs" style="margin-top:12px"><button class="primary" onclick="healthTab('overview')">Overview</button><button class="secondary" onclick="healthTab('trends')">Trends</button><button class="secondary" onclick="healthTab('reports')">Reports</button><button class="secondary" onclick="healthTab('compare')">Compare</button></div>
+  <div class="top"><div><div class="section" style="margin:0">💙 Health</div></div><button class="iconbtn">🔔</button></div>
+  <div style="display:flex;align-items:end;justify-content:space-between;gap:10px;margin-top:8px">
+    <div style="flex:1"><div class="meta">Person</div><select><option>Me</option><option>Spouse</option><option>Child</option></select></div>
+  </div>
+  <div class="tabs">
+    <button id="tOverview" class="tab active" onclick="healthTab('overview')">Overview</button>
+    <button id="tTrends" class="tab" onclick="healthTab('trends')">Trends</button>
+    <button id="tReports" class="tab" onclick="healthTab('reports')">Reports</button>
+    <button id="tCompare" class="tab" onclick="healthTab('compare')">Compare</button>
+  </div>
 
-<div id="hOverview">
-<div class="section">Latest results</div><div id="latestDate" class="meta" style="text-align:right;margin-top:-25px"></div>
-<div class="grid2 healthcards" id="latestCards"></div>
-<div class="section">Needs attention</div><div class="card tablewrap"><table class="attention"><tbody id="attentionRows"></tbody></table></div>
-<div class="section">Recent report</div><div id="recentHealth"></div>
-</div>
+  <div id="hOverview">
+    <div class="section">Latest results <span class="meta" style="float:right;text-transform:none;letter-spacing:0">20 Aug 2026</span></div>
+    <div class="healthgrid">
+      <div class="card hcard"><div class="meta">HbA1c</div><div class="hval">7.2 <span class="meta">%</span></div><div class="htrend orangeText">↑ from 7.0</div></div>
+      <div class="card hcard"><div class="meta">Fasting Sugar</div><div class="hval">118 <span class="meta">mg/dL</span></div><div class="htrend greenText">↓ from 126</div></div>
+      <div class="card hcard"><div class="meta">LDL</div><div class="hval">91 <span class="meta">mg/dL</span></div><div class="htrend">No change</div></div>
+      <div class="card hcard"><div class="meta">Hemoglobin</div><div class="hval">14.2 <span class="meta">g/dL</span></div><div class="htrend">No change</div></div>
+    </div>
 
-<div id="hTrends" class="hidden">
-<div class="section">Trends</div><select id="trendParam" onchange="renderTrend()"></select><canvas id="trendChart" style="margin-top:10px"></canvas><div class="card" id="trendStats" style="margin-top:10px"></div>
-</div>
+    <div class="section">Needs attention</div>
+    <div class="card pad table"><table><tbody>
+      <tr><td>HbA1c</td><td>7.2 %</td><td class="redText" style="text-align:right">High</td></tr>
+      <tr><td>Vitamin D</td><td>42 nmol/L</td><td class="orangeText" style="text-align:right">Low</td></tr>
+      <tr><td>HDL</td><td>36 mg/dL</td><td class="orangeText" style="text-align:right">Low</td></tr>
+    </tbody></table></div>
 
-<div id="hReports" class="hidden">
-<div class="section">Reports</div><div class="actions"><button class="primary" onclick="processAll()">Process saved PDFs</button><button class="secondary" onclick="startAdd('Health')">＋ Add report</button></div><div id="processMsg" class="small" style="margin:8px 0"></div><div id="healthReportList"></div>
-</div>
+    <div class="section">Recent report</div>
+    <div class="card doc"><div class="doctop"><div class="docicon">PDF</div><div class="docmain"><div class="name">Blood Test Report</div><div class="meta">20 Aug 2026 &nbsp;•&nbsp; Dr Lal PathLabs</div><div class="tags"><span class="tag">42 values extracted</span></div></div><div>›</div></div></div>
+  </div>
 
-<div id="hCompare" class="hidden">
-<div class="section">Compare</div><div class="grid2"><select id="cmpA" onchange="renderCompare()"></select><select id="cmpB" onchange="renderCompare()"></select></div><div class="card tablewrap" id="compareBox" style="margin-top:10px"></div>
-</div>
+  <div id="hTrends" class="hidden">
+    <div class="section">Parameter</div><select><option>HbA1c</option><option>Fasting Glucose</option><option>LDL</option><option>Hemoglobin</option></select>
+    <div class="section">HbA1c trend</div><canvas id="chart"></canvas>
+  </div>
+
+  <div id="hReports" class="hidden">
+    <div class="section">2026</div>
+    <div class="timeline">
+      <div class="time"><div class="card doc"><div class="name">20 Aug</div><div class="meta">Blood Test Report · Dr Lal PathLabs</div><div class="tags"><span class="tag">42 values extracted</span></div></div></div>
+      <div class="time"><div class="card doc"><div class="name">23 Jun</div><div class="meta">Complete Health Check</div><div class="tags"><span class="tag">38 values extracted</span></div></div></div>
+    </div>
+  </div>
+
+  <div id="hCompare" class="hidden">
+    <div class="section">Compare</div>
+    <div class="grid2"><select><option>20 Jun 2026</option></select><select><option>20 Aug 2026</option></select></div>
+    <div class="card pad table" style="margin-top:10px"><table><thead><tr><th>Parameter</th><th>Jun</th><th>Aug</th><th>Change</th></tr></thead><tbody>
+      <tr><td>HbA1c</td><td>7.7</td><td>7.2</td><td class="greenText">↓ 0.5</td></tr>
+      <tr><td>LDL</td><td>96</td><td>91</td><td class="greenText">↓ 5</td></tr>
+      <tr><td>HDL</td><td>36</td><td>40</td><td class="greenText">↑ 4</td></tr>
+    </tbody></table></div>
+  </div>
 </section>
 
 <section id="search" class="screen">
-<div class="searchbar"><input id="globalSearch" placeholder="Search across documents, values, notes…"><button class="primary" onclick="runSearch()">Search</button></div>
-<div class="chips" style="margin-top:10px"><button class="secondary" onclick="quickSearch('blood')">Blood test reports</button><button class="secondary" onclick="quickSearch('insurance')">Insurance papers</button><button class="secondary" onclick="quickSearch('warranty')">Warranty</button><button class="secondary" onclick="quickSearch('school')">School reports</button><button class="secondary" onclick="quickSearch('gold')">Gold invoices</button></div>
-<div class="section">Search results</div><div id="searchResults"></div>
-<div class="section">Upcoming reminders</div><div class="card" id="searchReminders"></div>
-<div class="section">Backup & restore</div><div class="grid2"><button class="card secondary" onclick="exportBackup()"><div class="name">Backup Now</div><div class="meta">Save to private Files/iCloud</div></button><button class="card secondary" onclick="restoreFile.click()"><div class="name">Restore</div><div class="meta">Restore from backup</div></button></div><input id="restoreFile" class="hidden" type="file" accept="application/json" onchange="importBackup()">
-</section>
+  <div class="top"><div class="section" style="margin:0">🔍 Search</div><button class="iconbtn">🔔</button></div>
+  <div class="search" style="margin-top:10px"><input placeholder="Search across documents, values, notes..."></div>
+  <div class="filters"><button class="pill active">All</button><button class="pill">Documents</button><button class="pill">Health</button><button class="pill">Reminders</button><button class="pill">Notes</button></div>
+  <div class="section">Suggested searches</div>
+  <div class="filters" style="flex-wrap:wrap;overflow:visible"><button class="pill">Blood test reports</button><button class="pill">Insurance papers</button><button class="pill">Warranty</button><button class="pill">School reports</button><button class="pill">Gold invoices</button><button class="pill">Property papers</button></div>
 
-</main></div>
+  <div class="section">Upcoming reminders</div>
+  <div class="card pad">
+    <div class="row"><div>🚗</div><div class="grow"><div class="name">Car insurance renewal</div><div class="meta">05 Sep 2026</div></div><div class="days dr">12<br><span>days</span></div></div>
+    <div class="row"><div>❄️</div><div class="grow"><div class="name">Refrigerator warranty</div><div class="meta">01 Oct 2026</div></div><div class="days do">38<br><span>days</span></div></div>
+    <div class="row"><div>🛡️</div><div class="grow"><div class="name">Health insurance renewal</div><div class="meta">26 Dec 2026</div></div><div class="days dg">124<br><span>days</span></div></div>
+  </div>
+
+  <div class="section">Backup & restore</div>
+  <div class="backups"><button class="backup green"><div style="font-size:24px">💾</div><div class="name" style="margin-top:8px">Backup Now</div><div class="meta" style="color:#d9f0df">Last backup: 18 Aug 2026</div></button><button class="backup purple"><div style="font-size:24px">☁️</div><div class="name" style="margin-top:8px">Restore</div><div class="meta" style="color:#eadcf8">Restore from backup</div></button></div>
+</section>
+</main>
+</div>
 
 <nav>
-<button class="active" data-s="home" onclick="go('home',this)"><span class="ico">⌂</span>Home</button>
-<button data-s="family" onclick="go('family',this)"><span class="ico">♙</span>Family</button>
-<button data-s="documents" onclick="go('documents',this)"><span class="ico">▤</span>Documents</button>
-<button data-s="health" onclick="go('health',this)"><span class="ico">♡</span>Health</button>
-<button data-s="search" onclick="go('search',this)"><span class="ico">⌕</span>Search</button>
+<button class="active" data-page="home" onclick="go('home',this)"><span class="navicon">🏠</span>Home</button>
+<button data-page="family" onclick="go('family',this)"><span class="navicon">👥</span>Family</button>
+<button data-page="documents" onclick="go('documents',this)"><span class="navicon">📄</span>Documents</button>
+<button data-page="health" onclick="go('health',this)"><span class="navicon">♡</span>Health</button>
+<button data-page="search" onclick="go('search',this)"><span class="navicon">⌕</span>Search</button>
 </nav>
 
 <div id="addModal" class="modal hidden"><div class="sheet">
-<div class="header-row"><button class="secondary" onclick="closeAdd()">‹</button><div class="name">ADD DOCUMENT</div><button class="secondary" onclick="closeAdd()">✕</button></div>
-<div class="stepbar"><div class="step on" id="st1">1</div><div class="line"></div><div class="step" id="st2">2</div><div class="line"></div><div class="step" id="st3">3</div></div>
-<div id="addStep1"><div class="section">Who is this for?</div><div class="grid2" id="memberChoices"></div><button class="primary full" style="margin-top:14px" onclick="toStep2()">Continue ›</button></div>
-<div id="addStep2" class="hidden"><div class="section">What type of document?</div><div class="grid2" id="categoryChoices"></div><button class="primary full" style="margin-top:14px" onclick="toStep3()">Continue ›</button></div>
-<div id="addStep3" class="hidden"><div class="section">Details</div><div class="stack"><input id="aTitle" placeholder="Document title"><input id="aDate" type="date"><input id="aFile" type="file" accept="application/pdf,image/*"><div id="aDynamic" class="stack"></div><textarea id="aNotes" rows="3" placeholder="Notes"></textarea><button class="primary full" onclick="saveNewDocument()">Save</button><div id="aMsg" class="small"></div></div></div>
+  <div class="top"><div class="section" style="margin:0;text-transform:none;font-size:18px">＋ Add Document</div><button class="iconbtn" onclick="closeAdd()">✕</button></div>
+  <div class="stepbar"><div id="s1" class="step active">1</div><div class="line"></div><div id="s2" class="step">2</div><div class="line"></div><div id="s3" class="step">3</div></div>
+  <div id="a1"><div class="section">Who is this for?</div><div class="choicegrid">
+    <button class="choice selected" onclick="pick(this)"><div><div class="emoji">👤</div><div class="name">Me</div></div></button>
+    <button class="choice" onclick="pick(this)"><div><div class="emoji">👩</div><div class="name">Spouse</div></div></button>
+    <button class="choice" onclick="pick(this)"><div><div class="emoji">👦</div><div class="name">Child</div></div></button>
+    <button class="choice" onclick="pick(this)"><div><div class="emoji">👨‍👩‍👦</div><div class="name">Family / Common</div></div></button>
+  </div><button class="btn primary full" style="margin-top:12px" onclick="step(2)">Continue →</button></div>
+
+  <div id="a2" class="hidden"><div class="section">What type of document?</div><div class="choicegrid">
+    <button class="choice selected" onclick="pick(this)"><div><div class="emoji">💙</div><div class="name">Health</div></div></button>
+    <button class="choice" onclick="pick(this)"><div><div class="emoji">🎓</div><div class="name">Education</div></div></button>
+    <button class="choice" onclick="pick(this)"><div><div class="emoji">🛡️</div><div class="name">Warranty</div></div></button>
+    <button class="choice" onclick="pick(this)"><div><div class="emoji">💍</div><div class="name">Jewellery</div></div></button>
+    <button class="choice" onclick="pick(this)"><div><div class="emoji">☂️</div><div class="name">Insurance</div></div></button>
+    <button class="choice" onclick="pick(this)"><div><div class="emoji">📜</div><div class="name">Certificate</div></div></button>
+  </div><button class="btn primary full" style="margin-top:12px" onclick="step(3)">Continue →</button></div>
+
+  <div id="a3" class="hidden"><div class="section">Details</div><div style="display:grid;gap:9px"><input placeholder="Document title"><input type="date" value="2026-08-24"><input type="file" accept="application/pdf,image/*"><input placeholder="Laboratory / institution / vendor"><textarea rows="3" placeholder="Notes"></textarea><button class="btn primary full" onclick="closeAdd()">Save document</button></div></div>
 </div></div>
 
-<div id="reviewModal" class="modal hidden"><div class="sheet">
-<div class="header-row"><div><div class="name">Review extracted results</div><div class="small">Confirm before adding to health trends</div></div><button class="secondary" onclick="reviewModal.classList.add('hidden')">✕</button></div>
-<div id="reviewInfo" class="card" style="margin-top:12px"></div>
-<div class="review-row"><b>Parameter</b><b>Value</b><b>Unit</b></div><div id="reviewRows"></div>
-<div class="actions" style="margin-top:14px"><button class="secondary" onclick="reviewModal.classList.add('hidden')">Later</button><button class="primary" onclick="confirmReview()">Confirm & Save</button></div>
-</div></div>
-
-<div id="menuModal" class="modal hidden"><div class="sheet"><div id="menuTitle" class="name"></div><div class="stack" style="margin-top:12px"><button class="secondary full" onclick="menuView()">View</button><button class="secondary full" onclick="menuEdit()">Edit details</button><button class="secondary full" onclick="menuReplace()">Replace attachment</button><button class="danger full" onclick="menuDelete()">Delete</button><button class="secondary full" onclick="menuModal.classList.add('hidden')">Cancel</button></div></div></div>
-<input id="replaceFile" class="hidden" type="file" accept="application/pdf,image/*" onchange="replaceAttachment()">
+<div id="menuModal" class="modal hidden"><div class="sheet"><div class="name" id="menuTitle">Document</div><div style="display:grid;gap:8px;margin-top:12px"><button class="btn secondary full">Replace attachment</button><button class="btn secondary full">Move category</button><button class="btn secondary full">Export / Share</button><button class="btn danger full">Delete</button><button class="btn secondary full" onclick="closeMenu()">Cancel</button></div></div></div>
 
 <script>
-const DB='MyFamilyVaultDB',VER=4;let dbx,docFilter='All',addMemberId='',addCategory='',reviewDocId='',reviewData=[],menuDocId='';
-const CAT=['Health','Education','Warranty','Jewellery','Insurance','Certificates','Vehicle','Property','Other'];
-const TIT={home:['MY FAMILY VAULT','All important family records in one place'],family:['FAMILY','Family profiles'],documents:['DOCUMENTS','Your family document library'],health:['HEALTH','Reports, trends and comparison'],search:['SEARCH','Search, reminders and backup']};
-function S(n,m='readonly'){return dbx.transaction(n,m).objectStore(n)}
-function all(n){return new Promise((r,j)=>{let q=S(n).getAll();q.onsuccess=()=>r(q.result);q.onerror=()=>j(q.error)})}
-function one(n,id){return new Promise((r,j)=>{let q=S(n).get(id);q.onsuccess=()=>r(q.result);q.onerror=()=>j(q.error)})}
-function put(n,o){return new Promise((r,j)=>{let q=S(n,'readwrite').put(o);q.onsuccess=()=>r();q.onerror=()=>j(q.error)})}
-function rem(n,id){return new Promise((r,j)=>{let q=S(n,'readwrite').delete(id);q.onsuccess=()=>r();q.onerror=()=>j(q.error)})}
-function openDB(){return new Promise((r,j)=>{let q=indexedDB.open(DB,VER);q.onupgradeneeded=e=>{let d=e.target.result;if(!d.objectStoreNames.contains('members'))d.createObjectStore('members',{keyPath:'id'});if(!d.objectStoreNames.contains('documents'))d.createObjectStore('documents',{keyPath:'id'});if(!d.objectStoreNames.contains('files'))d.createObjectStore('files',{keyPath:'id'});if(!d.objectStoreNames.contains('healthResults'))d.createObjectStore('healthResults',{keyPath:'id'})};q.onsuccess=()=>{dbx=q.result;r()};q.onerror=()=>j(q.error)})}
-function E(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
-function go(id,b){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');title.textContent=TIT[id][0];subtitle.textContent=TIT[id][1];document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));let n=b||document.querySelector(`nav button[data-s="${id}"]`);if(n)n.classList.add('active');if(id==='home')renderHome();if(id==='family')renderFamily();if(id==='documents')prepareDocuments();if(id==='health')prepareHealth();if(id==='search')renderSearchReminders();scrollTo(0,0)}
-async function defaults(){let m=await all('members');if(!m.length){await put('members',{id:'self',name:'Me',relation:'Self',dob:''});await put('members',{id:'household',name:'Family / Common',relation:'Common',dob:''})}}
-function avatarClass(i){return['pblue','ppink','pgreen','pyellow'][i%4]}
-async function renderHome(){let [m,d]=await Promise.all([all('members'),all('documents')]);homeProfiles.innerHTML=m.map((x,i)=>`<button class="profile" onclick="openMember('${x.id}')"><div class="avatar ${avatarClass(i)}">${x.id==='household'?'👥':'👤'}</div><div class="small" style="color:#fff">${E(x.name)}</div></button>`).join('');for(const c of ['Health','Education','Warranty','Jewellery','Insurance','Certificates']){let e=document.getElementById('q'+c);if(e)e.textContent=d.filter(x=>x.category===c).length+' '+({Health:'reports',Education:'records',Warranty:'items',Jewellery:'records',Insurance:'policies',Certificates:'docs'}[c])}let today=new Date().toISOString().slice(0,10),up=d.filter(x=>x.reminderDate).sort((a,b)=>a.reminderDate.localeCompare(b.reminderDate)).slice(0,3);homeUpcoming.innerHTML=up.length?up.map(x=>`<div class="row"><span>● &nbsp;${E(x.title)}</span><span class="meta">${x.reminderDate}</span></div>`).join(''):'<div class="meta">No upcoming reminders.</div>';let r=d.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,4);homeRecent.innerHTML=r.length?r.map(x=>`<div class="row"><span>${icon(x.category)} &nbsp;${E(x.title)}</span><span class="meta">${x.date||''}</span></div>`).join(''):'<div class="meta">No documents yet.</div>'}
-function openMember(id){go('documents');setTimeout(()=>{docMemberFilter.value=id;renderDocuments()},50)}
-async function saveMember(){let n=memberName.value.trim();if(!n)return alert('Enter name');await put('members',{id:'m'+Date.now(),name:n,relation:memberRelation.value,dob:memberDob.value});memberName.value='';memberForm.classList.add('hidden');renderFamily();renderHome()}
-async function renderFamily(){let m=await all('members'),d=await all('documents');familyCards.innerHTML=m.map((x,i)=>{let md=d.filter(q=>q.memberId===x.id),h=md.filter(q=>q.category==='Health').length,ed=md.filter(q=>q.category==='Education').length;return `<button class="card secondary full" style="text-align:left" onclick="openMember('${x.id}')"><div class="doc"><div class="avatar ${avatarClass(i)}" style="margin:0">${x.id==='household'?'👥':'👤'}</div><div class="docbody"><div class="name">${E(x.name)}</div><div class="meta">${E(x.relation)}</div><div class="meta" style="margin-top:8px">${h} Health &nbsp;•&nbsp; ${ed} Education &nbsp;•&nbsp; ${md.length} Documents</div></div><div>›</div></div></button>`}).join('')}
-async function prepareDocuments(){let m=await all('members'),cur=docMemberFilter.value;docMemberFilter.innerHTML='<option value="All">All people</option>'+m.map(x=>`<option value="${x.id}">${E(x.name)}</option>`).join('');if(cur)docMemberFilter.value=cur;renderDocuments()}
-function setFilter(c){docFilter=c;renderDocuments()}
-function openCat(c){docFilter=c;go(c==='Health'?'health':'documents')}
-function icon(c){return({Health:'🩺',Education:'🎓',Warranty:'🧾',Jewellery:'💍',Insurance:'🛡️',Certificates:'📜',Vehicle:'🚗',Property:'🏠'}[c]||'📄')}
-async function visibleDocs(){let d=await all('documents'),q=(docSearch.value||'').toLowerCase(),m=docMemberFilter.value||'All';if(docFilter!=='All')d=d.filter(x=>x.category===docFilter);if(m!=='All')d=d.filter(x=>x.memberId===m);if(q)d=d.filter(x=>JSON.stringify(x).toLowerCase().includes(q));return d.sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.createdAt||0)-(a.createdAt||0))}
-function docCard(x){return `<div class="card"><div class="doc"><div class="docicon">${icon(x.category)}</div><div class="docbody"><div class="name">${E(x.title)}</div><div class="meta">${E(x.memberName)}</div><div class="meta">${x.date||''}${x.extra?.lab?' · '+E(x.extra.lab):''}</div><div class="badges">${x.fileName?`<span class="badge">${x.fileName.toLowerCase().endsWith('.pdf')?'PDF':'Image'}</span>`:''}${x.processed?`<span class="badge">${x.processedCount||0} values extracted</span>`:''}</div></div></div><div class="actions">${x.fileId?`<button class="secondary" onclick="openAttachment('${x.fileId}')">View</button>`:'<button class="secondary" disabled>No file</button>'}<button class="secondary" onclick="editDoc('${x.id}')">Edit</button><button class="secondary dots" onclick="openMenu('${x.id}')">•••</button></div></div>`}
-async function renderDocuments(){let d=await visibleDocs();documentList.innerHTML=d.length?d.map(docCard).join(''):'<div class="card"><div class="meta">No matching documents.</div></div>'}
-async function openAttachment(id){let f=await one('files',id);if(!f?.blob)return alert('File not found');let u=URL.createObjectURL(f.blob);window.open(u,'_blank');setTimeout(()=>URL.revokeObjectURL(u),60000)}
-async function openMenu(id){menuDocId=id;let d=await one('documents',id);menuTitle.textContent=d?.title||'Document';menuModal.classList.remove('hidden')}
-async function menuView(){let d=await one('documents',menuDocId);menuModal.classList.add('hidden');if(d?.fileId)openAttachment(d.fileId)}
-async function menuDelete(){let d=await one('documents',menuDocId);if(!d)return;if(!confirm(`Delete "${d.title}"?\n\nThe attachment and any extracted health values will also be deleted.`))return;let hr=(await all('healthResults')).filter(x=>x.documentId===d.id);for(const x of hr)await rem('healthResults',x.id);if(d.fileId)await rem('files',d.fileId);await rem('documents',d.id);menuModal.classList.add('hidden');renderDocuments();renderHome();renderHealthAll()}
-function menuEdit(){menuModal.classList.add('hidden');editDoc(menuDocId)}
-function menuReplace(){menuModal.classList.add('hidden');replaceFile.click()}
-async function replaceAttachment(){let f=replaceFile.files[0],d=await one('documents',menuDocId);if(!f||!d)return;if(d.fileId)await rem('files',d.fileId);let id='f'+Date.now();await put('files',{id,name:f.name,type:f.type,blob:f});d.fileId=id;d.fileName=f.name;d.processed=false;d.processedCount=0;await put('documents',d);replaceFile.value='';renderDocuments();alert('Attachment replaced.')}
-async function editDoc(id){let d=await one('documents',id);if(!d)return;let t=prompt('Document title',d.title);if(t===null)return;d.title=t.trim()||d.title;let dt=prompt('Document date (YYYY-MM-DD)',d.date||'');if(dt!==null)d.date=dt;await put('documents',d);renderDocuments();renderHome()}
-function startAdd(pref=''){addMemberId='';addCategory=pref||'';addModal.classList.remove('hidden');addStep1.classList.remove('hidden');addStep2.classList.add('hidden');addStep3.classList.add('hidden');st1.classList.add('on');st2.classList.remove('on');st3.classList.remove('on');buildAddChoices()}
-function closeAdd(){addModal.classList.add('hidden')}
-async function buildAddChoices(){let m=await all('members');memberChoices.innerHTML=m.map((x,i)=>`<button id="mc-${x.id}" class="card secondary choice" onclick="pickMember('${x.id}')"><div><div class="avatar ${avatarClass(i)}">${x.id==='household'?'👥':'👤'}</div><div class="name">${E(x.name)}</div></div></button>`).join('');categoryChoices.innerHTML=CAT.map(c=>`<button id="cc-${c}" class="card secondary choice" onclick="pickCategory('${c}')"><div><div style="font-size:27px">${icon(c)}</div><div class="name">${c}</div></div></button>`).join('')}
-function pickMember(id){addMemberId=id;document.querySelectorAll('#memberChoices .choice').forEach(x=>x.classList.remove('sel'));document.getElementById('mc-'+id).classList.add('sel')}
-function pickCategory(c){addCategory=c;document.querySelectorAll('#categoryChoices .choice').forEach(x=>x.classList.remove('sel'));document.getElementById('cc-'+c).classList.add('sel')}
-function toStep2(){if(!addMemberId)return alert('Choose a family member');addStep1.classList.add('hidden');addStep2.classList.remove('hidden');st2.classList.add('on');if(addCategory)pickCategory(addCategory)}
-function toStep3(){if(!addCategory)return alert('Choose document type');addStep2.classList.add('hidden');addStep3.classList.remove('hidden');st3.classList.add('on');aDate.value=new Date().toISOString().slice(0,10);buildDynamic()}
-function buildDynamic(){let h='';if(addCategory==='Health')h='<input id="xLab" placeholder="Laboratory / hospital">';if(addCategory==='Education')h='<input id="xSchool" placeholder="School / institute"><input id="xExam" placeholder="Class / exam / test"><input id="xScore" placeholder="Marks / grade / rank">';if(addCategory==='Warranty')h='<input id="xVendor" placeholder="Brand / seller"><input id="xItem" placeholder="Item / model / serial no."><input id="xExpiry" type="date"><div class="meta">Warranty expiry</div>';if(addCategory==='Jewellery')h='<input id="xVendor" placeholder="Jeweller"><input id="xItem" placeholder="Item / description"><input id="xDetails" placeholder="Weight / purity / hallmark"><input id="xAmount" placeholder="Amount">';if(addCategory==='Insurance')h='<input id="xVendor" placeholder="Insurer"><input id="xItem" placeholder="Policy number"><input id="xExpiry" type="date"><div class="meta">Renewal / expiry</div>';if(addCategory==='Certificates')h='<input id="xVendor" placeholder="Issuer / institution"><input id="xItem" placeholder="Certificate number"><input id="xExpiry" type="date"><div class="meta">Expiry, if any</div>';aDynamic.innerHTML=h}
-function xv(id){let e=document.getElementById(id);return e?e.value.trim():''}
-async function saveNewDocument(){let m=await one('members',addMemberId),f=aFile.files[0];if(!m)return;let fid=null;if(f){fid='f'+Date.now();await put('files',{id:fid,name:f.name,type:f.type,blob:f})}let extra={};if(addCategory==='Health')extra={lab:xv('xLab')};if(addCategory==='Education')extra={school:xv('xSchool'),exam:xv('xExam'),score:xv('xScore')};if(['Warranty','Jewellery','Insurance','Certificates'].includes(addCategory))extra={vendor:xv('xVendor'),item:xv('xItem'),details:xv('xDetails'),amount:xv('xAmount')};let d={id:'d'+Date.now(),memberId:m.id,memberName:m.name,category:addCategory,title:aTitle.value.trim()||addCategory+' document',date:aDate.value,fileId:fid,fileName:f?.name||'',notes:aNotes.value,reminderDate:xv('xExpiry')||null,extra,createdAt:Date.now(),processed:false};await put('documents',d);aMsg.textContent='Saved.';closeAdd();renderHome();if(addCategory==='Health'&&f&&f.type==='application/pdf')setTimeout(()=>extractForReview(d.id),200)}
-const TESTS=[
-['HbA1c',/HbA1c(?:,? WHOLE BLOOD)?[^0-9]{0,100}(\d+(?:\.\d+)?)\s*%/i,'%',4,5.6,'range'],
-['Estimated Average Glucose',/(?:Estimated average glucose|eAG)[^0-9]{0,80}(\d+(?:\.\d+)?)\s*mg\/dL/i,'mg/dL',null,null,'none'],
-['Fasting Glucose',/(?:GLUCOSE FASTING[^0-9]{0,100}|Fasting Glucose[^0-9]{0,80})(\d+(?:\.\d+)?)\s*mg\/dL/i,'mg/dL',70,100,'range'],
-['Creatinine',/Creatinine[^0-9]{0,80}(\d+(?:\.\d+)?)\s*mg\/dL/i,'mg/dL',0.67,1.17,'range'],
-['eGFR',/(?:GFR Estimated|eGFR)[^0-9]{0,80}(\d+(?:\.\d+)?)\s*mL\/min\/1\.73m2/i,'mL/min/1.73m²',59,null,'min'],
-['Urea',/Urea(?! Nitrogen)[^0-9]{0,80}(\d+(?:\.\d+)?)\s*mg\/dL/i,'mg/dL',17,43,'range'],
-['Uric Acid',/Uric Acid[^0-9]{0,80}(\d+(?:\.\d+)?)\s*mg\/dL/i,'mg/dL',3.5,7.2,'range'],
-['AST (SGOT)',/AST\s*\(SGOT\)[^0-9]{0,80}(\d+(?:\.\d+)?)\s*U\/L/i,'U/L',null,50,'max'],
-['ALT (SGPT)',/ALT\s*\(SGPT\)[^0-9]{0,80}(\d+(?:\.\d+)?)\s*U\/L/i,'U/L',null,50,'max'],
-['Alkaline Phosphatase',/Alkaline Phosphatase(?: \(ALP\))?[^0-9]{0,80}(\d+(?:\.\d+)?)\s*U\/L/i,'U/L',30,120,'range'],
-['Bilirubin Total',/Bilirubin Total[^0-9]{0,80}(\d+(?:\.\d+)?)\s*mg\/dL/i,'mg/dL',0.3,1.2,'range'],
-['Albumin',/Albumin[^0-9]{0,80}(\d+(?:\.\d+)?)\s*g\/dL/i,'g/dL',3.5,5.2,'range'],
-['Calcium',/(?:Calcium,? Total|Calcium)[^0-9]{0,80}(\d+(?:\.\d+)?)\s*mg\/dL/i,'mg/dL',8.6,10.3,'range'],
-['Sodium',/Sodium[^0-9]{0,80}(\d+(?:\.\d+)?)\s*mEq\/L/i,'mEq/L',136,146,'range'],
-['Potassium',/Potassium[^0-9]{0,80}(\d+(?:\.\d+)?)\s*mEq\/L/i,'mEq/L',3.5,5.1,'range'],
-['Vitamin B12',/Vitamin B12(?:; Cyanocobalamin)?[^0-9]{0,80}(\d+(?:\.\d+)?)\s*pg\/mL/i,'pg/mL',211,946,'range'],
-['Vitamin D, 25 Hydroxy',/Vitamin D,?\s*25\s*Hydroxy[^0-9]{0,80}(\d+(?:\.\d+)?)\s*nmol\/L/i,'nmol/L',75,250,'range'],
-['Free T3',/Free Triiodothyronine[^0-9]{0,80}(\d+(?:\.\d+)?)\s*pg\/mL/i,'pg/mL',2,4.4,'range'],
-['Free T4',/Free Thyroxine[^0-9]{0,80}(\d+(?:\.\d+)?)\s*ng\/dL/i,'ng/dL',0.93,1.70,'range'],
-['TSH',/TSH,?\s*Ultrasensitive[^0-9]{0,80}(\d+(?:\.\d+)?)\s*[µu]IU\/mL/i,'µIU/mL',0.27,4.2,'range'],
-['Hemoglobin',/Hemoglobin[^0-9]{0,80}(\d+(?:\.\d+)?)\s*g\/dL/i,'g/dL',13,17,'range'],
-['Platelet Count',/Platelet Count[^0-9]{0,80}(\d+(?:\.\d+)?)\s*thou\/mm3/i,'thou/mm³',150,410,'range'],
-['Total Cholesterol',/Cholesterol Total[^0-9]{0,80}(\d+(?:\.\d+)?)\s*mg\/dL/i,'mg/dL',null,200,'max'],
-['Triglycerides',/Triglycerides[^0-9]{0,80}(\d+(?:\.\d+)?)\s*mg\/dL/i,'mg/dL',null,150,'max'],
-['HDL Cholesterol',/HDL Cholesterol[^0-9]{0,80}(\d+(?:\.\d+)?)\s*mg\/dL/i,'mg/dL',40,null,'min'],
-['LDL Cholesterol',/LDL Cholesterol,?\s*Direct[^0-9]{0,80}(\d+(?:\.\d+)?)\s*mg\/dL/i,'mg/dL',null,100,'max']
-];
-async function pdfText(blob){if(typeof pdfjsLib==='undefined')throw Error('PDF engine unavailable');pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';let pdf=await pdfjsLib.getDocument({data:await blob.arrayBuffer()}).promise,t='';for(let i=1;i<=pdf.numPages;i++){let p=await pdf.getPage(i),c=await p.getTextContent();t+=' '+c.items.map(x=>x.str).join(' ')}return t}
-function parseText(t){return TESTS.flatMap(x=>{let m=t.match(x[1]);return m?[{parameter:x[0],value:Number(m[1]),unit:x[2],low:x[3],high:x[4],rule:x[5]}]:[]})}
-async function extractForReview(id){let d=await one('documents',id),f=d?.fileId?await one('files',d.fileId):null;if(!f)return;try{let t=await pdfText(f.blob),p=parseText(t);if(!p.length){alert('The PDF was saved, but no supported selectable-text lab values were detected. It may be scanned/image-only or use an unsupported layout.');return}reviewDocId=id;reviewData=p;reviewInfo.innerHTML=`<div class="name">${E(d.title)}</div><div class="meta">${E(d.memberName)} · ${d.date||''} · ${E(d.extra?.lab||'')}</div><div class="meta" style="margin-top:5px">${p.length} values detected</div>`;reviewRows.innerHTML=p.map((r,i)=>`<div class="review-row"><input data-i="${i}" data-k="parameter" value="${E(r.parameter)}"><input data-i="${i}" data-k="value" type="number" step="any" value="${r.value}"><input data-i="${i}" data-k="unit" value="${E(r.unit)}"></div>`).join('');reviewModal.classList.remove('hidden')}catch(e){alert('Could not read this PDF locally. The original report is still saved.')}} 
-async function confirmReview(){document.querySelectorAll('#reviewRows input').forEach(x=>{let i=Number(x.dataset.i),k=x.dataset.k;reviewData[i][k]=k==='value'?Number(x.value):x.value});let d=await one('documents',reviewDocId),old=(await all('healthResults')).filter(x=>x.documentId===reviewDocId);for(const x of old)await rem('healthResults',x.id);for(const r of reviewData)await put('healthResults',{id:'hr-'+reviewDocId+'-'+slug(r.parameter),documentId:reviewDocId,memberId:d.memberId,date:d.date,lab:d.extra?.lab||'',...r});d.processed=true;d.processedCount=reviewData.length;await put('documents',d);reviewModal.classList.add('hidden');renderHealthAll();renderHome();alert('Verified results saved to Health.')}
-function slug(s){return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
-async function processAll(){let d=(await all('documents')).filter(x=>x.category==='Health'&&x.memberId===healthMember.value&&x.fileId&&!x.processed);let n=0;for(const x of d){let f=await one('files',x.fileId);try{let p=parseText(await pdfText(f.blob));if(p.length){let old=(await all('healthResults')).filter(q=>q.documentId===x.id);for(const z of old)await rem('healthResults',z.id);for(const r of p)await put('healthResults',{id:'hr-'+x.id+'-'+slug(r.parameter),documentId:x.id,memberId:x.memberId,date:x.date,lab:x.extra?.lab||'',...r});x.processed=true;x.processedCount=p.length;await put('documents',x);n++}}catch(e){}}processMsg.textContent=`Processed ${n} report(s). Review newly uploaded reports individually when possible.`;renderHealthAll()}
-function status(r){if(r.rule==='min')return r.value<r.low?'Low':'Normal';if(r.rule==='max')return r.value>r.high?'High':'Normal';if(r.rule==='range'){if(r.low!=null&&r.value<r.low)return'Low';if(r.high!=null&&r.value>r.high)return'High'}return'Normal'}
-function healthTab(t){['Overview','Trends','Reports','Compare'].forEach(x=>document.getElementById('h'+x).classList.add('hidden'));document.getElementById('h'+t[0].toUpperCase()+t.slice(1)).classList.remove('hidden');if(t==='trends')prepareTrends();if(t==='compare')prepareCompare()}
-async function prepareHealth(){let m=await all('members'),cur=healthMember.value;healthMember.innerHTML=m.filter(x=>x.id!=='household').map(x=>`<option value="${x.id}">${E(x.name)}</option>`).join('');if(cur)healthMember.value=cur;renderHealthAll()}
-async function renderHealthAll(){await renderOverview();await renderHealthReports()}
-async function renderOverview(){if(!healthMember.value)return;let hr=(await all('healthResults')).filter(x=>x.memberId===healthMember.value).sort((a,b)=>a.date.localeCompare(b.date));if(!hr.length){latestCards.innerHTML='<div class="card" style="grid-column:1/-1"><div class="meta">No verified health values yet. Add or process a text-based PDF report.</div></div>';attentionRows.innerHTML='';recentHealth.innerHTML='';latestDate.textContent='';return}let date=hr.at(-1).date,latest=hr.filter(x=>x.date===date);latestDate.textContent=date;let keys=['HbA1c','Fasting Glucose','LDL Cholesterol','Hemoglobin'],group={};for(const r of hr)(group[r.parameter]??=[]).push(r);latestCards.innerHTML=keys.map(k=>latest.find(r=>r.parameter===k)).filter(Boolean).map(r=>{let a=group[r.parameter],prev=a.length>1?a.at(-2):null,d=prev?r.value-prev.value:null;return `<div class="card"><div class="meta">${E(r.parameter)}</div><div class="hvalue">${r.value} <span class="unit">${E(r.unit||'')}</span></div><div class="small ${d>0?'up':d<0?'down':''}">${d==null?'No previous value':(d>0?'↑ ':'↓ ')+Math.abs(Number(d.toFixed(2)))+' from '+prev.value}</div></div>`}).join('')||'<div class="card"><div class="meta">No key values detected.</div></div>';let ab=latest.filter(x=>status(x)!=='Normal');attentionRows.innerHTML=ab.length?ab.map(r=>`<tr><td>${E(r.parameter)}</td><td>${r.value} ${E(r.unit||'')}</td><td class="${status(r).toLowerCase()}">${status(r)}</td></tr>`).join(''):'<tr><td colspan="3" class="meta">No stored values outside the parser reference limits.</td></tr>';let docs=(await all('documents')).filter(x=>x.category==='Health'&&x.memberId===healthMember.value).sort((a,b)=>(b.date||'').localeCompare(a.date||''));recentHealth.innerHTML=docs.length?docCard(docs[0]):''}
-async function renderHealthReports(){let d=(await all('documents')).filter(x=>x.category==='Health'&&x.memberId===healthMember.value).sort((a,b)=>(b.date||'').localeCompare(a.date||''));healthReportList.innerHTML=d.length?d.map(x=>`<div class="card"><div class="doc"><div class="docicon">📄</div><div class="docbody"><div class="name">${E(x.title)}</div><div class="meta">${x.date||''} · ${E(x.extra?.lab||'')}</div><div class="badges"><span class="badge">${x.processed?'✓ '+(x.processedCount||0)+' values extracted':'Not processed'}</span></div></div></div><div class="actions">${x.fileId?`<button class="secondary" onclick="openAttachment('${x.fileId}')">View</button><button class="secondary" onclick="extractForReview('${x.id}')">Review/Process</button>`:''}<button class="danger" onclick="openMenu('${x.id}')">•••</button></div></div>`).join(''):'<div class="card"><div class="meta">No health reports.</div></div>'}
-async function prepareTrends(){let r=(await all('healthResults')).filter(x=>x.memberId===healthMember.value),p=[...new Set(r.map(x=>x.parameter))].sort();trendParam.innerHTML=p.map(x=>`<option>${E(x)}</option>`).join('');if(p.includes('HbA1c'))trendParam.value='HbA1c';renderTrend()}
-async function renderTrend(){let p=trendParam.value,r=(await all('healthResults')).filter(x=>x.memberId===healthMember.value&&x.parameter===p).sort((a,b)=>a.date.localeCompare(b.date));let v=r.map(x=>x.value);trendStats.innerHTML=r.length?`<div class="row"><span>Latest</span><b>${r.at(-1).value} ${E(r.at(-1).unit||'')}</b></div><div class="row"><span>Previous</span><b>${r.length>1?r.at(-2).value:'—'}</b></div><div class="row"><span>Change</span><b>${r.length>1?Number((r.at(-1).value-r.at(-2).value).toFixed(3)):'—'}</b></div>`:'<div class="meta">No data.</div>';drawChart(r)}
-function drawChart(p){let c=trendChart,d=devicePixelRatio||1,w=c.clientWidth,h=235;c.width=w*d;c.height=h*d;let g=c.getContext('2d');g.scale(d,d);g.clearRect(0,0,w,h);if(!p.length){g.fillStyle='#9da7b2';g.fillText('No trend data.',18,28);return}if(p.length===1){g.fillStyle='#3478f6';g.beginPath();g.arc(w/2,h/2,6,0,Math.PI*2);g.fill();return}let vals=p.map(x=>x.value),mn=Math.min(...vals),mx=Math.max(...vals);if(mn===mx){mn--;mx++}let L=40,R=14,T=20,B=32,W=w-L-R,H=h-T-B,x=i=>L+i*W/(p.length-1),y=v=>T+(mx-v)/(mx-mn)*H;g.strokeStyle='#29313a';for(let i=0;i<4;i++){let yy=T+i*H/3;g.beginPath();g.moveTo(L,yy);g.lineTo(w-R,yy);g.stroke()}g.strokeStyle='#3478f6';g.lineWidth=3;g.beginPath();p.forEach((q,i)=>i?g.lineTo(x(i),y(q.value)):g.moveTo(x(i),y(q.value)));g.stroke();p.forEach((q,i)=>{g.fillStyle='#3478f6';g.beginPath();g.arc(x(i),y(q.value),5,0,Math.PI*2);g.fill();g.fillStyle='#9da7b2';g.font='10px -apple-system';g.fillText(q.date.slice(5),x(i)-13,h-8)})}
-async function prepareCompare(){let d=(await all('documents')).filter(x=>x.category==='Health'&&x.memberId===healthMember.value&&x.processed).sort((a,b)=>a.date.localeCompare(b.date)),o=d.map(x=>`<option value="${x.id}">${x.date} · ${E(x.title)}</option>`).join('');cmpA.innerHTML=o;cmpB.innerHTML=o;if(d.length>1){cmpA.value=d.at(-2).id;cmpB.value=d.at(-1).id}renderCompare()}
-async function renderCompare(){if(!cmpA.value||!cmpB.value){compareBox.innerHTML='<div class="meta">Process at least two reports.</div>';return}let r=await all('healthResults'),A=r.filter(x=>x.documentId===cmpA.value),B=r.filter(x=>x.documentId===cmpB.value),n=[...new Set([...A.map(x=>x.parameter),...B.map(x=>x.parameter)])];compareBox.innerHTML='<table><thead><tr><th>Parameter</th><th>Earlier</th><th>Later</th><th>Change</th></tr></thead><tbody>'+n.map(k=>{let a=A.find(x=>x.parameter===k),b=B.find(x=>x.parameter===k),d=a&&b?b.value-a.value:null;return `<tr><td>${E(k)}</td><td>${a?a.value:'—'}</td><td>${b?b.value:'—'}</td><td>${d==null?'—':(d>0?'+':'')+Number(d.toFixed(3))}</td></tr>`}).join('')+'</tbody></table>'}
-function quickSearch(q){globalSearch.value=q;runSearch()}
-async function runSearch(){let q=globalSearch.value.toLowerCase().trim(),d=await all('documents'),h=await all('healthResults'),out=[];d.filter(x=>JSON.stringify(x).toLowerCase().includes(q)).forEach(x=>out.push(docCard(x)));let p=[...new Set(h.map(x=>x.parameter))].find(x=>x.toLowerCase().includes(q)||q.includes(x.toLowerCase()));if(p){let a=h.filter(x=>x.parameter===p).sort((x,y)=>x.date.localeCompare(y.date));out.unshift(`<div class="card"><div class="name">${E(p)}</div><div class="meta" style="margin-top:6px">${a.map(x=>`${x.date}: ${x.value} ${x.unit||''}`).join(' → ')}</div></div>`)}searchResults.innerHTML=out.join('')||'<div class="card"><div class="meta">No matching records.</div></div>'}
-async function renderSearchReminders(){let d=await all('documents'),today=new Date().toISOString().slice(0,10);let r=d.filter(x=>x.reminderDate).sort((a,b)=>a.reminderDate.localeCompare(b.reminderDate));searchReminders.innerHTML=r.length?r.slice(0,8).map(x=>{let days=Math.ceil((new Date(x.reminderDate)-new Date(today))/86400000);return `<div class="row"><div><div>${E(x.title)}</div><div class="meta">${x.reminderDate}</div></div><b style="color:${days<30?'#ff6d6d':days<90?'#f2b45d':'#72c86b'}">${days>=0?days+' days':'Expired'}</b></div>`}).join(''):'<div class="meta">No reminders.</div>'}
-async function exportBackup(){let members=await all('members'),documents=await all('documents'),healthResults=await all('healthResults'),files=await all('files'),ff=[];for(const f of files)ff.push({id:f.id,name:f.name,type:f.type,data:await blobData(f.blob)});let b=new Blob([JSON.stringify({version:4,exportedAt:new Date().toISOString(),members,documents,healthResults,files:ff})],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='MyFamilyVault_Backup.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-function blobData(b){return new Promise(r=>{let f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)})}
-function dataBlob(s){let [h,b]=s.split(','),m=h.match(/data:(.*?);base64/)[1],x=atob(b),a=new Uint8Array(x.length);for(let i=0;i<x.length;i++)a[i]=x.charCodeAt(i);return new Blob([a],{type:m})}
-async function importBackup(){let f=restoreFile.files[0];if(!f)return;let p=JSON.parse(await f.text());for(const x of p.members||[])await put('members',x);for(const x of p.documents||[])await put('documents',x);for(const x of p.healthResults||[])await put('healthResults',x);for(const x of p.files||[])await put('files',{id:x.id,name:x.name,type:x.type,blob:dataBlob(x.data)});alert('Backup restored.');renderHome()}
-window.addEventListener('load',async()=>{await openDB();await defaults();renderHome();if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{})});
+const titles={home:['Good morning','All important family records in one place'],family:['My Family','Family profiles'],documents:['Documents','Your family document library'],health:['Health','Reports, trends and comparison'],search:['Search','Search, reminders and backup']};
+function go(id,btn){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');pageTitle.textContent=titles[id][0];pageSub.textContent=titles[id][1];document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));let t=btn||document.querySelector(`nav button[data-page="${id}"]`);if(t)t.classList.add('active');if(id==='health')setTimeout(draw,40);scrollTo(0,0)}
+function healthTab(t){['Overview','Trends','Reports','Compare'].forEach(n=>document.getElementById('h'+n).classList.add('hidden'));document.getElementById('h'+t[0].toUpperCase()+t.slice(1)).classList.remove('hidden');['Overview','Trends','Reports','Compare'].forEach(n=>document.getElementById('t'+n).classList.toggle('active',n.toLowerCase()===t));if(t==='trends')setTimeout(draw,40)}
+function draw(){let c=document.getElementById('chart');if(!c||c.offsetParent===null)return;let d=devicePixelRatio||1,w=c.clientWidth,h=240;c.width=w*d;c.height=h*d;let g=c.getContext('2d');g.scale(d,d);g.clearRect(0,0,w,h);let vals=[8.2,8.0,7.7,7.2],lab=['Aug25','Jan26','Jun26','Aug26'],L=40,R=14,T=18,B=34,W=w-L-R,H=h-T-B,min=6.8,max=8.5,x=i=>L+i*W/3,y=v=>T+(max-v)/(max-min)*H;g.strokeStyle='rgba(255,255,255,.08)';for(let i=0;i<4;i++){let yy=T+i*H/3;g.beginPath();g.moveTo(L,yy);g.lineTo(w-R,yy);g.stroke()}g.strokeStyle='#0b75ff';g.lineWidth=3;g.beginPath();vals.forEach((v,i)=>i?g.lineTo(x(i),y(v)):g.moveTo(x(i),y(v)));g.stroke();vals.forEach((v,i)=>{g.fillStyle='#0b75ff';g.beginPath();g.arc(x(i),y(v),5,0,Math.PI*2);g.fill();g.fillStyle='#fff';g.font='11px -apple-system';g.fillText(v.toFixed(1),x(i)-8,y(v)-9);g.fillStyle='#95a4b5';g.font='10px -apple-system';g.fillText(lab[i],x(i)-13,h-9)})}
+function openAdd(){addModal.classList.remove('hidden');step(1)}function closeAdd(){addModal.classList.add('hidden')}
+function step(n){[1,2,3].forEach(i=>{document.getElementById('a'+i).classList.toggle('hidden',i!==n);document.getElementById('s'+i).classList.toggle('active',i<=n)})}
+function pick(el){el.parentElement.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));el.classList.add('selected')}
+function openMenu(t){menuTitle.textContent=t;menuModal.classList.remove('hidden')}function closeMenu(){menuModal.classList.add('hidden')}
 </script>
-</body></html>
+</body>
+</html>
