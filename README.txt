@@ -1,14 +1,25 @@
-MY FAMILY VAULT — FINAL UPGRADE
+MY FAMILY VAULT v1
 
-Replace index.html, sw.js and manifest.json in your GitHub Pages repository. Keep the existing icon files.
+Approved UI + local-first architecture.
 
-Your existing IndexedDB data at the same GitHub Pages URL is preserved.
+INSTALL / UPDATE ON GITHUB PAGES
+1. Upload/replace index.html, sw.js, manifest.json, icon-192.png, icon-512.png
+   in the root of skpbhel/my-family-vault.
+2. Wait for GitHub Pages to redeploy.
+3. Open https://skpbhel.github.io/my-family-vault/ in Safari.
+4. Pull to refresh. If the Home Screen app still shows an older UI, reopen the
+   Safari site first, then launch the Home Screen app again.
 
-After deployment:
-1. Open https://skpbhel.github.io/my-family-vault/ in Safari.
-2. Refresh once. If the Home Screen app still shows the old version, close it fully and reopen; if necessary remove and re-add the Home Screen icon.
-3. Open Health -> Process saved PDFs. This attempts to extract values from the health PDFs already stored in IndexedDB.
-4. Text-based PDFs work best. Scanned/image-only PDFs need OCR in a later version.
-5. Use Search -> Export backup regularly.
+PRIVACY
+- No family/health/document data is uploaded to GitHub.
+- Records and attachments are stored in IndexedDB in Safari on the device.
+- PDF extraction happens in the browser.
+- pdf.js is loaded/cached as an app library; no health PDF is uploaded to it.
+- Export backups regularly to a private location.
 
-Features: family profiles; health PDF processing; health trends; report comparison; health insights; education records; bills/warranty; jewellery; insurance; certificates; property/vehicle records; reminders; attachment viewing; global search; backup/restore.
+TEXT PDF HEALTH FLOW
+Add Report -> local PDF text read -> extracted values shown for review ->
+Confirm & Save -> Overview / Trends / Reports / Compare.
+
+SCANNED PDFs
+The original file is still saved, but automatic OCR is not included in v1.
