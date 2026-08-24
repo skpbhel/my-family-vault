@@ -2,6 +2,7 @@
   "name": "My Family Vault",
   "short_name": "Family Vault",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#07101a",
   "theme_color": "#07101a",
