@@ -73,10 +73,74 @@ body{font-size:17px}
 #chart{height:300px!important}
 </style>
 
+
+<style>
+/* v13 Coaching Test Performance */
+#education .section{font-size:15px!important}
+#education .meta{font-size:14px!important;line-height:1.45}
+#education select,#education input,#education textarea{font-size:16px!important}
+.edu-toolbar{display:flex;gap:9px;align-items:end;margin-top:10px}
+.edu-toolbar>div{flex:1}
+.edu-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#101821;border:1px solid var(--line);padding:5px;border-radius:15px;margin-top:14px}
+.edu-tab{border:0;border-radius:11px;min-height:42px;background:transparent;color:var(--muted);font-size:14px;font-weight:800}
+.edu-tab.active{background:#263343;color:white}
+.edu-summary{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.edu-kpi{background:#141e28;border:1px solid var(--line);border-radius:18px;padding:14px;min-height:92px}
+.edu-kpi .klabel{font-size:12px;color:var(--muted);font-weight:700}
+.edu-kpi .kvalue{font-size:25px;font-weight:880;margin-top:7px;letter-spacing:-.4px}
+.edu-kpi .ksub{font-size:12px;color:#b8c3cf;margin-top:4px}
+.edu-analysis{background:linear-gradient(135deg,#122b4c,#162435);border:1px solid rgba(91,162,255,.24);border-radius:19px;padding:15px}
+.edu-analysis-title{font-size:17px;font-weight:850}
+.edu-analysis-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:11px}
+.edu-analysis-cell{background:rgba(255,255,255,.055);border-radius:13px;padding:11px}
+.edu-analysis-cell .small{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#aebccc;font-weight:800}
+.edu-analysis-cell .big{font-size:17px;font-weight:850;margin-top:4px}
+.edu-subject-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.edu-subject{border:1px solid var(--line);border-radius:16px;padding:12px;background:#141d27}
+.edu-subject .subject-name{font-size:14px;font-weight:850}
+.edu-subject .subject-score{font-size:24px;font-weight:880;margin-top:6px}
+.edu-subject .subject-meta{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.5}
+.edu-test-card{background:#121b25;border:1px solid var(--line);border-radius:19px;padding:15px;margin-bottom:11px}
+.edu-test-top{display:flex;align-items:flex-start;gap:10px}
+.edu-test-badge{border-radius:10px;padding:5px 8px;font-size:11px;font-weight:850;background:#173c68;color:#d7eaff;white-space:nowrap}
+.edu-test-badge.minor{background:#314127;color:#dff7d7}
+.edu-test-score{font-size:24px;font-weight:880;margin-top:10px}
+.edu-test-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
+.edu-mini{background:#17222e;border-radius:12px;padding:9px;text-align:center}
+.edu-mini b{display:block;font-size:15px}
+.edu-mini span{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+.edu-paper-summary{margin-top:10px;border-top:1px solid var(--line);padding-top:9px}
+.edu-paper-row{display:grid;grid-template-columns:1.5fr .8fr .8fr;gap:7px;padding:7px 0;font-size:12px}
+.edu-paper-row+.edu-paper-row{border-top:1px solid rgba(255,255,255,.05)}
+#eduTrendCanvas{width:100%;height:285px;background:#0f1720;border:1px solid var(--line);border-radius:17px}
+.edu-form-note{background:#112034;border:1px solid rgba(70,140,220,.28);border-radius:14px;padding:11px;font-size:12px;color:#c7d8e9;line-height:1.55}
+.edu-paper-input{background:#121b25;border:1px solid var(--line);border-radius:18px;padding:13px;margin-top:11px}
+.edu-paper-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
+.edu-paper-head .pname{font-size:16px;font-weight:880}
+.edu-paper-head .pmax{font-size:12px;color:var(--muted)}
+.edu-subject-input{background:#17222d;border-radius:14px;padding:11px;margin-top:8px}
+.edu-subject-input .shead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.edu-subject-input .sname{font-size:14px;font-weight:850}
+.edu-subject-input .sqcheck{font-size:11px;color:var(--muted)}
+.edu-input-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.edu-mini-field label{font-size:9px;text-transform:uppercase;letter-spacing:.3px;color:var(--muted);display:block;margin:0 0 4px;text-align:center}
+.edu-mini-field input{min-width:0;width:100%;padding:9px 4px!important;text-align:center;font-size:15px!important}
+.edu-live-total{display:flex;justify-content:space-between;align-items:center;margin-top:11px;padding-top:10px;border-top:1px solid var(--line);font-size:13px}
+.edu-live-total b{font-size:17px}
+.edu-form-section{margin-top:17px;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:#aebbc9;font-weight:850}
+.edu-empty{text-align:center;padding:24px 16px}
+.edu-doc-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:11px}
+@media(max-width:380px){
+  .edu-subject-grid{grid-template-columns:1fr}
+  .edu-input-grid{grid-template-columns:repeat(2,1fr)}
+  .edu-summary{grid-template-columns:1fr 1fr}
+}
+</style>
+
 </head>
 <body>
 <div class="app">
-<header><div class="top"><div><div class="brand"><span style="font-size:20px">👋</span><div class="title" id="pageTitle">My Family Vault</div></div><div class="sub" id="pageSub">All important family records in one place</div><div class="build-badge" id="buildBadge">Structured Records v12</div></div><button class="iconbtn" onclick="go('search')">🔍</button></div></header>
+<header><div class="top"><div><div class="brand"><span style="font-size:20px">👋</span><div class="title" id="pageTitle">My Family Vault</div></div><div class="sub" id="pageSub">All important family records in one place</div><div class="build-badge" id="buildBadge">Structured Records v13</div></div><button class="iconbtn" onclick="go('search')">🔍</button></div></header>
 <main>
 <section id="home" class="screen active">
   <div class="section">Family quick access</div><div id="homeProfiles" class="profile-strip"></div>
@@ -103,6 +167,64 @@ body{font-size:17px}
   <div class="filters" id="docFilterPills"></div>
   <div class="section">Categories</div><div class="categories" id="categoryGrid"></div>
   <div class="section">Documents</div><div id="documentList"></div>
+</section>
+
+
+<section id="education" class="screen">
+  <div class="top">
+    <div>
+      <div class="section" style="margin:0">🎓 Coaching Test Performance</div>
+      <div class="meta" style="margin-top:4px">JEE Main + Advanced · 21-day test cycle</div>
+    </div>
+    <button class="btn primary" style="width:auto;min-width:94px" onclick="openEduTestModal()">＋ Test</button>
+  </div>
+
+  <div class="edu-toolbar">
+    <div><div class="meta">Student</div><select id="educationPerson" onchange="renderEducationAll()"></select></div>
+  </div>
+
+  <div class="edu-tabs">
+    <button id="eduTabDashboard" class="edu-tab active" onclick="educationTab('dashboard')">Dashboard</button>
+    <button id="eduTabTests" class="edu-tab" onclick="educationTab('tests')">Tests</button>
+    <button id="eduTabDocuments" class="edu-tab" onclick="educationTab('documents')">Documents</button>
+  </div>
+
+  <div id="eduDashboard">
+    <div class="section">Latest performance</div>
+    <div id="eduSummary" class="edu-summary"></div>
+
+    <div class="section">Performance analysis</div>
+    <div id="eduAnalysis" class="edu-analysis"></div>
+
+    <div class="section">Trend</div>
+    <select id="eduTrendMetric" onchange="renderEduTrend()">
+      <option value="score">Score %</option>
+      <option value="accuracy">Accuracy %</option>
+      <option value="cohort">Cohort position %</option>
+    </select>
+    <div style="margin-top:9px"><canvas id="eduTrendCanvas"></canvas></div>
+    <div class="meta" id="eduTrendNote" style="margin-top:7px"></div>
+
+    <div class="section">Subject performance</div>
+    <div id="eduSubjectSummary" class="edu-subject-grid"></div>
+
+    <div class="section">Latest test breakdown</div>
+    <div id="eduLatestBreakdown"></div>
+  </div>
+
+  <div id="eduTests" class="hidden">
+    <div class="section">Test history</div>
+    <div id="eduTestList"></div>
+  </div>
+
+  <div id="eduDocuments" class="hidden">
+    <div class="section">Education documents</div>
+    <div class="edu-doc-actions">
+      <button class="btn primary" onclick="openEducationDocument()">＋ Document</button>
+      <button class="btn secondary" onclick="openEducationDocumentsLibrary()">Full library</button>
+    </div>
+    <div id="eduDocumentList"></div>
+  </div>
 </section>
 
 <section id="health" class="screen">
@@ -135,6 +257,46 @@ body{font-size:17px}
   <div id="a3" class="hidden"><div class="section">Details</div><div class="category-caption" id="categoryFormTitle">Document details</div><div class="form-panel"><div id="dynamicFields" class="form-panel"></div><div class="form-section">Document & attachment</div><div class="form-field"><label>Record title</label><input id="addTitle" placeholder="Short name for this record"></div><div class="form-field"><label>Document / record date</label><input id="addDate" type="date"></div><div class="form-field"><label>Attachment(s)</label><input id="addFile" type="file" accept=".pdf,application/pdf,image/*" multiple><div class="hint">Original PDF/image is stored unchanged. You can attach more than one file.</div></div><div class="form-field"><label>Notes</label><textarea id="addNotes" rows="3" placeholder="Optional notes"></textarea></div><button class="btn primary full" onclick="saveDocument()">Save document</button><div class="meta" id="addMsg"></div></div></div>
 </div></div>
 
+
+<div id="eduTestModal" class="modal hidden"><div class="sheet" style="max-height:95vh">
+  <div class="top">
+    <div>
+      <div class="name" id="eduModalTitle" style="font-size:19px">Add coaching test</div>
+      <div class="meta" id="eduModalStudent"></div>
+    </div>
+    <button class="iconbtn" onclick="closeEduTestModal()">✕</button>
+  </div>
+
+  <div class="edu-form-section">Test information</div>
+  <div style="display:grid;gap:9px;margin-top:9px">
+    <div class="form-field"><label>Test date</label><input id="eduTestDate" type="date"></div>
+    <div class="form-field"><label>Test number / name</label><input id="eduTestName" placeholder="e.g. Test 08 / Major Test 3"></div>
+    <div class="form-field"><label>Coaching institute</label><input id="eduInstitute" placeholder="Institute name"></div>
+    <div class="grid2">
+      <div class="form-field"><label>Test type</label><select id="eduTestType" onchange="eduTestPatternChanged()"><option>Major</option><option>Minor</option></select></div>
+      <div class="form-field" id="eduMinorPatternWrap"><label>Minor pattern</label><select id="eduMinorPattern" onchange="eduTestPatternChanged()"><option value="Main">JEE Main</option><option value="Advanced">JEE Advanced</option></select></div>
+    </div>
+  </div>
+
+  <div class="edu-form-note" id="eduPatternNote" style="margin-top:10px"></div>
+
+  <div class="edu-form-section">Result</div>
+  <div class="grid2" style="margin-top:9px">
+    <div class="form-field"><label>Rank</label><input id="eduRank" type="number" min="1" inputmode="numeric" placeholder="Rank"></div>
+    <div class="form-field"><label>Total students</label><input id="eduTotalStudents" type="number" min="1" inputmode="numeric" placeholder="Students"></div>
+  </div>
+
+  <div class="edu-form-section">Paper & subject performance</div>
+  <div class="meta" style="margin-top:5px">Enter official subject marks from the scorecard. Correct + Wrong + Unattempted must equal the paper question count.</div>
+  <div id="eduPaperInputs"></div>
+  <div id="eduOverallLive" class="card pad" style="margin-top:11px"></div>
+
+  <div class="edu-form-section">Notes</div>
+  <textarea id="eduTestNotes" rows="3" placeholder="Topics that went well, mistakes, time-management observations..." style="margin-top:8px"></textarea>
+
+  <button class="btn primary full" style="margin-top:14px" onclick="saveEduTest()">Save test performance</button>
+</div></div>
+
 <div id="memberModal" class="modal hidden"><div class="sheet"><div class="top"><div class="name" id="memberModalTitle">Add family member</div><button class="iconbtn" onclick="closeMemberModal()">✕</button></div><div style="display:grid;gap:9px;margin-top:12px"><input id="memberName" placeholder="Name"><select id="memberRelation"><option>Self</option><option>Spouse</option><option>Son</option><option>Daughter</option><option>Parent</option><option>Other</option></select><input id="memberDob" type="date"><button class="btn primary full" onclick="saveMember()">Save</button></div></div></div>
 
 <div id="docModal" class="modal hidden"><div class="sheet"><div class="top"><div class="name" id="docModalTitle">Document</div><button class="iconbtn" onclick="closeDocMenu()">✕</button></div><div style="display:grid;gap:8px;margin-top:12px"><button class="btn secondary full" onclick="viewCurrentDoc()">View</button><button class="btn secondary full" onclick="editCurrentDoc()">Edit details</button><button class="btn secondary full" onclick="addAttachmentInput.click()">Add attachment(s)</button><button class="btn secondary full" onclick="replaceInput.click()">Replace primary attachment</button><button class="btn secondary full" onclick="shareCurrentDoc()">Export / Share</button><button class="btn danger full" onclick="deleteCurrentDoc()">Delete</button></div></div></div><input id="addAttachmentInput" class="hidden" type="file" accept=".pdf,application/pdf,image/*" multiple onchange="addAttachmentsToCurrent()"><input id="replaceInput" class="hidden" type="file" accept=".pdf,application/pdf,image/*" onchange="replaceCurrentAttachment()">
@@ -159,11 +321,11 @@ body{font-size:17px}
 </div>
 
 <script>
-const DB='MyFamilyVaultDB', VER=5, CATS=['Health','Education','Warranty','Jewellery','Insurance','Certificates','Vehicle','Property','Other'];
+const DB='MyFamilyVaultDB', VER=6, CATS=['Health','Education','Warranty','Jewellery','Insurance','Certificates','Vehicle','Property','Other'];
 let dbx, docCategoryFilter='All', addPerson='', addCategory='', addCategoryLocked=false, memberModalFromAdd=false, currentDocId='', editingDocId='', reviewDocId='', reviewData=[];
-const titles={home:['My Family Vault','All important family records in one place'],family:['My Family','Family profiles'],documents:['Documents','Your family document library'],health:['Health','Reports, trends and comparison'],search:['Search','Search, reminders and backup']};
+const titles={home:['My Family Vault','All important family records in one place'],family:['My Family','Family profiles'],documents:['Documents','Your family document library'],education:['Education','Coaching tests, performance and documents'],health:['Health','Reports, trends and comparison'],search:['Search','Search, reminders and backup']};
 
-function openDB(){return new Promise((res,rej)=>{let r=indexedDB.open(DB,VER);r.onupgradeneeded=e=>{let d=e.target.result;['members','documents','files','healthResults'].forEach((n,i)=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:'id'})})};r.onsuccess=()=>{dbx=r.result;res()};r.onerror=()=>rej(r.error)})}
+function openDB(){return new Promise((res,rej)=>{let r=indexedDB.open(DB,VER);r.onupgradeneeded=e=>{let d=e.target.result;['members','documents','files','healthResults','educationTests'].forEach((n,i)=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:'id'})})};r.onsuccess=()=>{dbx=r.result;res()};r.onerror=()=>rej(r.error)})}
 function S(n,m='readonly'){return dbx.transaction(n,m).objectStore(n)}
 function all(n){return new Promise((res,rej)=>{let r=S(n).getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
 function one(n,id){return new Promise((res,rej)=>{let r=S(n).get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)})}
@@ -171,13 +333,13 @@ function put(n,o){return new Promise((res,rej)=>{let r=S(n,'readwrite').put(o);r
 function del(n,id){return new Promise((res,rej)=>{let r=S(n,'readwrite').delete(id);r.onsuccess=()=>res();r.onerror=()=>rej(r.error)})}
 function E(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
 function icon(c){return({Health:'💙',Education:'🎓',Warranty:'🛡️',Jewellery:'💍',Insurance:'☂️',Certificates:'📜',Vehicle:'🚙',Property:'🏡',Other:'⬛'}[c]||'📄')}
-function go(id,btn){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');pageTitle.textContent=titles[id][0];pageSub.textContent=titles[id][1];document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));let t=btn||document.querySelector(`nav button[data-page="${id}"]`);if(t)t.classList.add('active');if(id==='home')renderHome();if(id==='family')renderFamily();if(id==='documents')prepareDocuments();if(id==='health')prepareHealth();if(id==='search'){runSearch();renderReminders()}scrollTo(0,0)}
+function go(id,btn){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');pageTitle.textContent=titles[id][0];pageSub.textContent=titles[id][1];document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));let t=btn||document.querySelector(`nav button[data-page="${id}"]`);if(t)t.classList.add('active');if(id==='home')renderHome();if(id==='family')renderFamily();if(id==='documents')prepareDocuments();if(id==='education')prepareEducation();if(id==='health')prepareHealth();if(id==='search'){runSearch();renderReminders()}scrollTo(0,0)}
 async function defaults(){let m=await all('members');if(!m.length){await put('members',{id:'self',name:'Me',relation:'Self',dob:'',color:'blue'});await put('members',{id:'household',name:'Family / Common',relation:'Common',dob:'',color:'gold'})}}
 function memberColor(i,m){return m.color||['blue','pink','green','gold'][i%4]}
 function avClass(c){return c==='pink'?'avp':c==='green'?'avg':c==='gold'?'avy':'avb'}
 function daysUntil(date){if(!date)return 9999;let a=new Date(new Date().toISOString().slice(0,10)),b=new Date(date);return Math.ceil((b-a)/86400000)}
 function collectReminders(docs){const out=[];const add=(d,date,label)=>{if(date)out.push({docId:d.id,title:d.title,date,label,category:d.category})};for(const d of docs){add(d,d.reminderDate,d.category==='Insurance'?'Policy renewal':d.category==='Warranty'?'Warranty':d.category==='Certificates'?'Expiry':d.category==='Vehicle'?'RC / renewal':d.category==='Property'?'Property due':'Reminder');const e=d.extra||{};if(d.category==='Warranty'){add(d,e.extendedWarranty,'Extended warranty');add(d,e.amcValidUpTo,'AMC')}if(d.category==='Vehicle'){add(d,e.insuranceExpiry,'Vehicle insurance');add(d,e.pucExpiry,'PUC');add(d,e.nextService,'Service due')}if(d.category==='Insurance'){add(d,e.maturityDate,'Maturity');add(d,e.travelEnd,'Travel cover end')} }return out.sort((a,b)=>a.date.localeCompare(b.date))}
-async function renderHome(){let [m,d]=await Promise.all([all('members'),all('documents')]);homeProfiles.innerHTML=m.map((x,i)=>`<button class="profile" onclick="openMemberDocs('${x.id}')"><div class="avatar ${avClass(memberColor(i,x))}">${x.id==='household'?'👥':'👤'}</div><div class="pname">${E(x.name)}</div></button>`).join('');for(const c of ['Health','Education','Warranty','Jewellery','Insurance','Certificates']){let e=document.getElementById('count'+c);e.textContent=d.filter(x=>x.category===c).length+' '+({Health:'reports',Education:'records',Warranty:'items',Jewellery:'records',Insurance:'policies',Certificates:'docs'}[c])}
+async function renderHome(){let [m,d,et]=await Promise.all([all('members'),all('documents'),all('educationTests')]);homeProfiles.innerHTML=m.map((x,i)=>`<button class="profile" onclick="openMemberDocs('${x.id}')"><div class="avatar ${avClass(memberColor(i,x))}">${x.id==='household'?'👥':'👤'}</div><div class="pname">${E(x.name)}</div></button>`).join('');for(const c of ['Health','Education','Warranty','Jewellery','Insurance','Certificates']){let e=document.getElementById('count'+c);e.textContent=d.filter(x=>x.category===c).length+' '+({Health:'reports',Education:'records',Warranty:'items',Jewellery:'records',Insurance:'policies',Certificates:'docs'}[c])};if(typeof countEducation!=='undefined')countEducation.textContent=et.length+' tests • '+d.filter(x=>x.category==='Education').length+' docs'
   const reminders=collectReminders(d),within90=reminders.filter(r=>{const n=daysUntil(r.date);return n>=0&&n<=90}).length;
   const insuranceCover=d.filter(x=>x.category==='Insurance').reduce((a,x)=>a+(Number(String(x.extra?.sumInsured||'').replace(/[,₹\s]/g,''))||0),0);
   const jewelleryValue=d.filter(x=>x.category==='Jewellery').reduce((a,x)=>a+(estimateJewelleryValue(x.extra)||0),0);
@@ -185,7 +347,17 @@ async function renderHome(){let [m,d]=await Promise.all([all('members'),all('doc
   const rems=reminders.slice(0,3);homeReminders.innerHTML=rems.length?rems.map(r=>`<div class="row" onclick="openRecord('${r.docId}')"><div class="dot" style="background:${daysUntil(r.date)<30?'#ff6e68':daysUntil(r.date)<90?'#ffac55':'#61d482'}"></div><div class="grow"><div class="name">${E(r.title)}</div><div class="meta">${E(r.label)}</div></div><div class="meta">${r.date} ›</div></div>`).join(''):'<div class="meta">No upcoming reminders.</div>';
   let recent=[...d].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,4);homeRecent.innerHTML=recent.length?recent.map(r=>`<div class="row" onclick="openRecord('${r.id}')"><div>${icon(r.category)}</div><div class="grow"><div class="name">${E(r.title)}</div><div class="meta">${E(r.memberName)} · ${E(r.category)}</div></div><div class="meta">${r.date||''}</div></div>`).join(''):'<div class="meta">No documents yet.</div>'
 }
-async function renderFamily(){let [m,d]=await Promise.all([all('members'),all('documents')]);familyList.innerHTML=m.map((x,i)=>{let md=d.filter(q=>q.memberId===x.id),h=md.filter(q=>q.category==='Health').length,ed=md.filter(q=>q.category==='Education').length,c=memberColor(i,x);return `<div class="card family-card ${c}" onclick="openMemberDocs('${x.id}')"><div class="family-inner"><div class="avatar ${avClass(c)}" style="margin:0">${x.id==='household'?'👥':'👤'}</div><div class="family-main"><div class="name" style="font-size:18px">${E(x.name)}</div><div class="meta" style="color:#e9edf2">${E(x.relation)}</div><div class="meta" style="color:#e9edf2;margin-top:8px">${h} Health • ${ed} Education • ${md.length} Documents</div></div><button class="btn secondary" style="width:42px" onclick="event.stopPropagation();deleteMember('${x.id}')">•••</button></div></div>`}).join('')}
+async function renderFamily(){
+  let [m,d,et]=await Promise.all([all('members'),all('documents'),all('educationTests')]);
+  familyList.innerHTML=m.map((x,i)=>{
+    let md=d.filter(q=>q.memberId===x.id),
+        h=md.filter(q=>q.category==='Health').length,
+        ed=md.filter(q=>q.category==='Education').length,
+        tests=et.filter(q=>q.memberId===x.id).length,
+        c=memberColor(i,x);
+    return `<div class="card family-card ${c}" onclick="openMemberDocs('${x.id}')"><div class="family-inner"><div class="avatar ${avClass(c)}" style="margin:0">${x.id==='household'?'👥':'👤'}</div><div class="family-main"><div class="name" style="font-size:18px">${E(x.name)}</div><div class="meta" style="color:#e9edf2">${E(x.relation)}</div><div class="meta" style="color:#e9edf2;margin-top:8px">${h} Health • ${tests} Tests • ${ed} Education docs • ${md.length} Documents</div></div><button class="btn secondary" style="width:42px" onclick="event.stopPropagation();deleteMember('${x.id}')">•••</button></div></div>`;
+  }).join('');
+}
 function openMemberModal(){memberModalFromAdd=false;memberName.value='';memberDob.value='';memberRelation.value='Other';memberModal.classList.remove('hidden')}
 function openMemberModalFromAdd(){memberModalFromAdd=true;memberName.value='';memberDob.value='';memberRelation.value='Other';memberModal.classList.remove('hidden')}
 function closeMemberModal(){memberModal.classList.add('hidden')}
@@ -205,7 +377,13 @@ async function saveMember(){
     step(1);
   }
 }
-async function deleteMember(id){if(id==='self'||id==='household')return alert('Default profiles cannot be deleted. You can edit their names later.');let docs=(await all('documents')).filter(x=>x.memberId===id);if(docs.length)return alert('Move or delete this member’s documents first.');if(confirm('Delete this family member?')){await del('members',id);renderFamily();renderHome()}}
+async function deleteMember(id){
+  if(id==='self'||id==='household')return alert('Default profiles cannot be deleted. You can edit their names later.');
+  let docs=(await all('documents')).filter(x=>x.memberId===id);
+  let tests=(await all('educationTests')).filter(x=>x.memberId===id);
+  if(docs.length||tests.length)return alert('Move or delete this member’s documents and coaching-test records first.');
+  if(confirm('Delete this family member?')){await del('members',id);renderFamily();renderHome()}
+}
 function openMemberDocs(id){go('documents');setTimeout(()=>{docPersonFilter.value=id;renderDocuments()},20)}
 async function prepareDocuments(){let m=await all('members'),cur=docPersonFilter.value;docPersonFilter.innerHTML='<option value="All">All</option>'+m.map(x=>`<option value="${x.id}">${E(x.name)}</option>`).join('');if(cur)docPersonFilter.value=cur;docFilterPills.innerHTML=['All',...CATS].map(c=>`<button class="pill ${c===docCategoryFilter?'active':''}" onclick="setDocCategory('${c}',this)">${c}</button>`).join('');categoryGrid.innerHTML=CATS.map(c=>`<button class="cat" onclick="setDocCategory('${c}')">${icon(c)} ${c}</button>`).join('');updateDocumentHeader();renderDocuments()}
 function updateDocumentHeader(){
@@ -221,7 +399,7 @@ function updateDocumentHeader(){
 }
 function openAddForCurrentCategory(){openAdd(docCategoryFilter==='All'?'':docCategoryFilter)}
 function setDocCategory(c,el){docCategoryFilter=c;if(el){el.parentElement.querySelectorAll('.pill').forEach(x=>x.classList.remove('active'));el.classList.add('active')}else{document.querySelectorAll('#docFilterPills .pill').forEach(x=>x.classList.toggle('active',x.textContent===c))}updateDocumentHeader();renderDocuments()}
-function openCategory(c){docCategoryFilter=c;go(c==='Health'?'health':'documents');setTimeout(updateDocumentHeader,0)}
+function openCategory(c){docCategoryFilter=c;if(c==='Health')go('health');else if(c==='Education')go('education');else go('documents');setTimeout(updateDocumentHeader,0)}
 async function visibleDocs(){let d=await all('documents'),q=(docSearch.value||'').toLowerCase(),p=docPersonFilter.value||'All';if(docCategoryFilter!=='All')d=d.filter(x=>x.category===docCategoryFilter);if(p!=='All')d=d.filter(x=>x.memberId===p);if(q)d=d.filter(x=>JSON.stringify(x).toLowerCase().includes(q));return d.sort((a,b)=>(b.date||'').localeCompare(a.date||'')||(b.createdAt||0)-(a.createdAt||0))}
 function docCard(x){let ft=(x.fileName||'').toLowerCase().endsWith('.pdf')?'PDF':x.fileName?'IMG':'';return `<div class="card doc"><div class="doctop"><div class="docicon" style="${ft==='PDF'?'':'color:#2563eb'}">${ft||icon(x.category)}</div><div class="docmain"><div class="name">${E(x.title)}</div><div class="meta">${E(x.memberName)} · ${E(x.category)}</div><div class="meta">${x.date||''}${x.extra?.lab?' • '+E(x.extra.lab):x.extra?.vendor?' • '+E(x.extra.vendor):''}</div><div class="tags">${x.processed?`<span class="tag">${x.processedCount||0} values extracted</span>`:''}${x.reminderDate?`<span class="tag">Due ${x.reminderDate}</span>`:''}</div></div></div><div class="actions"><button class="btn primary" onclick="openRecord('${x.id}')">View</button><button class="btn secondary" onclick="openEdit('${x.id}')">Edit</button><button class="btn secondary" onclick="openDocMenu('${x.id}')">•••</button></div></div>`}
 async function renderDocuments(){
@@ -290,7 +468,7 @@ async function replaceCurrentAttachment(){
 }
 async function shareCurrentDoc(){let d=await one('documents',currentDocId);if(!d?.fileId)return alert('No attachment.');let f=await one('files',d.fileId);if(!f)return;if(navigator.share&&navigator.canShare){let file=new File([f.blob],f.name,{type:f.type||'application/octet-stream'});if(navigator.canShare({files:[file]})){await navigator.share({title:d.title,files:[file]});return}}let u=URL.createObjectURL(f.blob),a=document.createElement('a');a.href=u;a.download=f.name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
 async function deleteCurrentDoc(){let d=await one('documents',currentDocId);if(!d||!confirm(`Delete "${d.title}"?\n\nThis also removes all attachments and extracted health values.`))return;let rs=(await all('healthResults')).filter(x=>x.documentId===d.id);for(const r of rs)await del('healthResults',r.id);const ids=d.fileIds?.length?d.fileIds:(d.fileId?[d.fileId]:[]);for(const id of new Set(ids))await del('files',id);await del('documents',d.id);closeDocMenu();refreshAll()}
-function refreshAll(){renderHome();renderFamily();renderDocuments();renderHealthAll();renderReminders()}
+function refreshAll(){renderHome();renderFamily();renderDocuments();renderHealthAll();renderReminders();if(document.getElementById('education')?.classList.contains('active'))prepareEducation()}
 async function openAdd(pref=''){
   addPerson='';
   addCategory=pref||'';
@@ -903,6 +1081,410 @@ function removeReview(i){reviewData.splice(i,1);renderReviewRows()}
 async function confirmReview(){document.querySelectorAll('#reviewRows input').forEach(x=>{let i=Number(x.dataset.i),k=x.dataset.k;if(reviewData[i])reviewData[i][k]=k==='value'?Number(x.value):x.value});let d=await one('documents',reviewDocId),old=(await all('healthResults')).filter(x=>x.documentId===reviewDocId);for(const x of old)await del('healthResults',x.id);for(const r of reviewData)await put('healthResults',{id:'hr-'+reviewDocId+'-'+slug(r.parameter),documentId:reviewDocId,memberId:d.memberId,date:d.date,lab:d.extra?.lab||'',...r});d.processed=true;d.processedCount=reviewData.length;await put('documents',d);reviewModal.classList.add('hidden');refreshAll()}
 function slug(s){return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
 async function processUnprocessed(){let docs=(await all('documents')).filter(x=>x.category==='Health'&&x.memberId===healthPerson.value&&x.fileId&&!x.processed),done=0;for(const d of docs){let f=await one('files',d.fileId);try{let raw=await pdfText(f.blob),p=mergeLabResults(parseHealthText(raw),simpleLabFallback(raw));if(!p.length)continue;for(const r of p)await put('healthResults',{id:'hr-'+d.id+'-'+slug(r.parameter),documentId:d.id,memberId:d.memberId,date:d.date,lab:d.extra?.lab||'',...r});d.processed=true;d.processedCount=p.length;await put('documents',d);done++}catch(e){}}alert(`Processed ${done} report(s).`);renderHealthAll()}
+
+let editingEduTestId='';
+
+function educationTab(tab){
+  ['dashboard','tests','documents'].forEach(t=>{
+    document.getElementById('edu'+t[0].toUpperCase()+t.slice(1)).classList.toggle('hidden',t!==tab);
+    document.getElementById('eduTab'+t[0].toUpperCase()+t.slice(1)).classList.toggle('active',t===tab);
+  });
+  if(tab==='dashboard')renderEducationAll();
+  if(tab==='tests')renderEduTestList();
+  if(tab==='documents')renderEduDocuments();
+}
+
+async function prepareEducation(){
+  const members=(await all('members')).filter(x=>x.id!=='household');
+  const cur=educationPerson.value;
+  educationPerson.innerHTML=members.map(x=>`<option value="${x.id}">${E(x.name)}</option>`).join('');
+  if(cur&&members.some(x=>x.id===cur))educationPerson.value=cur;
+  else{
+    const preferred=members.find(x=>/shashwat/i.test(x.name))||members[0];
+    if(preferred)educationPerson.value=preferred.id;
+  }
+  await renderEducationAll();
+}
+
+function eduPaperDefs(type,minorPattern){
+  const main={code:'main',label:'JEE Main',pattern:'Main',questions:25,subjectMax:100,paperMax:300};
+  const adv1={code:'adv1',label:type==='Major'?'JEE Advanced · Paper 1':'JEE Advanced',pattern:'Advanced',questions:17,subjectMax:60,paperMax:180};
+  const adv2={code:'adv2',label:'JEE Advanced · Paper 2',pattern:'Advanced',questions:17,subjectMax:60,paperMax:180};
+  if(type==='Major')return [main,adv1,adv2];
+  return minorPattern==='Advanced'?[adv1]:[main];
+}
+
+function eduTestTotals(t){
+  let marks=0,max=0,correct=0,wrong=0,unattempted=0;
+  for(const p of t.papers||[]){
+    max+=p.paperMax||0;
+    for(const s of Object.values(p.subjects||{})){
+      marks+=Number(s.marks)||0;
+      correct+=Number(s.correct)||0;
+      wrong+=Number(s.wrong)||0;
+      unattempted+=Number(s.unattempted)||0;
+    }
+  }
+  const attempted=correct+wrong,totalQ=attempted+unattempted;
+  return{
+    marks,max,correct,wrong,unattempted,totalQ,
+    scorePct:max?marks/max*100:0,
+    accuracy:attempted?correct/attempted*100:0,
+    attemptRate:totalQ?attempted/totalQ*100:0,
+    cohort:(t.rank&&t.totalStudents)?((Number(t.totalStudents)-Number(t.rank)+1)/Number(t.totalStudents))*100:null,
+    topPct:(t.rank&&t.totalStudents)?Number(t.rank)/Number(t.totalStudents)*100:null
+  };
+}
+
+function eduSubjectAgg(tests){
+  const out={Physics:{marks:0,max:0,c:0,w:0,u:0},Chemistry:{marks:0,max:0,c:0,w:0,u:0},Maths:{marks:0,max:0,c:0,w:0,u:0}};
+  for(const t of tests)for(const p of t.papers||[])for(const name of Object.keys(out)){
+    const s=p.subjects?.[name];if(!s)continue;
+    out[name].marks+=Number(s.marks)||0;out[name].max+=Number(p.subjectMax)||0;
+    out[name].c+=Number(s.correct)||0;out[name].w+=Number(s.wrong)||0;out[name].u+=Number(s.unattempted)||0;
+  }
+  for(const v of Object.values(out)){
+    const att=v.c+v.w,total=att+v.u;
+    v.scorePct=v.max?v.marks/v.max*100:0;
+    v.accuracy=att?v.c/att*100:0;
+    v.attemptRate=total?att/total*100:0;
+    v.wrongRate=total?v.w/total*100:0;
+    v.unattemptRate=total?v.u/total*100:0;
+  }
+  return out;
+}
+
+function eduPct(v,d=1){return Number.isFinite(v)?Number(v).toFixed(d)+'%':'—'}
+function eduSigned(v,suffix=''){if(!Number.isFinite(v))return'—';return (v>0?'+':'')+Number(v).toFixed(1)+suffix}
+function eduDatePlus21(date){
+  if(!date)return'';
+  const d=new Date(date+'T00:00:00');d.setDate(d.getDate()+21);
+  return d.toISOString().slice(0,10);
+}
+function eduFriendlyDate(date){
+  if(!date)return'—';
+  const p=String(date).split('-');
+  return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:date;
+}
+
+async function renderEducationAll(){
+  if(!educationPerson.value){
+    eduSummary.innerHTML='<div class="card pad" style="grid-column:1/-1"><div class="meta">Add a family member first.</div></div>';
+    eduAnalysis.innerHTML='<div class="meta">No student selected.</div>';
+    eduSubjectSummary.innerHTML='';
+    eduLatestBreakdown.innerHTML='';
+    drawEduTrend([]);
+    return;
+  }
+  const tests=(await all('educationTests')).filter(x=>x.memberId===educationPerson.value).sort((a,b)=>a.date.localeCompare(b.date));
+  renderEduDashboard(tests);
+  renderEduTestList(tests);
+  renderEduDocuments();
+}
+
+function renderEduDashboard(tests){
+  if(!tests.length){
+    eduSummary.innerHTML=`<div class="card pad edu-empty" style="grid-column:1/-1"><div style="font-size:30px">🎯</div><div class="name" style="margin-top:8px">No coaching tests recorded</div><div class="meta" style="margin-top:5px">Add the first Major or Minor test to start performance analysis.</div><button class="btn primary" style="margin-top:12px" onclick="openEduTestModal()">＋ Add first test</button></div>`;
+    eduAnalysis.innerHTML='<div class="meta">Analysis will appear after the first test.</div>';
+    eduSubjectSummary.innerHTML='';
+    eduLatestBreakdown.innerHTML='';
+    drawEduTrend([]);
+    eduTrendNote.textContent='Score %, accuracy and cohort position are comparable across Main and Advanced because the app normalizes each test to its own maximum marks.';
+    return;
+  }
+
+  const latest=tests.at(-1),lt=eduTestTotals(latest),prev=tests.length>1?eduTestTotals(tests.at(-2)):null;
+  const next=eduDatePlus21(latest.date),days=daysUntil(next);
+  const scoreChange=prev?lt.scorePct-prev.scorePct:null;
+  const rankText=latest.rank&&latest.totalStudents?`${latest.rank} / ${latest.totalStudents}`:'—';
+  const topText=lt.topPct!=null?`Top ${lt.topPct.toFixed(1)}%`:'No rank data';
+
+  eduSummary.innerHTML=`
+    <div class="edu-kpi"><div class="klabel">LATEST SCORE</div><div class="kvalue">${lt.marks}/${lt.max}</div><div class="ksub">${eduPct(lt.scorePct)}${scoreChange!=null?' · '+eduSigned(scoreChange,' pp'):''}</div></div>
+    <div class="edu-kpi"><div class="klabel">RANK</div><div class="kvalue">${rankText}</div><div class="ksub">${topText}</div></div>
+    <div class="edu-kpi"><div class="klabel">ACCURACY</div><div class="kvalue">${eduPct(lt.accuracy)}</div><div class="ksub">Attempt rate ${eduPct(lt.attemptRate)}</div></div>
+    <div class="edu-kpi"><div class="klabel">NEXT EXPECTED TEST</div><div class="kvalue" style="font-size:19px">${eduFriendlyDate(next)}</div><div class="ksub">${days>=0?days+' days remaining':Math.abs(days)+' days overdue'} · 21-day cycle</div></div>`;
+
+  const agg=eduSubjectAgg(tests),entries=Object.entries(agg).filter(([,v])=>v.max>0).sort((a,b)=>b[1].scorePct-a[1].scorePct);
+  const best=entries[0],focus=entries.at(-1);
+  const wrong=Object.entries(agg).filter(([,v])=>v.max>0).sort((a,b)=>b[1].wrongRate-a[1].wrongRate)[0];
+  const unattempt=Object.entries(agg).filter(([,v])=>v.max>0).sort((a,b)=>b[1].unattemptRate-a[1].unattemptRate)[0];
+
+  eduAnalysis.innerHTML=`
+    <div class="edu-analysis-title">${E(latest.name||latest.type+' Test')} · ${eduFriendlyDate(latest.date)}</div>
+    <div class="meta" style="margin-top:4px;color:#c7d5e3">${latest.type}${latest.type==='Minor'?' · '+latest.minorPattern:''} · ${tests.length} test${tests.length===1?'':'s'} recorded</div>
+    <div class="edu-analysis-grid">
+      <div class="edu-analysis-cell"><div class="small">Strongest score</div><div class="big">${best?best[0]:'—'} ${best?eduPct(best[1].scorePct):''}</div></div>
+      <div class="edu-analysis-cell"><div class="small">Review priority</div><div class="big">${focus?focus[0]:'—'} ${focus?eduPct(focus[1].scorePct):''}</div></div>
+      <div class="edu-analysis-cell"><div class="small">Highest wrong rate</div><div class="big">${wrong?wrong[0]:'—'} ${wrong?eduPct(wrong[1].wrongRate):''}</div></div>
+      <div class="edu-analysis-cell"><div class="small">Most unattempted</div><div class="big">${unattempt?unattempt[0]:'—'} ${unattempt?eduPct(unattempt[1].unattemptRate):''}</div></div>
+    </div>`;
+
+  eduSubjectSummary.innerHTML=['Physics','Chemistry','Maths'].map(n=>{
+    const v=agg[n];
+    return `<div class="edu-subject"><div class="subject-name">${n}</div><div class="subject-score">${eduPct(v.scorePct,0)}</div><div class="subject-meta">Accuracy ${eduPct(v.accuracy,0)}<br>Attempt ${eduPct(v.attemptRate,0)}<br>C/W/U ${v.c}/${v.w}/${v.u}</div></div>`;
+  }).join('');
+
+  eduLatestBreakdown.innerHTML=eduTestCard(latest,true);
+  renderEduTrend(tests);
+}
+
+function eduTestCard(t,compact=false){
+  const z=eduTestTotals(t);
+  const paperRows=(t.papers||[]).map(p=>{
+    const pm=Object.values(p.subjects||{}).reduce((a,s)=>a+(Number(s.marks)||0),0);
+    return `<div class="edu-paper-row"><div>${E(p.label)}</div><div>${pm}/${p.paperMax}</div><div>${eduPct(p.paperMax?pm/p.paperMax*100:0)}</div></div>`;
+  }).join('');
+  return `<div class="edu-test-card">
+    <div class="edu-test-top"><div class="grow"><div class="name">${E(t.name||t.type+' Test')}</div><div class="meta">${eduFriendlyDate(t.date)}${t.institute?' · '+E(t.institute):''}</div></div><span class="edu-test-badge ${t.type==='Minor'?'minor':''}">${E(t.type)}${t.type==='Minor'?' · '+E(t.minorPattern):''}</span></div>
+    <div class="edu-test-score">${z.marks}/${z.max} <span class="meta">(${eduPct(z.scorePct)})</span></div>
+    <div class="edu-test-stats">
+      <div class="edu-mini"><b>${t.rank&&t.totalStudents?t.rank+'/'+t.totalStudents:'—'}</b><span>RANK</span></div>
+      <div class="edu-mini"><b>${eduPct(z.accuracy,0)}</b><span>ACCURACY</span></div>
+      <div class="edu-mini"><b>${z.correct}/${z.wrong}/${z.unattempted}</b><span>C / W / U</span></div>
+    </div>
+    <div class="edu-paper-summary">${paperRows}</div>
+    ${compact?'':`<div class="actions"><button class="btn secondary" onclick="openEduTestModal('${t.id}')">Edit</button><button class="btn danger" onclick="deleteEduTest('${t.id}')">Delete</button></div>`}
+    ${t.notes?`<div class="meta" style="margin-top:9px">${E(t.notes)}</div>`:''}
+  </div>`;
+}
+
+async function renderEduTestList(prefetched){
+  if(!educationPerson.value)return;
+  const tests=prefetched||((await all('educationTests')).filter(x=>x.memberId===educationPerson.value).sort((a,b)=>b.date.localeCompare(a.date)));
+  const sorted=[...tests].sort((a,b)=>b.date.localeCompare(a.date));
+  eduTestList.innerHTML=sorted.length?sorted.map(x=>eduTestCard(x)).join(''):`<div class="card pad edu-empty"><div class="meta">No tests recorded.</div></div>`;
+}
+
+async function renderEduDocuments(){
+  if(!educationPerson.value){eduDocumentList.innerHTML='';return}
+  const docs=(await all('documents')).filter(x=>x.memberId===educationPerson.value&&x.category==='Education').sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  eduDocumentList.innerHTML=docs.length?docs.map(docCard).join(''):'<div class="card pad"><div class="meta">No education documents for this student.</div></div>';
+}
+
+async function openEducationDocument(){
+  await openAdd('Education');
+  if(educationPerson.value){
+    addPerson=educationPerson.value;
+    document.querySelectorAll('#addMemberChoices .choice').forEach(x=>x.classList.toggle('selected',x.dataset.memberId===addPerson));
+  }
+}
+function openEducationDocumentsLibrary(){
+  docCategoryFilter='Education';
+  go('documents');
+  setTimeout(()=>{
+    docPersonFilter.value=educationPerson.value||'All';
+    updateDocumentHeader();
+    renderDocuments();
+  },30);
+}
+
+function renderEduTrend(){
+  all('educationTests').then(allTests=>{
+    const tests=allTests.filter(x=>x.memberId===educationPerson.value).sort((a,b)=>a.date.localeCompare(b.date));
+    drawEduTrend(tests);
+  });
+}
+function drawEduTrend(tests){
+  const c=eduTrendCanvas,d=devicePixelRatio||1,w=c.clientWidth||320,h=285;
+  c.width=w*d;c.height=h*d;
+  const g=c.getContext('2d');g.scale(d,d);g.clearRect(0,0,w,h);
+  if(!tests.length){
+    g.fillStyle='#95a4b5';g.font='15px -apple-system';g.fillText('No test trend yet.',16,28);return;
+  }
+  const metric=eduTrendMetric.value||'score';
+  const pts=tests.map(t=>{
+    const z=eduTestTotals(t);
+    return{
+      date:t.date,
+      value:metric==='score'?z.scorePct:metric==='accuracy'?z.accuracy:z.cohort,
+      label:metric==='score'?'Score %':metric==='accuracy'?'Accuracy %':'Cohort position %'
+    };
+  }).filter(x=>Number.isFinite(x.value));
+  if(!pts.length){
+    g.fillStyle='#95a4b5';g.font='15px -apple-system';g.fillText(metric==='cohort'?'Rank / total students required for this trend.':'No trend data.',16,28);return;
+  }
+
+  let vals=pts.map(x=>x.value),mn=Math.min(...vals),mx=Math.max(...vals),range=mx-mn;
+  if(range<10){const mid=(mx+mn)/2;mn=mid-6;mx=mid+6}else{mn-=range*.15;mx+=range*.15}
+  mn=Math.max(0,mn);mx=Math.min(100,Math.max(mx,mn+5));
+
+  const L=45,R=16,T=38,B=50,W=w-L-R,H=h-T-B;
+  const xx=i=>pts.length===1?w/2:L+i*W/(pts.length-1);
+  const yy=v=>T+(mx-v)/(mx-mn)*H;
+
+  g.font='11px -apple-system';g.textAlign='right';
+  for(let i=0;i<4;i++){
+    const v=mx-i*(mx-mn)/3,y=T+i*H/3;
+    g.strokeStyle='rgba(255,255,255,.09)';g.beginPath();g.moveTo(L,y);g.lineTo(w-R,y);g.stroke();
+    g.fillStyle='#8fa0b1';g.fillText(v.toFixed(0),L-6,y+4);
+  }
+
+  g.strokeStyle='#0b75ff';g.lineWidth=3;g.beginPath();
+  pts.forEach((p,i)=>i?g.lineTo(xx(i),yy(p.value)):g.moveTo(xx(i),yy(p.value)));
+  g.stroke();
+
+  const dateEvery=pts.length<=5?1:Math.ceil(pts.length/5);
+  pts.forEach((p,i)=>{
+    const x=xx(i),y=yy(p.value);
+    g.fillStyle='#0b75ff';g.beginPath();g.arc(x,y,5.5,0,Math.PI*2);g.fill();
+    g.fillStyle='#fff';g.font='bold 13px -apple-system';g.textAlign='center';g.fillText(p.value.toFixed(1),x,Math.max(16,y-12));
+    if(i%dateEvery===0||i===pts.length-1){
+      g.fillStyle='#aab6c3';g.font='12px -apple-system';g.fillText(formatTrendDate(p.date),x,h-17);
+    }
+  });
+  eduTrendNote.textContent=metric==='cohort'
+    ?'Cohort position = relative position among students in that coaching test; it is not NTA JEE percentile.'
+    :'All tests are normalized to percentages so Major, Minor, Main and Advanced results can be compared.';
+  g.textAlign='left';
+}
+
+async function openEduTestModal(id=''){
+  if(!educationPerson.value)return alert('Choose a student first.');
+  editingEduTestId=id;
+  const member=await one('members',educationPerson.value);
+  eduModalStudent.textContent=member?.name||'Student';
+  eduModalTitle.textContent=id?'Edit coaching test':'Add coaching test';
+
+  const existing=id?await one('educationTests',id):null;
+  if(existing){
+    eduTestDate.value=existing.date||'';
+    eduTestName.value=existing.name||'';
+    eduInstitute.value=existing.institute||'';
+    eduTestType.value=existing.type||'Major';
+    eduMinorPattern.value=existing.minorPattern||'Main';
+    eduRank.value=existing.rank||'';
+    eduTotalStudents.value=existing.totalStudents||'';
+    eduTestNotes.value=existing.notes||'';
+  }else{
+    const tests=(await all('educationTests')).filter(x=>x.memberId===educationPerson.value).sort((a,b)=>a.date.localeCompare(b.date));
+    const last=tests.at(-1);
+    eduTestDate.value=last?eduDatePlus21(last.date):new Date().toISOString().slice(0,10);
+    eduTestName.value='';
+    eduInstitute.value=last?.institute||'';
+    eduTestType.value='Major';
+    eduMinorPattern.value='Main';
+    eduRank.value='';
+    eduTotalStudents.value=last?.totalStudents||'';
+    eduTestNotes.value='';
+  }
+  eduTestModal.classList.remove('hidden');
+  eduRenderPaperInputs(existing);
+}
+function closeEduTestModal(){eduTestModal.classList.add('hidden');editingEduTestId=''}
+
+function eduTestPatternChanged(){
+  eduRenderPaperInputs(null);
+}
+function eduRenderPaperInputs(existing){
+  const type=eduTestType.value,minor=eduMinorPattern.value;
+  eduMinorPatternWrap.classList.toggle('hidden',type!=='Minor');
+  const defs=eduPaperDefs(type,minor);
+  eduPatternNote.innerHTML=type==='Major'
+    ?'<b>Major:</b> 1 JEE Main paper (300 marks) + 2 JEE Advanced papers (180 marks each) = <b>660 marks</b>. Main: 25 questions/subject. Advanced: 17 questions/subject.'
+    :minor==='Main'
+      ?'<b>Minor · JEE Main:</b> 1 paper · 300 marks · 25 questions and 100 marks per subject.'
+      :'<b>Minor · JEE Advanced:</b> 1 paper · 180 marks · 17 questions and 60 marks per subject.';
+
+  eduPaperInputs.innerHTML=defs.map(def=>`
+    <div class="edu-paper-input" data-code="${def.code}">
+      <div class="edu-paper-head"><div class="pname">${def.label}</div><div class="pmax">${def.paperMax} marks · ${def.questions*3} questions</div></div>
+      ${['Physics','Chemistry','Maths'].map(sub=>`
+        <div class="edu-subject-input">
+          <div class="shead"><div class="sname">${sub}</div><div class="sqcheck" id="qcheck_${def.code}_${sub}">0 / ${def.questions} Q</div></div>
+          <div class="edu-input-grid">
+            <div class="edu-mini-field"><label>Correct</label><input id="edu_${def.code}_${sub}_correct" type="number" min="0" max="${def.questions}" inputmode="numeric" oninput="updateEduTestTotals()"></div>
+            <div class="edu-mini-field"><label>Wrong</label><input id="edu_${def.code}_${sub}_wrong" type="number" min="0" max="${def.questions}" inputmode="numeric" oninput="updateEduTestTotals()"></div>
+            <div class="edu-mini-field"><label>Unattempt.</label><input id="edu_${def.code}_${sub}_unattempted" type="number" min="0" max="${def.questions}" inputmode="numeric" oninput="updateEduTestTotals()"></div>
+            <div class="edu-mini-field"><label>Marks / ${def.subjectMax}</label><input id="edu_${def.code}_${sub}_marks" type="number" step="0.01" inputmode="decimal" oninput="updateEduTestTotals()"></div>
+          </div>
+        </div>`).join('')}
+      <div class="edu-live-total"><span>Paper total</span><b id="paperTotal_${def.code}">0 / ${def.paperMax}</b></div>
+    </div>`).join('');
+
+  if(existing){
+    for(const p of existing.papers||[])for(const [sub,s] of Object.entries(p.subjects||{})){
+      for(const f of ['correct','wrong','unattempted','marks']){
+        const el=document.getElementById(`edu_${p.code}_${sub}_${f}`);
+        if(el)el.value=s[f]??'';
+      }
+    }
+  }
+  updateEduTestTotals();
+}
+
+function updateEduTestTotals(){
+  const defs=eduPaperDefs(eduTestType.value,eduMinorPattern.value);
+  let totalMarks=0,totalMax=0,totalC=0,totalW=0,totalU=0;
+  for(const def of defs){
+    let pm=0;
+    for(const sub of ['Physics','Chemistry','Maths']){
+      const val=f=>Number(document.getElementById(`edu_${def.code}_${sub}_${f}`)?.value)||0;
+      const c=val('correct'),w=val('wrong'),u=val('unattempted'),m=val('marks'),qs=c+w+u;
+      totalC+=c;totalW+=w;totalU+=u;pm+=m;
+      const qc=document.getElementById(`qcheck_${def.code}_${sub}`);
+      if(qc){
+        qc.textContent=`${qs} / ${def.questions} Q`;
+        qc.style.color=qs===def.questions?'#63d88d':qs>def.questions?'#ff7770':'#95a4b5';
+      }
+    }
+    totalMarks+=pm;totalMax+=def.paperMax;
+    const pt=document.getElementById(`paperTotal_${def.code}`);
+    if(pt)pt.textContent=`${Number(pm.toFixed(2))} / ${def.paperMax}`;
+  }
+  const attempted=totalC+totalW,totalQ=attempted+totalU;
+  const accuracy=attempted?totalC/attempted*100:0,attemptRate=totalQ?attempted/totalQ*100:0;
+  eduOverallLive.innerHTML=`<div class="row"><div class="grow"><div class="name">Overall test</div><div class="meta">Correct / Wrong / Unattempted: ${totalC} / ${totalW} / ${totalU}</div></div><div style="text-align:right"><div class="name" style="font-size:20px">${Number(totalMarks.toFixed(2))} / ${totalMax}</div><div class="meta">${totalMax?eduPct(totalMarks/totalMax*100):'—'} · Accuracy ${eduPct(accuracy,0)}</div></div></div>`;
+}
+
+async function saveEduTest(){
+  if(!educationPerson.value)return alert('Choose a student.');
+  if(!eduTestDate.value)return alert('Enter test date.');
+  const type=eduTestType.value,minor=eduMinorPattern.value,defs=eduPaperDefs(type,minor);
+  const papers=[];let errors=[];
+  for(const def of defs){
+    const subjects={};
+    for(const sub of ['Physics','Chemistry','Maths']){
+      const get=f=>document.getElementById(`edu_${def.code}_${sub}_${f}`);
+      const rawMarks=get('marks')?.value;
+      const c=Number(get('correct')?.value)||0,w=Number(get('wrong')?.value)||0,u=Number(get('unattempted')?.value)||0;
+      if(c+w+u!==def.questions)errors.push(`${def.label} · ${sub}: Correct + Wrong + Unattempted must equal ${def.questions}.`);
+      if(rawMarks===''||rawMarks==null)errors.push(`${def.label} · ${sub}: enter marks scored.`);
+      const marks=Number(rawMarks);
+      if(Number.isFinite(marks)&&marks>def.subjectMax)errors.push(`${def.label} · ${sub}: marks cannot exceed ${def.subjectMax}.`);
+      subjects[sub]={correct:c,wrong:w,unattempted:u,marks:Number.isFinite(marks)?marks:0};
+    }
+    papers.push({code:def.code,label:def.label,pattern:def.pattern,questions:def.questions,subjectMax:def.subjectMax,paperMax:def.paperMax,subjects});
+  }
+  if(errors.length)return alert(errors.slice(0,6).join('\n'));
+  const rank=Number(eduRank.value),students=Number(eduTotalStudents.value);
+  if(!rank||!students)return alert('Enter rank and total students.');
+  if(rank<1||students<1||rank>students)return alert('Rank must be between 1 and total students.');
+
+  const member=await one('members',educationPerson.value);
+  const obj={
+    id:editingEduTestId||'et'+Date.now(),
+    memberId:educationPerson.value,memberName:member?.name||'',
+    date:eduTestDate.value,name:eduTestName.value.trim(),
+    institute:eduInstitute.value.trim(),type,minorPattern:type==='Minor'?minor:'',
+    rank,totalStudents:students,papers,notes:eduTestNotes.value.trim(),
+    updatedAt:Date.now()
+  };
+  if(!editingEduTestId)obj.createdAt=Date.now();
+  else{
+    const old=await one('educationTests',editingEduTestId);
+    obj.createdAt=old?.createdAt||Date.now();
+  }
+  await put('educationTests',obj);
+  closeEduTestModal();
+  await renderEducationAll();
+  renderHome();renderFamily();
+}
+async function deleteEduTest(id){
+  const t=await one('educationTests',id);if(!t)return;
+  if(confirm(`Delete ${t.name||t.type+' Test'}?`)){await del('educationTests',id);await renderEducationAll();renderHome();renderFamily()}
+}
+
 function healthTab(t){['Overview','Trends','Reports','Compare'].forEach(n=>document.getElementById('h'+n).classList.add('hidden'));document.getElementById('h'+t[0].toUpperCase()+t.slice(1)).classList.remove('hidden');['Overview','Trends','Reports','Compare'].forEach(n=>document.getElementById('t'+n).classList.toggle('active',n.toLowerCase()===t));if(t==='trends')prepareTrends();if(t==='compare')prepareCompare()}
 async function prepareHealth(){let m=await all('members'),cur=healthPerson.value;healthPerson.innerHTML=m.filter(x=>x.id!=='household').map(x=>`<option value="${x.id}">${E(x.name)}</option>`).join('');if(cur)healthPerson.value=cur;renderHealthAll()}
 async function renderHealthAll(){if(!healthPerson.value)return;await renderOverview();await renderHealthReports()}
@@ -1000,13 +1582,54 @@ async function renderCompare(){if(!cmpA.value||!cmpB.value){compareBox.innerHTML
 let recordCurrentId='';function humanLabel(k){return ({documentType:'Document type',school:'School / Institute',board:'Board / University',classCourse:'Class / Course',exam:'Exam / Test',academicYear:'Academic year',score:'Marks / Grade',rank:'Rank',rollNo:'Roll / Registration no.',certificateNo:'Certificate no.',insuranceFor:'Insurance for',company:'Insurance company',policyNo:'Policy number',startDate:'Start date',sumInsured:'Sum insured',premium:'Premium',premiumFrequency:'Premium frequency',nominee:'Nominee',agent:'Agent / Broker',registrationNo:'Registration no.',idv:'IDV',engineNo:'Engine no.',chassisNo:'Chassis no.',coveredPersons:'Persons covered',healthPolicyType:'Policy type',tpa:'TPA',metal:'Metal',itemType:'Item type',vendor:'Store / Vendor',invoiceNo:'Invoice number',purity:'Purity',grossWeight:'Gross weight',netWeight:'Net metal weight',stoneWeight:'Stone / diamond weight',purchaseRate:'Purchase metal rate',currentRate:'Current metal rate',makingCharges:'Making charges',gst:'GST',purchaseValue:'Purchase value',hallmark:'Hallmark / HUID',itemCategory:'Item category',item:'Item',brand:'Brand',model:'Model',serialNo:'Serial number',purchaseDate:'Purchase date',extendedWarranty:'Extended warranty up to',amcValidUpTo:'AMC valid up to',serviceCentre:'Service centre',location:'Location',issuer:'Issuing authority',documentNo:'Document number',issueDate:'Issue date',placeOfIssue:'Place of issue',status:'Status',originalLocation:'Original stored at',vehicleType:'Vehicle type',insuranceExpiry:'Insurance expiry',pucExpiry:'PUC expiry',lastService:'Last service',nextService:'Next service',odometer:'Odometer',propertyType:'Property type',address:'Address',plotFlatNo:'Plot / Flat no.',area:'Area',registryDate:'Registry date',currentValue:'Current estimated value',loan:'Loan details',electricityNo:'Electricity consumer no.',waterNo:'Water connection no.',lab:'Laboratory / Hospital',insuredSubject:'Insured person / item / asset',customerCare:'Customer care / claim contact',addOns:'Add-on covers',networkNote:'Cashless network note',lifeAssured:'Life assured',maturityDate:'Maturity date',travelDestination:'Travel destination',travelEnd:'Travel cover end',certificateName:'Certificate / Report title',subject:'Subject / Stream',marks:'Marks obtained',maxMarks:'Maximum marks',percentage:'Percentage',grade:'Grade',diamondCarat:'Diamond carat',metalValueAtPurchase:'Metal value at purchase',locker:'Stored at / locker',installDate:'Installation date',sensitive:'Document number privacy',registrationDate:'Registration date',coOwners:'Co-owner(s)',society:'Society / Association'}[k]||k.replace(/([A-Z])/g,' $1').replace(/^./,s=>s.toUpperCase()))}function displayRecordValue(k,v,e){if(k==='documentNo'&&e?.sensitive==='Yes'){const t=String(v||'');return t.length>4?'•••• '+t.slice(-4):'••••'}return /value|premium|insured|rate|charges|gst|idv/i.test(k)?money(v):v}
 function money(v){const n=Number(String(v||'').replace(/[,₹\s]/g,''));return Number.isFinite(n)&&n?new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:0}).format(n):v}function purityFactor(p){if(p==='24K')return 1;if(p==='22K')return 22/24;if(p==='18K')return 18/24;if(p==='14K')return 14/24;if(p==='999 Silver')return .999;if(p==='925 Silver')return .925;return 1}function estimateJewelleryValue(e){const w=Number(e?.netWeight),r=Number(e?.currentRate);return Number.isFinite(w)&&Number.isFinite(r)&&w>0&&r>0?w*r*purityFactor(e?.purity):null}async function openRecord(id){const d=await one('documents',id);if(!d)return;recordCurrentId=id;recordTitle.textContent=d.title||'Record';recordSub.textContent=`${d.memberName||''} · ${d.category||''}${d.date?' · '+d.date:''}`;let hero='';if(d.category==='Jewellery'){const est=estimateJewelleryValue(d.extra),pv=Number(d.extra?.purchaseValue);if(est){const ch=Number.isFinite(pv)&&pv>0?((est-pv)/pv*100):null;hero=`<div class="summary-hero"><div class="meta" style="color:#cbd8e5">Estimated metal value</div><div class="summary-value">${money(est)}</div><div class="calc-note">${ch!==null?('Change vs purchase value: '+(ch>=0?'+':'')+ch.toFixed(1)+'% · '):''}Based on net metal weight × current rate × purity factor. Not guaranteed resale value.</div></div>`}}if(d.category==='Insurance'&&d.extra?.sumInsured)hero=`<div class="summary-hero"><div class="meta" style="color:#cbd8e5">Insurance cover</div><div class="summary-value">${money(d.extra.sumInsured)}</div><div class="calc-note">${E(d.extra.company||'')} ${d.reminderDate?'· valid up to '+d.reminderDate:''}</div></div>`;if(d.category==='Warranty'&&d.reminderDate)hero=`<div class="summary-hero"><div class="meta" style="color:#cbd8e5">Warranty status</div><div class="summary-value">${daysUntil(d.reminderDate)>=0?daysUntil(d.reminderDate)+' days':'Expired'}</div><div class="calc-note">Valid up to ${d.reminderDate}</div></div>`;if(d.category==='Property'&&d.extra?.currentValue)hero=`<div class="summary-hero"><div class="meta" style="color:#cbd8e5">Current estimated property value</div><div class="summary-value">${money(d.extra.currentValue)}</div><div class="calc-note">User-entered estimate · ${E(d.extra.address||'')}</div></div>`;recordHero.innerHTML=hero;const base=[['Owner / Member',d.memberName],['Category',d.category],['Record date',d.date],['Reminder / Expiry',d.reminderDate]],extra=Object.entries(d.extra||{}).filter(([k,v])=>v!==''&&v!=null),fields=[...base,...extra.map(([k,v])=>[humanLabel(k),displayRecordValue(k,v,d.extra)])];recordFields.innerHTML=fields.filter(x=>x[1]).map(([l,v])=>`<div class="record-field"><div class="rf-label">${E(l)}</div><div class="rf-value">${E(v)}</div></div>`).join('')||'<div class="meta">No structured details.</div>';const ids=d.fileIds?.length?d.fileIds:(d.fileId?[d.fileId]:[]),atts=[];for(const fid of ids){const f=await one('files',fid);if(f)atts.push({fid,...f})}recordAttachments.innerHTML=atts.length?atts.map(a=>`<div class="attach-row"><div style="font-size:20px">${(a.name||'').toLowerCase().endsWith('.pdf')?'📄':'🖼️'}</div><div class="attach-name">${E(a.name||'Attachment')}</div><button class="btn primary" style="width:74px" onclick="viewFileById('${a.fid}')">View</button></div>`).join(''):'<div class="meta">No attachments.</div>';recordNotes.innerHTML=d.notes?E(d.notes):'<span class="meta">No notes.</span>';recordModal.classList.remove('hidden')}async function viewFileById(fid){const f=await one('files',fid);if(!f?.blob)return alert('Attachment not found.');closeViewer();currentViewerUrl=URL.createObjectURL(f.blob);viewerTitle.textContent=f.name||'Attachment';viewerMeta.textContent='Original stored attachment';const type=(f.type||'').toLowerCase(),name=(f.name||'').toLowerCase();if(type.includes('pdf')||name.endsWith('.pdf'))viewerBody.innerHTML='<iframe src="'+currentViewerUrl+'" style="width:100%;height:100%;border:0;background:white"></iframe>';else viewerBody.innerHTML='<div style="width:100%;height:100%;overflow:auto;display:grid;place-items:center;background:#111"><img src="'+currentViewerUrl+'" style="max-width:100%;height:auto"></div>';viewerModal.classList.remove('hidden')}async function recordViewOriginal(){const d=await one('documents',recordCurrentId);if(d?.fileId)viewFileById(d.fileId);else alert('No original attachment.')}function recordEdit(){recordModal.classList.add('hidden');openEdit(recordCurrentId)}function recordMore(){recordModal.classList.add('hidden');openDocMenu(recordCurrentId)}
 
-async function runSearch(){let q=(globalSearch.value||'').toLowerCase().trim(),docs=await all('documents'),hrs=await all('healthResults');if(!q){searchResults.innerHTML='<div class="card pad"><div class="meta">Type to search all documents and health values.</div></div>';return}let out=[];docs.filter(x=>JSON.stringify(x).toLowerCase().includes(q)).forEach(x=>out.push(docCard(x)));let params=[...new Set(hrs.map(x=>x.parameter))].filter(x=>x.toLowerCase().includes(q)||q.includes(x.toLowerCase()));for(const p of params){let a=hrs.filter(x=>x.parameter===p).sort((x,y)=>x.date.localeCompare(y.date));out.unshift(`<div class="card pad"><div class="name">${E(p)}</div><div class="meta" style="margin-top:5px">${a.map(x=>`${x.date}: ${x.value} ${x.unit||''}`).join(' → ')}</div></div>`)}searchResults.innerHTML=out.join('')||'<div class="card pad"><div class="meta">No matching records.</div></div>'}
+async function runSearch(){
+  let q=(globalSearch.value||'').toLowerCase().trim(),
+      docs=await all('documents'),
+      hrs=await all('healthResults'),
+      ets=await all('educationTests');
+  if(!q){
+    searchResults.innerHTML='<div class="card pad"><div class="meta">Type to search documents, health values and coaching tests.</div></div>';
+    return;
+  }
+  let out=[];
+  docs.filter(x=>JSON.stringify(x).toLowerCase().includes(q)).forEach(x=>out.push(docCard(x)));
+  ets.filter(x=>JSON.stringify(x).toLowerCase().includes(q)).forEach(t=>{
+    const z=eduTestTotals(t);
+    out.push(`<div class="card pad" onclick="go('education');setTimeout(()=>{educationPerson.value='${t.memberId}';educationTab('tests');renderEducationAll()},40)"><div class="name">🎯 ${E(t.name||t.type+' Test')} · ${E(t.memberName||'')}</div><div class="meta" style="margin-top:5px">${t.date} · ${E(t.type)}${t.type==='Minor'?' '+E(t.minorPattern):''} · ${z.marks}/${z.max} (${eduPct(z.scorePct)}) · Rank ${t.rank}/${t.totalStudents}</div></div>`);
+  });
+  let params=[...new Set(hrs.map(x=>x.parameter))].filter(x=>x.toLowerCase().includes(q)||q.includes(x.toLowerCase()));
+  for(const p of params){
+    let a=hrs.filter(x=>x.parameter===p).sort((x,y)=>x.date.localeCompare(y.date));
+    out.unshift(`<div class="card pad"><div class="name">${E(p)}</div><div class="meta" style="margin-top:5px">${a.map(x=>`${x.date}: ${x.value} ${x.unit||''}`).join(' → ')}</div></div>`)
+  }
+  searchResults.innerHTML=out.join('')||'<div class="card pad"><div class="meta">No matching records.</div></div>';
+}
 async function renderReminders(){let docs=await all('documents'),d=collectReminders(docs);searchReminders.innerHTML=d.length?d.map(x=>{let days=daysUntil(x.date),cls=days<30?'dr':days<90?'do':'dg';return `<div class="row" onclick="openRecord('${x.docId}')"><div>${icon(x.category)}</div><div class="grow"><div class="name">${E(x.title)}</div><div class="meta">${E(x.label)} · ${x.date}</div></div><div class="days ${cls}">${days>=0?days:'!'}<br><span>${days>=0?'days':'expired'}</span></div></div>`}).join(''):'<div class="meta">No reminders.</div>'}
-async function exportBackup(){let members=await all('members'),documents=await all('documents'),healthResults=await all('healthResults'),files=await all('files'),ff=[];for(const f of files)ff.push({id:f.id,name:f.name,type:f.type,data:await blobData(f.blob)});let b=new Blob([JSON.stringify({version:12,exportedAt:new Date().toISOString(),members,documents,healthResults,files:ff})],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='MyFamilyVault_Backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+async function exportBackup(){
+  let members=await all('members'),documents=await all('documents'),healthResults=await all('healthResults'),
+      educationTests=await all('educationTests'),files=await all('files'),ff=[];
+  for(const f of files)ff.push({id:f.id,name:f.name,type:f.type,data:await blobData(f.blob)});
+  let b=new Blob([JSON.stringify({version:13,exportedAt:new Date().toISOString(),members,documents,healthResults,educationTests,files:ff})],{type:'application/json'}),
+      a=document.createElement('a');
+  a.href=URL.createObjectURL(b);a.download='MyFamilyVault_Backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000)
+}
 function blobData(b){return new Promise(r=>{let f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)})}
 function dataBlob(s){let [h,b]=s.split(','),m=(h.match(/data:(.*?);base64/)||[])[1]||'application/octet-stream',x=atob(b),a=new Uint8Array(x.length);for(let i=0;i<x.length;i++)a[i]=x.charCodeAt(i);return new Blob([a],{type:m})}
-async function importBackup(){let f=restoreInput.files[0];if(!f)return;try{let p=JSON.parse(await f.text());if(!p.members||!p.documents)throw Error();for(const x of p.members)await put('members',x);for(const x of p.documents)await put('documents',x);for(const x of p.healthResults||[])await put('healthResults',x);for(const x of p.files||[])await put('files',{id:x.id,name:x.name,type:x.type,blob:dataBlob(x.data)});alert('Backup restored.');refreshAll()}catch(e){alert('Invalid backup file.')}restoreInput.value=''}
-window.addEventListener('load',async()=>{await openDB();await defaults();renderHome();if('serviceWorker'in navigator){try{const r=await navigator.serviceWorker.register('sw.js?v=12');await r.update();navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!sessionStorage.getItem('v12reload')){sessionStorage.setItem('v12reload','1');location.reload()}})}catch(e){}}});
+async function importBackup(){
+  let f=restoreInput.files[0];if(!f)return;
+  try{
+    let p=JSON.parse(await f.text());if(!p.members||!p.documents)throw Error();
+    for(const x of p.members)await put('members',x);
+    for(const x of p.documents)await put('documents',x);
+    for(const x of p.healthResults||[])await put('healthResults',x);
+    for(const x of p.educationTests||[])await put('educationTests',x);
+    for(const x of p.files||[])await put('files',{id:x.id,name:x.name,type:x.type,blob:dataBlob(x.data)});
+    alert('Backup restored.');refreshAll()
+  }catch(e){alert('Invalid backup file.')}
+  restoreInput.value=''
+}
+window.addEventListener('load',async()=>{await openDB();await defaults();renderHome();if('serviceWorker'in navigator){try{const r=await navigator.serviceWorker.register('sw.js?v=13');await r.update();navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!sessionStorage.getItem('v13reload')){sessionStorage.setItem('v13reload','1');location.reload()}})}catch(e){}}});
 </script>
 </body>
 </html>

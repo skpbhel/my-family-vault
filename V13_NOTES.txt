@@ -1,0 +1,25 @@
+My Family Vault – Structured Records v13
+Education / Coaching Test Performance
+
+Major Test:
+- JEE Main: 1 paper, 300 marks; 100 marks and 25 questions per subject.
+- JEE Advanced: 2 papers; each paper 180 marks; 60 marks and 17 questions per subject.
+- Combined Major maximum: 660 marks.
+
+Minor Test:
+- One paper only.
+- Select JEE Main pattern or JEE Advanced pattern.
+
+Recorded per subject and paper:
+Correct, Wrong, Unattempted, Marks scored.
+The app validates the question count and automatically calculates paper and overall totals.
+
+Also recorded:
+Rank, Total students, Test date, Test name/number, Coaching institute, Notes.
+
+Analysis:
+Score %, Accuracy %, Attempt rate, C/W/U, relative cohort position, subject performance,
+strongest subject, review-priority subject, highest wrong rate, highest unattempted rate,
+trend charts, latest paper breakdown and next expected test date based on a 21-day cycle.
+
+Advanced marks are entered from the official scorecard because Advanced marking schemes may vary.
