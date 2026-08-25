@@ -1,0 +1,16 @@
+My Family Vault – Structured Records v12
+
+Built from the confirmed working v10 code.
+
+Included:
+- Health and Education: family-member selection retained.
+- Insurance, Warranty, Jewellery, Certificates, Vehicle, Property and Other: direct to main structured fields.
+- Non-Health/Education records save under Family / Common.
+- Family tab: clearer + Add Member button.
+- Health/Education add flow: + Add family member available directly.
+- Health trend graph: value shown at every point, date shown below, larger graph and fonts.
+- Health tabs/tables/metrics: larger fonts for iPhone readability.
+- Original PDF viewer and Health PDF parser retained.
+- IndexedDB database name/version unchanged.
+- Service worker cache/version bumped to v12.
+- JavaScript syntax validated before packaging.

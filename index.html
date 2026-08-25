@@ -59,10 +59,24 @@ body{font-size:17px}
 .build-badge{display:inline-flex;align-items:center;padding:5px 9px;border-radius:999px;background:#153b68;border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:800;color:#d9ebff;margin-top:7px}
 .category-caption{font-size:19px;font-weight:850;margin:2px 0 2px}
 </style>
+
+<style>
+/* v12 Health readability */
+#health .tab{font-size:15px!important;height:42px!important;font-weight:750}
+#health .section{font-size:15px!important}
+#health .meta{font-size:14px!important;line-height:1.45}
+#health select{font-size:17px!important;min-height:48px!important}
+#health .hval{font-size:29px!important}
+#health .htrend{font-size:14px!important;line-height:1.4}
+#health .table td,#health .table th{font-size:15px!important;padding:11px 7px!important}
+#trendStats{font-size:16px!important}
+#chart{height:300px!important}
+</style>
+
 </head>
 <body>
 <div class="app">
-<header><div class="top"><div><div class="brand"><span style="font-size:20px">👋</span><div class="title" id="pageTitle">My Family Vault</div></div><div class="sub" id="pageSub">All important family records in one place</div><div class="build-badge" id="buildBadge">Structured Records v10</div></div><button class="iconbtn" onclick="go('search')">🔍</button></div></header>
+<header><div class="top"><div><div class="brand"><span style="font-size:20px">👋</span><div class="title" id="pageTitle">My Family Vault</div></div><div class="sub" id="pageSub">All important family records in one place</div><div class="build-badge" id="buildBadge">Structured Records v12</div></div><button class="iconbtn" onclick="go('search')">🔍</button></div></header>
 <main>
 <section id="home" class="screen active">
   <div class="section">Family quick access</div><div id="homeProfiles" class="profile-strip"></div>
@@ -79,7 +93,7 @@ body{font-size:17px}
 </section>
 
 <section id="family" class="screen">
-  <div class="top" style="margin-bottom:12px"><div class="section" style="margin:0">My family</div><button class="btn primary" style="width:72px" onclick="openMemberModal()">＋ Add</button></div>
+  <div class="top" style="margin-bottom:12px"><div class="section" style="margin:0">My family</div><button class="btn primary" style="width:auto;min-width:128px" onclick="openMemberModal()">＋ Add Member</button></div>
   <div id="familyList"></div>
 </section>
 
@@ -116,8 +130,8 @@ body{font-size:17px}
 <div id="addModal" class="modal hidden"><div class="sheet">
   <div class="top"><div class="section" style="margin:0;text-transform:none;font-size:18px">＋ Add Document</div><button class="iconbtn" onclick="closeAdd()">✕</button></div>
   <div class="stepbar"><div id="s1" class="step active">1</div><div class="line"></div><div id="s2" class="step">2</div><div class="line"></div><div id="s3" class="step">3</div></div>
-  <div id="a1"><div class="section">Who is this for?</div><div class="choicegrid" id="addMemberChoices"></div><button class="btn primary full" style="margin-top:12px" onclick="step(2)">Continue →</button></div>
-  <div id="a2" class="hidden"><div class="section">What type of document?</div><div class="choicegrid" id="addCategoryChoices"></div><button class="btn primary full" style="margin-top:12px" onclick="step(3)">Continue →</button></div>
+  <div id="a1"><div class="section">Who is this for?</div><div class="choicegrid" id="addMemberChoices"></div><button class="btn secondary full" style="margin-top:12px" onclick="openMemberModalFromAdd()">＋ Add family member</button><button class="btn primary full" style="margin-top:8px" onclick="continueMemberStep()">Continue →</button></div>
+  <div id="a2" class="hidden"><div class="section">What type of document?</div><div class="choicegrid" id="addCategoryChoices"></div><button class="btn primary full" style="margin-top:12px" onclick="continueCategoryStep()">Continue →</button></div>
   <div id="a3" class="hidden"><div class="section">Details</div><div class="category-caption" id="categoryFormTitle">Document details</div><div class="form-panel"><div id="dynamicFields" class="form-panel"></div><div class="form-section">Document & attachment</div><div class="form-field"><label>Record title</label><input id="addTitle" placeholder="Short name for this record"></div><div class="form-field"><label>Document / record date</label><input id="addDate" type="date"></div><div class="form-field"><label>Attachment(s)</label><input id="addFile" type="file" accept=".pdf,application/pdf,image/*" multiple><div class="hint">Original PDF/image is stored unchanged. You can attach more than one file.</div></div><div class="form-field"><label>Notes</label><textarea id="addNotes" rows="3" placeholder="Optional notes"></textarea></div><button class="btn primary full" onclick="saveDocument()">Save document</button><div class="meta" id="addMsg"></div></div></div>
 </div></div>
 
@@ -146,7 +160,7 @@ body{font-size:17px}
 
 <script>
 const DB='MyFamilyVaultDB', VER=5, CATS=['Health','Education','Warranty','Jewellery','Insurance','Certificates','Vehicle','Property','Other'];
-let dbx, docCategoryFilter='All', addPerson='', addCategory='', addCategoryLocked=false, currentDocId='', editingDocId='', reviewDocId='', reviewData=[];
+let dbx, docCategoryFilter='All', addPerson='', addCategory='', addCategoryLocked=false, memberModalFromAdd=false, currentDocId='', editingDocId='', reviewDocId='', reviewData=[];
 const titles={home:['My Family Vault','All important family records in one place'],family:['My Family','Family profiles'],documents:['Documents','Your family document library'],health:['Health','Reports, trends and comparison'],search:['Search','Search, reminders and backup']};
 
 function openDB(){return new Promise((res,rej)=>{let r=indexedDB.open(DB,VER);r.onupgradeneeded=e=>{let d=e.target.result;['members','documents','files','healthResults'].forEach((n,i)=>{if(!d.objectStoreNames.contains(n))d.createObjectStore(n,{keyPath:'id'})})};r.onsuccess=()=>{dbx=r.result;res()};r.onerror=()=>rej(r.error)})}
@@ -172,9 +186,25 @@ async function renderHome(){let [m,d]=await Promise.all([all('members'),all('doc
   let recent=[...d].sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).slice(0,4);homeRecent.innerHTML=recent.length?recent.map(r=>`<div class="row" onclick="openRecord('${r.id}')"><div>${icon(r.category)}</div><div class="grow"><div class="name">${E(r.title)}</div><div class="meta">${E(r.memberName)} · ${E(r.category)}</div></div><div class="meta">${r.date||''}</div></div>`).join(''):'<div class="meta">No documents yet.</div>'
 }
 async function renderFamily(){let [m,d]=await Promise.all([all('members'),all('documents')]);familyList.innerHTML=m.map((x,i)=>{let md=d.filter(q=>q.memberId===x.id),h=md.filter(q=>q.category==='Health').length,ed=md.filter(q=>q.category==='Education').length,c=memberColor(i,x);return `<div class="card family-card ${c}" onclick="openMemberDocs('${x.id}')"><div class="family-inner"><div class="avatar ${avClass(c)}" style="margin:0">${x.id==='household'?'👥':'👤'}</div><div class="family-main"><div class="name" style="font-size:18px">${E(x.name)}</div><div class="meta" style="color:#e9edf2">${E(x.relation)}</div><div class="meta" style="color:#e9edf2;margin-top:8px">${h} Health • ${ed} Education • ${md.length} Documents</div></div><button class="btn secondary" style="width:42px" onclick="event.stopPropagation();deleteMember('${x.id}')">•••</button></div></div>`}).join('')}
-function openMemberModal(){memberName.value='';memberDob.value='';memberRelation.value='Other';memberModal.classList.remove('hidden')}
+function openMemberModal(){memberModalFromAdd=false;memberName.value='';memberDob.value='';memberRelation.value='Other';memberModal.classList.remove('hidden')}
+function openMemberModalFromAdd(){memberModalFromAdd=true;memberName.value='';memberDob.value='';memberRelation.value='Other';memberModal.classList.remove('hidden')}
 function closeMemberModal(){memberModal.classList.add('hidden')}
-async function saveMember(){let n=memberName.value.trim();if(!n)return alert('Enter a name');await put('members',{id:'m'+Date.now(),name:n,relation:memberRelation.value,dob:memberDob.value,color:['blue','pink','green','gold'][(await all('members')).length%4]});closeMemberModal();renderFamily();renderHome()}
+async function saveMember(){
+  let n=memberName.value.trim();
+  if(!n)return alert('Enter a name');
+  const id='m'+Date.now();
+  await put('members',{id,name:n,relation:memberRelation.value,dob:memberDob.value,color:['blue','pink','green','gold'][(await all('members')).length%4]});
+  const returnToAdd=memberModalFromAdd;
+  memberModalFromAdd=false;
+  closeMemberModal();
+  await renderFamily();await renderHome();
+  if(returnToAdd){
+    await buildAddChoices();
+    addPerson=id;
+    document.querySelectorAll('#addMemberChoices .choice').forEach(x=>x.classList.toggle('selected',x.dataset.memberId===id));
+    step(1);
+  }
+}
 async function deleteMember(id){if(id==='self'||id==='household')return alert('Default profiles cannot be deleted. You can edit their names later.');let docs=(await all('documents')).filter(x=>x.memberId===id);if(docs.length)return alert('Move or delete this member’s documents first.');if(confirm('Delete this family member?')){await del('members',id);renderFamily();renderHome()}}
 function openMemberDocs(id){go('documents');setTimeout(()=>{docPersonFilter.value=id;renderDocuments()},20)}
 async function prepareDocuments(){let m=await all('members'),cur=docPersonFilter.value;docPersonFilter.innerHTML='<option value="All">All</option>'+m.map(x=>`<option value="${x.id}">${E(x.name)}</option>`).join('');if(cur)docPersonFilter.value=cur;docFilterPills.innerHTML=['All',...CATS].map(c=>`<button class="pill ${c===docCategoryFilter?'active':''}" onclick="setDocCategory('${c}',this)">${c}</button>`).join('');categoryGrid.innerHTML=CATS.map(c=>`<button class="cat" onclick="setDocCategory('${c}')">${icon(c)} ${c}</button>`).join('');updateDocumentHeader();renderDocuments()}
@@ -261,22 +291,80 @@ async function replaceCurrentAttachment(){
 async function shareCurrentDoc(){let d=await one('documents',currentDocId);if(!d?.fileId)return alert('No attachment.');let f=await one('files',d.fileId);if(!f)return;if(navigator.share&&navigator.canShare){let file=new File([f.blob],f.name,{type:f.type||'application/octet-stream'});if(navigator.canShare({files:[file]})){await navigator.share({title:d.title,files:[file]});return}}let u=URL.createObjectURL(f.blob),a=document.createElement('a');a.href=u;a.download=f.name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
 async function deleteCurrentDoc(){let d=await one('documents',currentDocId);if(!d||!confirm(`Delete "${d.title}"?\n\nThis also removes all attachments and extracted health values.`))return;let rs=(await all('healthResults')).filter(x=>x.documentId===d.id);for(const r of rs)await del('healthResults',r.id);const ids=d.fileIds?.length?d.fileIds:(d.fileId?[d.fileId]:[]);for(const id of new Set(ids))await del('files',id);await del('documents',d.id);closeDocMenu();refreshAll()}
 function refreshAll(){renderHome();renderFamily();renderDocuments();renderHealthAll();renderReminders()}
-async function openAdd(pref=''){addPerson='';addCategory=pref||'';addCategoryLocked=!!pref;addTitle.value='';addNotes.value='';addFile.value='';addModal.classList.remove('hidden');await buildAddChoices();step(1)}
+async function openAdd(pref=''){
+  addPerson='';
+  addCategory=pref||'';
+  addCategoryLocked=!!pref;
+  addTitle.value='';
+  addNotes.value='';
+  addFile.value='';
+  addModal.classList.remove('hidden');
+  await buildAddChoices();
+
+  if(addCategory==='Health'||addCategory==='Education'){
+    step(1);
+  }else if(addCategory){
+    addPerson='household';
+    step(3);
+  }else{
+    step(2);
+  }
+}
 function closeAdd(){addModal.classList.add('hidden')}
-async function buildAddChoices(){let m=await all('members');addMemberChoices.innerHTML=m.map((x,i)=>`<button class="choice" onclick="pickAddPerson('${x.id}',this)"><div><div class="emoji">${x.id==='household'?'👨‍👩‍👦':'👤'}</div><div class="name">${E(x.name)}</div></div></button>`).join('');addCategoryChoices.innerHTML=CATS.map(c=>`<button class="choice ${c===addCategory?'selected':''}" onclick="pickAddCategory('${c}',this)"><div><div class="emoji">${icon(c)}</div><div class="name">${c}</div></div></button>`).join('')}
-function pickAddPerson(id,el){addPerson=id;el.parentElement.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));el.classList.add('selected')}
-function pickAddCategory(c,el){addCategory=c;el.parentElement.querySelectorAll('.choice').forEach(x=>x.classList.remove('selected'));el.classList.add('selected')}
+async function buildAddChoices(){
+  let m=await all('members');
+  const people=m.filter(x=>x.id!=='household');
+  addMemberChoices.innerHTML=people.length
+    ? people.map(x=>`<button class="choice" data-member-id="${x.id}" onclick="pickAddPerson('${x.id}',this)"><div><div class="emoji">👤</div><div class="name">${E(x.name)}</div><div class="meta">${E(x.relation||'Family member')}</div></div></button>`).join('')
+    : '<div class="card pad"><div class="meta">No family member added yet. Tap “Add family member”.</div></div>';
+  addCategoryChoices.innerHTML=CATS.map(c=>`<button class="choice ${c===addCategory?'selected':''}" onclick="pickAddCategory('${c}',this)"><div><div class="emoji">${icon(c)}</div><div class="name">${c}</div></div></button>`).join('');
+}
+function pickAddPerson(id,el){
+  addPerson=id;
+  document.querySelectorAll('#addMemberChoices .choice').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function pickAddCategory(c,el){
+  addCategory=c;
+  document.querySelectorAll('#addCategoryChoices .choice').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+}
+function continueMemberStep(){
+  if(!addPerson)return alert('Choose a family member or add a new one.');
+  step(3);
+}
+function continueCategoryStep(){
+  if(!addCategory)return alert('Choose a document type.');
+  if(addCategory==='Health'||addCategory==='Education'){
+    addPerson='';
+    buildAddChoices().then(()=>step(1));
+  }else{
+    addPerson='household';
+    step(3);
+  }
+}
 function step(n){
-  if(n===2&&!addPerson)return alert('Choose a family member.');
-  if(n===2&&addCategoryLocked)return step(3);
-  if(n===3&&!addCategory)return alert('Choose a document type.');
-  [1,2,3].forEach(i=>{document.getElementById('a'+i).classList.toggle('hidden',i!==n);document.getElementById('s'+i).classList.toggle('active',i<=n)});
-  if(n===3){addDate.value=new Date().toISOString().slice(0,10);buildDynamicFields();setTimeout(()=>{const first=dynamicFields.querySelector('select,input,textarea');if(first)first.focus({preventScroll:true});},0)}
+  [1,2,3].forEach(i=>{
+    document.getElementById('a'+i).classList.toggle('hidden',i!==n);
+    document.getElementById('s'+i).classList.toggle('active',i<=n);
+  });
+  if(n===3){
+    if(!addCategory)return alert('Choose a document type.');
+    addDate.value=new Date().toISOString().slice(0,10);
+    buildDynamicFields();
+    setTimeout(()=>{
+      const first=dynamicFields.querySelector('select,input,textarea');
+      if(first)first.focus({preventScroll:true});
+    },0);
+  }
 }
 function ff(label,control,hint=''){return `<div class="form-field"><label>${label}</label>${control}${hint?`<div class="hint">${hint}</div>`:''}</div>`}
 function fs(label){return `<div class="form-section">${label}</div>`}
 function buildDynamicFields(){
-  if(typeof categoryFormTitle!=='undefined')categoryFormTitle.textContent=addCategory+' details';
+  if(typeof categoryFormTitle!=='undefined'){
+    categoryFormTitle.textContent=addCategory+' details';
+    if(addCategory!=='Health'&&addCategory!=='Education')categoryFormTitle.textContent+=' · Family / Common';
+  }
   let h='';
   if(addCategory==='Health')h=ff('Laboratory / hospital','<input id="xLab" placeholder="e.g. Dr Lal PathLabs">');
   if(addCategory==='Education')h=
@@ -418,7 +506,13 @@ function renderInsuranceSpecific(){
 }
 function xv(id){let e=document.getElementById(id);return e?e.value.trim():''}
 async function saveDocument(){
-  let m=await one('members',addPerson);if(!m)return;
+  if(addCategory!=='Health'&&addCategory!=='Education'&&!addPerson)addPerson='household';
+  let m=await one('members',addPerson);
+  if(!m){
+    if(addCategory==='Health'||addCategory==='Education')return alert('Please choose a family member.');
+    m=await one('members','household');
+  }
+  if(!m)return alert('Family / Common profile is missing.');
   const selectedFiles=[...addFile.files],fileIds=[];
   for(const f of selectedFiles){const fid='f'+Date.now()+'-'+Math.random().toString(36).slice(2,8);await put('files',{id:fid,name:f.name,type:f.type,blob:f});fileIds.push(fid)}
   const f=selectedFiles[0]||null,fid=fileIds[0]||null;let extra={};
@@ -817,7 +911,90 @@ async function renderOverview(){let rs=(await all('healthResults')).filter(x=>x.
 async function renderHealthReports(){let docs=(await all('documents')).filter(x=>x.category==='Health'&&x.memberId===healthPerson.value).sort((a,b)=>(b.date||'').localeCompare(a.date||''));healthReports.innerHTML=docs.length?docs.map(d=>`<div class="time"><div class="card doc"><div class="doctop"><div class="docicon">PDF</div><div class="docmain"><div class="name">${E(d.title)}</div><div class="meta">${d.date||''} ${d.extra?.lab?'• '+E(d.extra.lab):''}</div><div class="tags"><span class="tag">${d.processed?(d.processedCount||0)+' values extracted':'Not processed'}</span></div></div></div><div class="actions"><button class="btn primary" onclick="openRecord('${d.id}')">View</button><button class="btn secondary" onclick="extractForReview('${d.id}')">Review</button><button class="btn secondary" onclick="openDocMenu('${d.id}')">•••</button></div></div></div>`).join(''):'<div class="card pad"><div class="meta">No health reports.</div></div>'}
 async function prepareTrends(){let rs=(await all('healthResults')).filter(x=>x.memberId===healthPerson.value),p=[...new Set(rs.map(x=>x.parameter))].sort();trendParam.innerHTML=p.map(x=>`<option>${E(x)}</option>`).join('');if(p.includes('HbA1c'))trendParam.value='HbA1c';renderTrend()}
 async function renderTrend(){let p=trendParam.value,rs=(await all('healthResults')).filter(x=>x.memberId===healthPerson.value&&x.parameter===p).sort((a,b)=>a.date.localeCompare(b.date));trendStats.innerHTML=rs.length?`<div class="row"><div class="grow">Latest</div><b>${rs.at(-1).value} ${E(rs.at(-1).unit||'')}</b></div><div class="row"><div class="grow">Previous</div><b>${rs.length>1?rs.at(-2).value:'—'}</b></div><div class="row"><div class="grow">Change</div><b>${rs.length>1?Number((rs.at(-1).value-rs.at(-2).value).toFixed(3)):'—'}</b></div>`:'<div class="meta">No trend data.</div>';drawChart(rs)}
-function drawChart(p){let c=chart,d=devicePixelRatio||1,w=c.clientWidth,h=240;c.width=w*d;c.height=h*d;let g=c.getContext('2d');g.scale(d,d);g.clearRect(0,0,w,h);if(!p.length){g.fillStyle='#95a4b5';g.fillText('No trend data.',18,28);return}if(p.length===1){g.fillStyle='#0b75ff';g.beginPath();g.arc(w/2,h/2,6,0,Math.PI*2);g.fill();return}let vals=p.map(x=>x.value),mn=Math.min(...vals),mx=Math.max(...vals);if(mn===mx){mn--;mx++}let L=40,R=14,T=18,B=34,W=w-L-R,H=h-T-B,x=i=>L+i*W/(p.length-1),y=v=>T+(mx-v)/(mx-mn)*H;g.strokeStyle='rgba(255,255,255,.08)';for(let i=0;i<4;i++){let yy=T+i*H/3;g.beginPath();g.moveTo(L,yy);g.lineTo(w-R,yy);g.stroke()}g.strokeStyle='#0b75ff';g.lineWidth=3;g.beginPath();p.forEach((q,i)=>i?g.lineTo(x(i),y(q.value)):g.moveTo(x(i),y(q.value)));g.stroke();p.forEach((q,i)=>{g.fillStyle='#0b75ff';g.beginPath();g.arc(x(i),y(q.value),5,0,Math.PI*2);g.fill();g.fillStyle='#95a4b5';g.font='10px -apple-system';g.fillText(q.date.slice(5),x(i)-13,h-9)})}
+function formatTrendDate(date){
+  if(!date)return '';
+  const parts=String(date).split('-');
+  if(parts.length===3)return parts[2]+'/'+parts[1]+'/'+parts[0].slice(2);
+  return date;
+}
+function drawChart(p){
+  const c=chart,d=devicePixelRatio||1,w=c.clientWidth,h=300;
+  c.width=w*d;c.height=h*d;
+  const g=c.getContext('2d');
+  g.scale(d,d);g.clearRect(0,0,w,h);
+
+  if(!p.length){
+    g.fillStyle='#95a4b5';
+    g.font='15px -apple-system';
+    g.fillText('No trend data.',18,30);
+    return;
+  }
+
+  const unit=p[0].unit||'';
+
+  if(p.length===1){
+    const cx=w/2,cy=135;
+    g.fillStyle='#0b75ff';
+    g.beginPath();g.arc(cx,cy,7,0,Math.PI*2);g.fill();
+
+    g.fillStyle='#ffffff';
+    g.font='bold 17px -apple-system';
+    g.textAlign='center';
+    g.fillText(String(p[0].value)+(unit?' '+unit:''),cx,cy-20);
+
+    g.fillStyle='#b5c0cc';
+    g.font='14px -apple-system';
+    g.fillText(formatTrendDate(p[0].date),cx,cy+34);
+    g.textAlign='left';
+    return;
+  }
+
+  const vals=p.map(x=>Number(x.value)).filter(Number.isFinite);
+  let mn=Math.min(...vals),mx=Math.max(...vals),range=mx-mn;
+  if(!Number.isFinite(range)||range===0)range=1;
+  mn-=range*0.20;mx+=range*0.20;
+
+  const L=58,R=18,T=42,B=58,W=w-L-R,H=h-T-B;
+  const x=i=>L+i*W/(p.length-1);
+  const y=v=>T+(mx-Number(v))/(mx-mn)*H;
+
+  g.font='12px -apple-system';
+  g.textAlign='right';
+  for(let i=0;i<4;i++){
+    const value=mx-i*(mx-mn)/3,yy=T+i*H/3;
+    g.strokeStyle='rgba(255,255,255,.10)';
+    g.lineWidth=1;
+    g.beginPath();g.moveTo(L,yy);g.lineTo(w-R,yy);g.stroke();
+    g.fillStyle='#9eacba';
+    g.fillText(String(Number(value.toFixed(2))),L-8,yy+4);
+  }
+
+  g.strokeStyle='#0b75ff';
+  g.lineWidth=3;
+  g.beginPath();
+  p.forEach((q,i)=>i?g.lineTo(x(i),y(q.value)):g.moveTo(x(i),y(q.value)));
+  g.stroke();
+
+  const dateEvery=p.length<=5?1:Math.ceil(p.length/5);
+  p.forEach((q,i)=>{
+    const px=x(i),py=y(q.value);
+
+    g.fillStyle='#0b75ff';
+    g.beginPath();g.arc(px,py,6,0,Math.PI*2);g.fill();
+
+    g.fillStyle='#ffffff';
+    g.font='bold 14px -apple-system';
+    g.textAlign='center';
+    g.fillText(String(q.value)+(unit?' '+unit:''),px,Math.max(17,py-13));
+
+    if(i%dateEvery===0||i===p.length-1){
+      g.fillStyle='#b5c0cc';
+      g.font='13px -apple-system';
+      g.fillText(formatTrendDate(q.date),px,h-18);
+    }
+  });
+  g.textAlign='left';
+}
 async function prepareCompare(){let docs=(await all('documents')).filter(x=>x.category==='Health'&&x.memberId===healthPerson.value&&x.processed).sort((a,b)=>a.date.localeCompare(b.date)),o=docs.map(x=>`<option value="${x.id}">${x.date} · ${E(x.title)}</option>`).join('');cmpA.innerHTML=o;cmpB.innerHTML=o;if(docs.length>1){cmpA.value=docs.at(-2).id;cmpB.value=docs.at(-1).id}renderCompare()}
 async function renderCompare(){if(!cmpA.value||!cmpB.value){compareBox.innerHTML='<div class="meta">Process at least two reports.</div>';return}let r=await all('healthResults'),A=r.filter(x=>x.documentId===cmpA.value),B=r.filter(x=>x.documentId===cmpB.value),names=[...new Set([...A.map(x=>x.parameter),...B.map(x=>x.parameter)])];compareBox.innerHTML='<table><thead><tr><th>Parameter</th><th>Earlier</th><th>Later</th><th>Change</th></tr></thead><tbody>'+names.map(k=>{let a=A.find(x=>x.parameter===k),b=B.find(x=>x.parameter===k),d=a&&b?b.value-a.value:null;return `<tr><td>${E(k)}</td><td>${a?a.value:'—'}</td><td>${b?b.value:'—'}</td><td class="${d<0?'greenText':d>0?'orangeText':''}">${d==null?'—':(d>0?'+':'')+Number(d.toFixed(3))}</td></tr>`}).join('')+'</tbody></table>'}
 let recordCurrentId='';function humanLabel(k){return ({documentType:'Document type',school:'School / Institute',board:'Board / University',classCourse:'Class / Course',exam:'Exam / Test',academicYear:'Academic year',score:'Marks / Grade',rank:'Rank',rollNo:'Roll / Registration no.',certificateNo:'Certificate no.',insuranceFor:'Insurance for',company:'Insurance company',policyNo:'Policy number',startDate:'Start date',sumInsured:'Sum insured',premium:'Premium',premiumFrequency:'Premium frequency',nominee:'Nominee',agent:'Agent / Broker',registrationNo:'Registration no.',idv:'IDV',engineNo:'Engine no.',chassisNo:'Chassis no.',coveredPersons:'Persons covered',healthPolicyType:'Policy type',tpa:'TPA',metal:'Metal',itemType:'Item type',vendor:'Store / Vendor',invoiceNo:'Invoice number',purity:'Purity',grossWeight:'Gross weight',netWeight:'Net metal weight',stoneWeight:'Stone / diamond weight',purchaseRate:'Purchase metal rate',currentRate:'Current metal rate',makingCharges:'Making charges',gst:'GST',purchaseValue:'Purchase value',hallmark:'Hallmark / HUID',itemCategory:'Item category',item:'Item',brand:'Brand',model:'Model',serialNo:'Serial number',purchaseDate:'Purchase date',extendedWarranty:'Extended warranty up to',amcValidUpTo:'AMC valid up to',serviceCentre:'Service centre',location:'Location',issuer:'Issuing authority',documentNo:'Document number',issueDate:'Issue date',placeOfIssue:'Place of issue',status:'Status',originalLocation:'Original stored at',vehicleType:'Vehicle type',insuranceExpiry:'Insurance expiry',pucExpiry:'PUC expiry',lastService:'Last service',nextService:'Next service',odometer:'Odometer',propertyType:'Property type',address:'Address',plotFlatNo:'Plot / Flat no.',area:'Area',registryDate:'Registry date',currentValue:'Current estimated value',loan:'Loan details',electricityNo:'Electricity consumer no.',waterNo:'Water connection no.',lab:'Laboratory / Hospital',insuredSubject:'Insured person / item / asset',customerCare:'Customer care / claim contact',addOns:'Add-on covers',networkNote:'Cashless network note',lifeAssured:'Life assured',maturityDate:'Maturity date',travelDestination:'Travel destination',travelEnd:'Travel cover end',certificateName:'Certificate / Report title',subject:'Subject / Stream',marks:'Marks obtained',maxMarks:'Maximum marks',percentage:'Percentage',grade:'Grade',diamondCarat:'Diamond carat',metalValueAtPurchase:'Metal value at purchase',locker:'Stored at / locker',installDate:'Installation date',sensitive:'Document number privacy',registrationDate:'Registration date',coOwners:'Co-owner(s)',society:'Society / Association'}[k]||k.replace(/([A-Z])/g,' $1').replace(/^./,s=>s.toUpperCase()))}function displayRecordValue(k,v,e){if(k==='documentNo'&&e?.sensitive==='Yes'){const t=String(v||'');return t.length>4?'•••• '+t.slice(-4):'••••'}return /value|premium|insured|rate|charges|gst|idv/i.test(k)?money(v):v}
@@ -825,11 +1002,11 @@ function money(v){const n=Number(String(v||'').replace(/[,₹\s]/g,''));return N
 
 async function runSearch(){let q=(globalSearch.value||'').toLowerCase().trim(),docs=await all('documents'),hrs=await all('healthResults');if(!q){searchResults.innerHTML='<div class="card pad"><div class="meta">Type to search all documents and health values.</div></div>';return}let out=[];docs.filter(x=>JSON.stringify(x).toLowerCase().includes(q)).forEach(x=>out.push(docCard(x)));let params=[...new Set(hrs.map(x=>x.parameter))].filter(x=>x.toLowerCase().includes(q)||q.includes(x.toLowerCase()));for(const p of params){let a=hrs.filter(x=>x.parameter===p).sort((x,y)=>x.date.localeCompare(y.date));out.unshift(`<div class="card pad"><div class="name">${E(p)}</div><div class="meta" style="margin-top:5px">${a.map(x=>`${x.date}: ${x.value} ${x.unit||''}`).join(' → ')}</div></div>`)}searchResults.innerHTML=out.join('')||'<div class="card pad"><div class="meta">No matching records.</div></div>'}
 async function renderReminders(){let docs=await all('documents'),d=collectReminders(docs);searchReminders.innerHTML=d.length?d.map(x=>{let days=daysUntil(x.date),cls=days<30?'dr':days<90?'do':'dg';return `<div class="row" onclick="openRecord('${x.docId}')"><div>${icon(x.category)}</div><div class="grow"><div class="name">${E(x.title)}</div><div class="meta">${E(x.label)} · ${x.date}</div></div><div class="days ${cls}">${days>=0?days:'!'}<br><span>${days>=0?'days':'expired'}</span></div></div>`}).join(''):'<div class="meta">No reminders.</div>'}
-async function exportBackup(){let members=await all('members'),documents=await all('documents'),healthResults=await all('healthResults'),files=await all('files'),ff=[];for(const f of files)ff.push({id:f.id,name:f.name,type:f.type,data:await blobData(f.blob)});let b=new Blob([JSON.stringify({version:8,exportedAt:new Date().toISOString(),members,documents,healthResults,files:ff})],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='MyFamilyVault_Backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+async function exportBackup(){let members=await all('members'),documents=await all('documents'),healthResults=await all('healthResults'),files=await all('files'),ff=[];for(const f of files)ff.push({id:f.id,name:f.name,type:f.type,data:await blobData(f.blob)});let b=new Blob([JSON.stringify({version:12,exportedAt:new Date().toISOString(),members,documents,healthResults,files:ff})],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='MyFamilyVault_Backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function blobData(b){return new Promise(r=>{let f=new FileReader();f.onload=()=>r(f.result);f.readAsDataURL(b)})}
 function dataBlob(s){let [h,b]=s.split(','),m=(h.match(/data:(.*?);base64/)||[])[1]||'application/octet-stream',x=atob(b),a=new Uint8Array(x.length);for(let i=0;i<x.length;i++)a[i]=x.charCodeAt(i);return new Blob([a],{type:m})}
 async function importBackup(){let f=restoreInput.files[0];if(!f)return;try{let p=JSON.parse(await f.text());if(!p.members||!p.documents)throw Error();for(const x of p.members)await put('members',x);for(const x of p.documents)await put('documents',x);for(const x of p.healthResults||[])await put('healthResults',x);for(const x of p.files||[])await put('files',{id:x.id,name:x.name,type:x.type,blob:dataBlob(x.data)});alert('Backup restored.');refreshAll()}catch(e){alert('Invalid backup file.')}restoreInput.value=''}
-window.addEventListener('load',async()=>{await openDB();await defaults();renderHome();if('serviceWorker'in navigator){try{const r=await navigator.serviceWorker.register('sw.js?v=9');await r.update();navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!sessionStorage.getItem('v9reload')){sessionStorage.setItem('v9reload','1');location.reload()}})}catch(e){}}});
+window.addEventListener('load',async()=>{await openDB();await defaults();renderHome();if('serviceWorker'in navigator){try{const r=await navigator.serviceWorker.register('sw.js?v=12');await r.update();navigator.serviceWorker.addEventListener('controllerchange',()=>{if(!sessionStorage.getItem('v12reload')){sessionStorage.setItem('v12reload','1');location.reload()}})}catch(e){}}});
 </script>
 </body>
 </html>

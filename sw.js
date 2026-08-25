@@ -1,4 +1,4 @@
-const CACHE='my-family-vault-v11';
+const CACHE='my-family-vault-v12';
 const LOCAL=['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png'];
 const PDFJS=['https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js','https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'];
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(CACHE).then(async c=>{await c.addAll(LOCAL);for(const u of PDFJS){try{await c.add(u)}catch(e){}}}))});
